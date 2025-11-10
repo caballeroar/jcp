@@ -1,6 +1,16 @@
 {
   "title": "Something exciting is coming",
   "subtitle": "Human-centered approach to",
-  "keywords": "Equity • Circular economy • Climate justice • Energy transition • Social justice • Community empowerment • Sustainability strategy • Responsible leadership",
-  "contact": "Contact us for inquiries on LinkedIn"
+  "keywords": [
+    "Equity",
+    "Circular Economy",
+    "Climate Justice",
+    "Energy Transition",
+    "Social Justice",
+    "Community Empowerment",
+    "Sustainability Strategy",
+    "Responsible Leadership"
+  ],
+  "contact": "Contact us for inquiries on LinkedIn",
+  "cta": "Contact Us"
 }

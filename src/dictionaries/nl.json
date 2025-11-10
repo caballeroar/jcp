@@ -1,6 +1,16 @@
 {
   "title": "Er komt iets moois aan",
   "subtitle": "Een mensgerichte benadering van",
-  "keywords": "Gelijkheid • Circulaire economie • Klimaatrechtvaardigheid • Energietransitie • Sociale rechtvaardigheid • Gemeenschapsversterking • Duurzaamheidsstrategie • Verantwoord leiderschap",
-  "contact": "Neem contact met ons op via LinkedIn"
+  "keywords": [
+    "Gelijkheid",
+    "Circulaire Economie",
+    "Klimaatrechtvaardigheid",
+    "Energietransitie",
+    "Sociale Rechtvaardigheid",
+    "Gemeenschapsversterking",
+    "Duurzaamheidsstrategie",
+    "Verantwoord Leiderschap"
+  ],
+  "contact": "Neem contact met ons op via LinkedIn",
+  "cta": "Contact Ons"
 }
