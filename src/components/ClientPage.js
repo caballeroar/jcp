@@ -1,37 +1,38 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import ContactButton from "./ContactButton";
 import AnimatedText from "./AnimatedText";
 import BackgroundAnimation from "./BackgroundAnimation";
+
+// Import dictionaries statically
+import enDict from "../dictionaries/en.json";
+import nlDict from "../dictionaries/nl.json";
+
+const dictionaries = {
+  en: enDict,
+  nl: nlDict,
+};
 
 export default function ClientPage({ initialLocale, initialDict }) {
   const [locale, setLocale] = useState(initialLocale);
   const [dict, setDict] = useState(initialDict);
   const [isLoading, setIsLoading] = useState(false);
 
-  const switchLanguage = async (newLocale) => {
+  const switchLanguage = (newLocale) => {
     if (newLocale === locale) return;
 
     setIsLoading(true);
 
-    try {
-      // Dynamically import the dictionary
-      const newDict = await import(`../dictionaries/${newLocale}.json`);
-
-      setTimeout(() => {
-        setLocale(newLocale);
-        setDict(newDict.default);
-        setIsLoading(false);
-
-        // Update URL without page reload
-        window.history.pushState({}, "", `/${newLocale}`);
-      }, 200);
-    } catch (error) {
-      console.error("Failed to load dictionary:", error);
+    setTimeout(() => {
+      setLocale(newLocale);
+      setDict(dictionaries[newLocale]);
       setIsLoading(false);
-    }
+
+      // Update URL without page reload
+      window.history.pushState({}, "", `/${newLocale}/`);
+    }, 200);
   };
 
   return (
@@ -72,10 +73,9 @@ export default function ClientPage({ initialLocale, initialDict }) {
         }`}
       >
         <div className="max-w-sm md:max-w-4xl mx-auto flex flex-col justify-between h-full mt-20 py-8">
-          {/* ...existing content structure with dict values... */}
           <div>
             <div className="px-12 md:px-6">
-              <h2 className="text-sm md:text-lg font-normal mb-20">
+              <h2 className="text-sm md:text-md font-normal mb-20">
                 {dict.title}
               </h2>
               <h1 className="text-xl md:text-4xl font-bold mb-2">
@@ -91,6 +91,7 @@ export default function ClientPage({ initialLocale, initialDict }) {
               />
             </div>
           </div>
+
           <div className="mb-20">
             <div className="mb-8">
               <Image
@@ -104,7 +105,7 @@ export default function ClientPage({ initialLocale, initialDict }) {
             </div>
 
             <div className="mb-8 flex flex-col gap-4 items-center justify-center">
-              <p className="text-sm md:text-lg ">{dict.contact}</p>
+              <p>{dict.contact}</p>
               <ContactButton>{dict.cta}</ContactButton>
             </div>
           </div>
