@@ -75,7 +75,7 @@ export default function ClientPage({ initialLocale, initialDict }) {
           {/* ...existing content structure with dict values... */}
           <div>
             <div className="px-12 md:px-6">
-              <h2 className="text-sm md:text-md font-normal mb-20">
+              <h2 className="text-sm md:text-lg font-normal mb-20">
                 {dict.title}
               </h2>
               <h1 className="text-xl md:text-4xl font-bold mb-2">
