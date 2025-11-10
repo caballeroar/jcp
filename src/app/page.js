@@ -1,5 +1,9 @@
-import { redirect } from "next/navigation";
-
 export default function RootPage() {
-  redirect("/en");
+  return (
+    <script
+      dangerouslySetInnerHTML={{
+        __html: `window.location.href = '/en/'`,
+      }}
+    />
+  );
 }

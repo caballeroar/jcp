@@ -1,5 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Temporarily remove headers config to test
+  output: "export",
+  trailingSlash: true,
+  images: {
+    unoptimized: true,
+  },
 };
 export default nextConfig;
