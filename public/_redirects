@@ -1,0 +1,6 @@
+# Redirect root to /en
+/    /en/    301
+
+# Handle SPA routing for locale pages
+/en/*  /en/index.html  200
+/nl/*  /nl/index.html  200
