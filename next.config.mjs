@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Remove i18n config - not needed for App Router
+  // Temporarily remove headers config to test
 };
 export default nextConfig;

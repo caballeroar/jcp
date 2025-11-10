@@ -6,6 +6,17 @@ const defaultLocale = "en";
 export function middleware(request) {
   const { pathname } = request.nextUrl;
 
+  // Skip middleware for static files, API routes, and special Next.js files
+  if (
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/api") ||
+    pathname.startsWith("/fonts") ||
+    pathname.startsWith("/images") ||
+    pathname.includes(".") // This catches files like .txt, .otf, .jpg, etc.
+  ) {
+    return NextResponse.next();
+  }
+
   // Check if pathname is missing a locale
   const pathnameHasLocale = locales.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
@@ -17,8 +28,10 @@ export function middleware(request) {
       new URL(`/${defaultLocale}${pathname}`, request.url)
     );
   }
+
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/((?!_next|api|favicon.ico|images).*)"],
+  matcher: ["/((?!_next|api|favicon.ico).*)"],
 };
