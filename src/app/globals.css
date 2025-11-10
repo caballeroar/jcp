@@ -89,12 +89,12 @@ html {
 }
 
 .animate-spin-slow {
-  animation: spin-slow 200s linear infinite !important;
+  animation: spin-slow 120s linear infinite !important;
 }
 
 /* Force animation on SVG elements */
 svg[style*="animation"] {
-  animation: spin-slow 200s linear infinite !important;
+  animation: spin-slow 120s linear infinite !important;
 }
 
 /* Simple icon background class */
