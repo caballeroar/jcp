@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
+  // Remove i18n config - not needed for App Router
 };
-
 export default nextConfig;
