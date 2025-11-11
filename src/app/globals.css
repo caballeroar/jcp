@@ -40,6 +40,7 @@
 body {
   background-color: var(--background);
   color: var(--foreground);
+  font-family: "PPMori", Arial, Helvetica, sans-serif;
   overflow: hidden;
 }
 
@@ -58,19 +59,6 @@ html {
 
 .animate-spin-slow {
   animation: spin-slow 120s linear infinite;
-}
-
-body {
-  background-color: var(--background) !important;
-  color: var(--foreground) !important;
-  font-family: "PPMori", Arial, Helvetica, sans-serif;
-  font-style: normal;
-  font-display: swap;
-  overflow: hidden;
-}
-
-html {
-  overflow: hidden;
 }
 
 /* Comprehensive CSS variable classes */
@@ -129,6 +117,15 @@ html {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 120s linear infinite !important;
+}
+
+/* Force animation on SVG elements */
+svg[style*="animation"] {
+  animation: spin-slow 120s linear infinite !important;
 }
 
 .animate-spin-slow {
