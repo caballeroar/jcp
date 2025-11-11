@@ -5,11 +5,7 @@
   --foreground: #050303;
 }
 
-/* @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-} */
-
+/* This section can be removed if you don't want dark mode */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #050303;
@@ -27,25 +23,9 @@
 
 @font-face {
   font-family: "PPMori";
-  src: url("/fonts/PPMori-ExtralightItalic.otf") format("opentype");
-  font-weight: 200;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "PPMori";
   src: url("/fonts/PPMori-Regular.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "PPMori";
-  src: url("/fonts/PPMori-RegularItalic.otf") format("opentype");
-  font-weight: 400;
-  font-style: italic;
   font-display: swap;
 }
 
@@ -57,17 +37,32 @@
   font-display: swap;
 }
 
-@font-face {
-  font-family: "PPMori";
-  src: url("/fonts/PPMori-SemiBoldItalic.otf") format("opentype");
-  font-weight: 600;
-  font-style: italic;
-  font-display: swap;
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  overflow: hidden;
+}
+
+html {
+  overflow: hidden;
+}
+
+@keyframes spin-slow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 120s linear infinite;
 }
 
 body {
-  background: "#f4f4f0";
-  color: var(--foreground);
+  background-color: var(--background) !important;
+  color: var(--foreground) !important;
   font-family: "PPMori", Arial, Helvetica, sans-serif;
   font-style: normal;
   font-display: swap;
@@ -76,6 +71,54 @@ body {
 
 html {
   overflow: hidden;
+}
+
+/* Comprehensive CSS variable classes */
+.bg-background {
+  background-color: var(--background) !important;
+}
+
+.bg-foreground {
+  background-color: var(--foreground) !important;
+}
+
+.text-foreground {
+  color: var(--foreground) !important;
+}
+
+.text-background {
+  color: var(--background) !important;
+}
+
+.text-muted {
+  color: #666666 !important;
+}
+
+.text-subtle {
+  color: #999999 !important;
+}
+
+.border-foreground {
+  border-color: var(--foreground) !important;
+}
+
+.border-muted {
+  border-color: #cccccc !important;
+}
+
+/* Dark mode specific overrides */
+@media (prefers-color-scheme: dark) {
+  .text-muted {
+    color: #aaaaaa !important;
+  }
+
+  .text-subtle {
+    color: #777777 !important;
+  }
+
+  .border-muted {
+    border-color: #444444 !important;
+  }
 }
 
 /* Custom slow spin animation with higher specificity */
@@ -95,11 +138,4 @@ html {
 /* Force animation on SVG elements */
 svg[style*="animation"] {
   animation: spin-slow 120s linear infinite !important;
-}
-
-/* Simple icon background class */
-.icon-bg-primary {
-  background-color: #454545 !important;
-  border-radius: 50%;
-  padding: 4px;
 }

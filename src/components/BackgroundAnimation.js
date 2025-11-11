@@ -11,27 +11,21 @@ export default function BackgroundAnimation({ locale }) {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden opacity-40">
       <div className="absolute inset-0 flex items-center justify-center">
-        {/* Rotating container with slow animation */}
         <div className="relative w-full h-full flex items-center justify-center animate-spin-slow">
           <svg
             width="120vmin"
             height="120vmin"
-            className="absolute"
+            className="absolute text-foreground/20"
             viewBox="0 0 1000 1000"
-            style={{
-              animation: "spin-slow 120s linear infinite",
-            }}
           >
-            {/* Dotted circle with smaller gaps */}
             <circle
               cx="500"
               cy="500"
               r="400"
               fill="none"
               stroke="#DF4D20"
-              strokeWidth="1"
-              strokeDasharray="8 4"
-              className="text-brand-600"
+              strokeWidth="2"
+              strokeDasharray="8 8"
             />
 
             {/* Curved text paths - positioned further from circle */}
@@ -62,8 +56,8 @@ export default function BackgroundAnimation({ locale }) {
             {currentWords.map((word, index) => (
               <text
                 key={word}
-                className="text-brand-600 font-light fill-current"
-                fontSize="16"
+                className="text-foreground/30 font-light fill-current"
+                fontSize="20"
               >
                 <textPath
                   href={`#circle-path-${index + 1}`}

@@ -16,7 +16,7 @@ export default function ContactButton({ children }) {
     <Button
       variant="outline"
       icon={<ArrowRight />}
-      iconBg="primary"
+      //   iconBg="primary"
       iconPosition="right"
       onClick={handleContact}
     >

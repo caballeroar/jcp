@@ -6,9 +6,8 @@ export default async function LocaleLayout({ children, params }) {
   return (
     <html lang={locale || "en"}>
       <body>
-        <div className="transition-opacity duration-300 ease-in-out">
-          {children}
-        </div>
+        {/* This transition wrapper might not be necessary */}
+        {children}
       </body>
     </html>
   );

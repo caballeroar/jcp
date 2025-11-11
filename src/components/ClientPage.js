@@ -37,10 +37,8 @@ export default function ClientPage({ initialLocale, initialDict }) {
 
   return (
     <>
-      {/* Background Animation */}
       <BackgroundAnimation locale={locale} />
 
-      {/* Language switcher */}
       <div
         className={`flex gap-4 text-xs w-full px-6 py-3 justify-end transition-opacity duration-200 ${
           isLoading ? "opacity-50" : "opacity-100"
@@ -49,7 +47,9 @@ export default function ClientPage({ initialLocale, initialDict }) {
         <button
           onClick={() => switchLanguage("en")}
           className={`hover:underline transition-colors ${
-            locale === "en" ? "text-primary-950 font-medium" : "text-gray-600"
+            locale === "en"
+              ? "text-foreground font-medium"
+              : "text-foreground/60"
           }`}
           disabled={isLoading}
         >
@@ -58,7 +58,9 @@ export default function ClientPage({ initialLocale, initialDict }) {
         <button
           onClick={() => switchLanguage("nl")}
           className={`hover:underline transition-colors ${
-            locale === "nl" ? "text-primary-950 font-medium" : "text-gray-600"
+            locale === "nl"
+              ? "text-foreground font-medium"
+              : "text-foreground/60"
           }`}
           disabled={isLoading}
         >
@@ -66,19 +68,18 @@ export default function ClientPage({ initialLocale, initialDict }) {
         </button>
       </div>
 
-      {/* Main content */}
       <main
-        className={`flex h-screen flex-col items-center justify-center text-center px-4 md:px-6 overflow-hidden transition-opacity duration-300 ${
+        className={`flex h-screen flex-col items-center justify-center text-center px-4 md:px-6 overflow-hidden bg-background transition-opacity duration-300 ${
           isLoading ? "opacity-70" : "opacity-100"
         }`}
       >
         <div className="max-w-sm md:max-w-4xl mx-auto flex flex-col justify-between h-full mt-20 py-8">
           <div>
             <div className="px-12 md:px-6">
-              <h2 className="text-sm md:text-md font-normal mb-20">
+              <h2 className="text-sm md:text-md font-normal mb-20 text-foreground/70">
                 {dict.title}
               </h2>
-              <h1 className="text-xl md:text-4xl font-bold mb-2">
+              <h1 className="text-xl md:text-4xl font-bold mb-2 text-foreground">
                 {dict.subtitle}
               </h1>
             </div>
@@ -86,7 +87,7 @@ export default function ClientPage({ initialLocale, initialDict }) {
             <div className="mb-8">
               <AnimatedText
                 words={dict.keywords}
-                className="text-xl md:text-4xl font-bold"
+                className="text-xl md:text-4xl font-bold text-foreground"
                 duration={2500}
               />
             </div>
@@ -105,7 +106,7 @@ export default function ClientPage({ initialLocale, initialDict }) {
             </div>
 
             <div className="mb-8 flex flex-col gap-4 items-center justify-center">
-              <p>{dict.contact}</p>
+              <p className="text-foreground/70">{dict.contact}</p>
               <ContactButton>{dict.cta}</ContactButton>
             </div>
           </div>

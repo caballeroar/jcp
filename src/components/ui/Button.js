@@ -18,12 +18,11 @@ export default function Button({
 
   const variants = {
     primary:
-      "bg-primary-950 text-white hover:bg-primary-900 focus:ring-primary-950",
-    secondary:
-      "bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500",
+      "bg-foreground text-background hover:opacity-90 focus:ring-foreground",
+    secondary: "bg-subtle  hover:bg-muted focus:ring-muted",
     outline:
-      "border border-primary-950 bg-transparent text-gray-700 hover:bg-gray-50 focus:ring-gray-500",
-    ghost: "bg-transparent text-gray-700 hover:bg-gray-100 focus:ring-gray-500",
+      "border border-muted bg-transparent  hover:bg-subtle focus:ring-muted",
+    ghost: "bg-transparent  hover:bg-subtle focus:ring-muted",
     danger: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500",
   };
 

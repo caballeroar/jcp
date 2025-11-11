@@ -5,9 +5,12 @@ module.exports = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  darkMode: "media",
   theme: {
     extend: {
       colors: {
+        background: "var(--background)",
+        foreground: "var(--foreground)",
         primary: {
           50: "#f6f6f6",
           100: "#e7e7e7",
@@ -19,7 +22,7 @@ module.exports = {
           700: "#4f4f4f",
           800: "#454545",
           900: "#3d3d3d",
-          950: "#050303", // Your custom primary color
+          950: "#050303",
         },
         brand: {
           50: "#fef5f2",
@@ -28,7 +31,7 @@ module.exports = {
           300: "#f7b8a1",
           400: "#f2916a",
           500: "#ec6e3d",
-          600: "#df4d20", // Your brand color
+          600: "#df4d20",
           700: "#c03d18",
           800: "#9f3318",
           900: "#822d1a",
@@ -36,12 +39,11 @@ module.exports = {
         },
       },
       fontFamily: {
-        ppmori: ["PPMori", "Arial", "Helvetica", "sans-serif"],
         sans: ["PPMori", "Arial", "Helvetica", "sans-serif"],
       },
       fontWeight: {
         extralight: 200,
-        light: 200, // Add alias for extralight
+        light: 200,
         normal: 400,
         semibold: 600,
       },
