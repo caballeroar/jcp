@@ -108,31 +108,3 @@ html {
     border-color: #444444 !important;
   }
 }
-
-/* Custom slow spin animation with higher specificity */
-@keyframes spin-slow {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-spin-slow {
-  animation: spin-slow 120s linear infinite !important;
-}
-
-/* Force animation on SVG elements */
-svg[style*="animation"] {
-  animation: spin-slow 120s linear infinite !important;
-}
-
-.animate-spin-slow {
-  animation: spin-slow 120s linear infinite !important;
-}
-
-/* Force animation on SVG elements */
-svg[style*="animation"] {
-  animation: spin-slow 120s linear infinite !important;
-}

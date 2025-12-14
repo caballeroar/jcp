@@ -5,9 +5,7 @@ import ClientPage from "../../components/ClientPage";
 const locales = ["en", "nl"];
 
 export async function generateStaticParams() {
-  return locales.map((locale) => ({
-    locale: locale,
-  }));
+  return [{ locale: "en" }, { locale: "nl" }];
 }
 
 export default async function Page({ params }) {
