@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import Script from "next/script";
 
-export function GoogleAnalytics({ GA_MEASUREMENT_ID }) {
+function GoogleAnalyticsInner({ GA_MEASUREMENT_ID }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -54,6 +54,14 @@ export function GoogleAnalytics({ GA_MEASUREMENT_ID }) {
   }, [GA_MEASUREMENT_ID]);
 
   return null;
+}
+
+export function GoogleAnalytics({ GA_MEASUREMENT_ID }) {
+  return (
+    <Suspense fallback={null}>
+      <GoogleAnalyticsInner GA_MEASUREMENT_ID={GA_MEASUREMENT_ID} />
+    </Suspense>
+  );
 }
 
 // Helper function to safely call gtag
