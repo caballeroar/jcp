@@ -1,6 +1,8 @@
 import "./globals.css";
 import { Fustat } from "next/font/google";
+import { Suspense } from "react";
 import { GoogleAnalytics } from "../components/GoogleAnalytics";
+import CookieConsent from "../components/CookieConsent";
 
 const fustat = Fustat({
   subsets: ["latin"],
@@ -29,6 +31,11 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         {gaId && <GoogleAnalytics GA_MEASUREMENT_ID={gaId} />}
+        {gaId && (
+          <Suspense fallback={null}>
+            <CookieConsent GA_MEASUREMENT_ID={gaId} />
+          </Suspense>
+        )}
         {children}
       </body>
     </html>
