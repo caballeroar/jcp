@@ -10,17 +10,32 @@ const fustat = Fustat({
 });
 
 export default function RootLayout({ children }) {
-  // Debug: Check if GA ID is loaded
-  console.log("GA_MEASUREMENT_ID:", process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID);
+  const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
   return (
     <html className={`${fustat.variable} ${fustat.className}`}>
-      <body>
-        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
-          <GoogleAnalytics
-            GA_MEASUREMENT_ID={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}
-          />
+      <head>
+        {gaId && (
+          <>
+            <script
+              async
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+            />
+            <script
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${gaId}');
+                `,
+              }}
+            />
+          </>
         )}
+      </head>
+      <body>
+        {gaId && <GoogleAnalytics GA_MEASUREMENT_ID={gaId} />}
         {children}
       </body>
     </html>
