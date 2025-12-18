@@ -12,48 +12,31 @@ function GoogleAnalyticsInner({ GA_MEASUREMENT_ID }) {
   console.log("GoogleAnalytics component loaded with ID:", GA_MEASUREMENT_ID);
 
   useEffect(() => {
-    const url = `${pathname}${searchParams}`;
-
-    // gtag('config') must be called each time the route changes
-    gtag("config", GA_MEASUREMENT_ID, {
-      page_path: url,
-    });
+    if (typeof window !== "undefined" && window.gtag) {
+      const url = `${pathname}${searchParams}`;
+      // gtag('config') must be called each time the route changes
+      window.gtag("config", GA_MEASUREMENT_ID, {
+        page_path: url,
+      });
+    }
   }, [pathname, searchParams, GA_MEASUREMENT_ID]);
 
-  // Try direct HTML approach as fallback
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      // Initialize dataLayer
-      window.dataLayer = window.dataLayer || [];
-
-      // Create gtag function
-      window.gtag = function () {
-        window.dataLayer.push(arguments);
-      };
-
-      // Load GA script manually
-      const script = document.createElement("script");
-      script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
-      script.async = true;
-
-      script.onload = () => {
-        console.log("GA script loaded successfully (manual method)");
-        // Initialize GA
-        window.gtag("js", new Date());
-        window.gtag("config", GA_MEASUREMENT_ID, {
-          page_path: window.location.pathname,
-        });
-      };
-
-      script.onerror = (e) => {
-        console.error("GA script still failed to load (manual method):", e);
-      };
-
-      document.head.appendChild(script);
-    }
-  }, [GA_MEASUREMENT_ID]);
-
-  return null;
+  return (
+    <>
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${GA_MEASUREMENT_ID}');
+        `}
+      </Script>
+    </>
+  );
 }
 
 export function GoogleAnalytics({ GA_MEASUREMENT_ID }) {
