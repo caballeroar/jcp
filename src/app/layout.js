@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
 
   return (
     <html className={`${fustat.variable} ${fustat.className}`}>
-      <body>
+      <head>
         {gaId && (
           <>
             <script
@@ -33,6 +33,8 @@ export default function RootLayout({ children }) {
             />
           </>
         )}
+      </head>
+      <body>
         {gaId && <GoogleAnalytics GA_MEASUREMENT_ID={gaId} />}
         {children}
       </body>
