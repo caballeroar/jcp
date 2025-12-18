@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
 
   return (
     <html className={`${fustat.variable} ${fustat.className}`}>
-      <head>
+      <body>
         {gaId && (
           <>
             <script
@@ -25,7 +25,7 @@ export default function RootLayout({ children }) {
               dangerouslySetInnerHTML={{
                 __html: `
                   window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
+                  function gtag(){dataLayer.push(arguments);} 
                   gtag('js', new Date());
                   gtag('config', '${gaId}');
                 `,
@@ -33,8 +33,6 @@ export default function RootLayout({ children }) {
             />
           </>
         )}
-      </head>
-      <body>
         {gaId && <GoogleAnalytics GA_MEASUREMENT_ID={gaId} />}
         {children}
       </body>
