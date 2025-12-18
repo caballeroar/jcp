@@ -9,7 +9,7 @@ export default function RootPage() {
         <p>Redirecting to English version...</p>
         <script
           dangerouslySetInnerHTML={{
-            __html: `if (typeof window !== 'undefined') { window.location.replace('/en/'); }`,
+            __html: `window.location.replace('/en/');`,
           }}
         />
       </body>
