@@ -17,19 +17,12 @@ export default function RootLayout({ children }) {
       <head>
         {gaId && (
           <>
+            {/* Define dataLayer/gtag without inline JS for CSP safety */}
+            <script defer src="/gtag-init.js" />
+            {/* Load GA4 gtag library */}
             <script
               async
               src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
-            />
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);} 
-                  gtag('js', new Date());
-                  gtag('config', '${gaId}');
-                `,
-              }}
             />
           </>
         )}

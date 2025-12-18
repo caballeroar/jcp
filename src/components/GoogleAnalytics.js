@@ -8,8 +8,15 @@ function GoogleAnalyticsTracker({ GA_MEASUREMENT_ID }) {
   const searchParams = useSearchParams();
 
   useEffect(() => {
+    // Respect Do Not Track and only run in production
+    const dnt =
+      typeof navigator !== "undefined" &&
+      (navigator.doNotTrack === "1" || window.doNotTrack === "1");
+    if (process.env.NODE_ENV !== "production" || dnt) return;
+
     if (typeof window !== "undefined" && window.gtag) {
-      const url = `${pathname}${searchParams}`;
+      const query = searchParams ? searchParams.toString() : "";
+      const url = query ? `${pathname}?${query}` : pathname;
       // Track page changes for SPA navigation
       window.gtag("config", GA_MEASUREMENT_ID, {
         page_path: url,
@@ -28,14 +35,4 @@ export function GoogleAnalytics({ GA_MEASUREMENT_ID }) {
   );
 }
 
-// Helper function to safely call gtag
-function gtag(...args) {
-  if (typeof window !== "undefined") {
-    window.gtag =
-      window.gtag ||
-      function () {
-        (window.dataLayer = window.dataLayer || []).push(arguments);
-      };
-    window.gtag(...args);
-  }
-}
+// No inline helpers here; gtag/dataLayer are declared in /public/gtag-init.js
