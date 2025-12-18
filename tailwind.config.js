@@ -39,7 +39,8 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ["PPMori", "Arial", "Helvetica", "sans-serif"],
+        sans: ["var(--font-fustat)", "Arial", "Helvetica", "sans-serif"],
+        fustat: ["var(--font-fustat)", "sans-serif"],
       },
       fontWeight: {
         extralight: 200,

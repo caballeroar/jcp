@@ -9,9 +9,10 @@ export default function AnimatedText({
 }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
+  const [isClient, setIsClient] = useState(() => typeof window !== "undefined");
 
   useEffect(() => {
-    if (!words || words.length === 0) return;
+    if (!words || words.length === 0 || !isClient) return;
 
     const interval = setInterval(() => {
       setIsVisible(false);
@@ -23,10 +24,21 @@ export default function AnimatedText({
     }, duration);
 
     return () => clearInterval(interval);
-  }, [words, duration]);
+  }, [words, duration, isClient]);
 
   if (!words || words.length === 0) {
     return null;
+  }
+
+  // Prevent hydration mismatch by showing initial state until client-side
+  if (!isClient) {
+    return (
+      <div className={`${className} h-16 flex items-center justify-center`}>
+        <span className="transition-all duration-600 opacity-100 transform translate-y-0">
+          {words[0]}
+        </span>
+      </div>
+    );
   }
 
   return (

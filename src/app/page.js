@@ -1,18 +1,18 @@
+import Link from "next/link";
+
 export default function RootPage() {
   return (
-    <html>
-      <head>
-        <meta httpEquiv="refresh" content="0; url=/en/" />
-        <title>Redirecting...</title>
-      </head>
-      <body>
-        <p>Redirecting to English version...</p>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.location.replace('/en/');`,
-          }}
-        />
-      </body>
-    </html>
+    <div>
+      <h1>Redirecting...</h1>
+      <p>
+        If you are not redirected automatically,{" "}
+        <Link href="/en/">click here</Link>.
+      </p>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `window.location.replace('/en/');`,
+        }}
+      />
+    </div>
   );
 }
