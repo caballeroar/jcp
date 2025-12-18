@@ -12,5 +12,28 @@
     "Responsible Leadership"
   ],
   "contact": "Contact us for inquiries on LinkedIn",
-  "cta": "Contact Us"
+  "cta": "Contact Us",
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "cases": "Cases"
+  },
+  "pages": {
+    "about": {
+      "title": "About Us",
+      "subtitle": "Our mission and vision",
+      "description": "We are dedicated to creating positive change through human-centered approaches to sustainability and social justice."
+    },
+    "services": {
+      "title": "Our Services",
+      "subtitle": "What we offer",
+      "description": "Comprehensive consulting services for sustainability, equity, and community empowerment initiatives."
+    },
+    "cases": {
+      "title": "Case Studies",
+      "subtitle": "Our work in action",
+      "description": "Real-world examples of our impact in communities and organizations worldwide."
+    }
+  }
 }

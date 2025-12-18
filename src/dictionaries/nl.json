@@ -12,5 +12,28 @@
     "Verantwoord Leiderschap"
   ],
   "contact": "Neem contact met ons op via LinkedIn",
-  "cta": "Contact Ons"
+  "cta": "Contact Ons",
+  "nav": {
+    "home": "Home",
+    "about": "Over Ons",
+    "services": "Diensten",
+    "cases": "Cases"
+  },
+  "pages": {
+    "about": {
+      "title": "Over Ons",
+      "subtitle": "Onze missie en visie",
+      "description": "Wij zijn toegewijd aan het creëren van positieve verandering door mensgerichte benaderingen van duurzaamheid en sociale rechtvaardigheid."
+    },
+    "services": {
+      "title": "Onze Diensten",
+      "subtitle": "Wat wij bieden",
+      "description": "Uitgebreide adviesdiensten voor duurzaamheid, gelijkheid en gemeenschapsversterking initiatieven."
+    },
+    "cases": {
+      "title": "Case Studies",
+      "subtitle": "Ons werk in actie",
+      "description": "Praktijkvoorbeelden van onze impact in gemeenschappen en organisaties wereldwijd."
+    }
+  }
 }
