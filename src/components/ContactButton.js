@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "./ui";
-import { ArrowRight } from "phosphor-react";
+import { ArrowLeft } from "phosphor-react";
 
 export default function ContactButton({ children }) {
   const handleContact = () => {
@@ -14,10 +14,9 @@ export default function ContactButton({ children }) {
 
   return (
     <Button
-      variant="outline"
-      icon={<ArrowRight />}
-      //   iconBg="primary"
-      iconPosition="right"
+      icon={<ArrowLeft />}
+      theme="light"
+      iconPosition="left"
       onClick={handleContact}
     >
       {children}

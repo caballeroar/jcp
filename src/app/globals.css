@@ -1,19 +1,34 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f4f4f0;
-  --foreground: #050303;
+  --background: #ebe7e3;
+  --content_dark: #1c0707;
+  --content_light: #fff;
+  --content_brand: #df4d20;
+  --bg_brand: #df4d20;
+  --gb_box_neutral: #fff;
+  --bg_box_accent: #fff;
+  --grey: #5d5d5d;
+  --surface: #1c0707;
+  --logos: #494949;
+  --bg_gradient: linear-gradient(180deg, #fff 80%, #f0f0f0 100%);
 }
 
-/* This section can be removed if you don't want dark mode */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #050303;
-    --foreground: #f4f4f0;
+    --background: #1c0707;
+    --content_dark: #f0f0f0;
+    --content_light: #1c0707;
+    --content_brand: #df4d20;
+    --bg_brand: #aa330e;
+    --gb_box_neutral: #1c0707;
+    --bg_box_accent: #494949;
+    --grey: #5d5d5d;
+    --surface: #f0f0f0;
+    --logos: #dfdfdf;
+    --bg_gradient: linear-gradient(180deg, #494949 80%, #5d5d5d 100%);
   }
 }
-
-
 
 body {
   background-color: var(--background);
