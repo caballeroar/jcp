@@ -9,6 +9,7 @@ import BackgroundAnimation from "./BackgroundAnimation";
 // Import dictionaries statically
 import enDict from "../dictionaries/en.json";
 import nlDict from "../dictionaries/nl.json";
+import { Switch } from "./ui";
 
 const dictionaries = {
   en: enDict,
@@ -107,6 +108,11 @@ export default function ClientPage({ initialLocale, initialDict }) {
 
             <div className="mb-8 flex flex-col gap-4 items-center justify-center">
               <p className="text-foreground/70">{dict.contact}</p>
+              <Switch
+                checked={locale === "nl"}
+                disabled={isLoading}
+                onChange={(checked) => switchLanguage(checked ? "nl" : "en")}
+              />
               <ContactButton>{dict.cta}</ContactButton>
             </div>
           </div>

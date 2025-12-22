@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
   return (
-    <html className={`${fustat.variable} ${fustat.className}`}>
+    <html className={`${fustat.variable}`}>
       <head>
         {gaId && (
           <>

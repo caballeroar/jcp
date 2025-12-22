@@ -30,14 +30,20 @@
   }
 }
 
+html {
+  overflow: hidden;
+  font-family: var(--font-fustat), Arial, Helvetica, sans-serif;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
 body {
   background-color: var(--background);
   color: var(--foreground);
   overflow: hidden;
-}
-
-html {
-  overflow: hidden;
+  line-height: 1.25;
 }
 
 @keyframes spin-slow {

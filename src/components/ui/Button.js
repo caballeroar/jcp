@@ -41,7 +41,10 @@ export default function Button({
           {icon}
         </span>
       )}
-      <span className={` ${baseButton}  `} style={themeStyle}>
+      <span
+        className={` ${baseButton}  `}
+        style={{ ...themeStyle, transform: "translateY(1px)" }}
+      >
         {children}
       </span>
       {iconPosition !== "left" && (
