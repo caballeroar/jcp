@@ -1,5 +1,5 @@
 import "./globals.css";
-import { Fustat } from "next/font/google";
+import { Fustat, Roboto_Mono } from "next/font/google";
 import { Suspense } from "react";
 import { GoogleAnalytics } from "../components/GoogleAnalytics";
 import CookieConsent from "../components/CookieConsent";
@@ -11,11 +11,18 @@ const fustat = Fustat({
   variable: "--font-fustat",
 });
 
+const robotoMono = Roboto_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  display: "swap",
+  variable: "--font-roboto-mono",
+});
+
 export default function RootLayout({ children }) {
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
   return (
-    <html className={`${fustat.variable}`}>
+    <html className={`${fustat.variable} ${robotoMono.variable}`}>
       <head>
         {gaId && (
           <>

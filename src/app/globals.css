@@ -31,18 +31,23 @@
 }
 
 html {
-  overflow: hidden;
   font-family: var(--font-fustat), Arial, Helvetica, sans-serif;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  letter-spacing: -1.5px;
+}
+/* Roboto Mono utility */
+.font-roboto-mono {
+  font-family: var(--font-roboto-mono), ui-monospace, SFMono-Regular, Menlo,
+    Monaco, Consolas, "Liberation Mono", monospace !important;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  overflow: hidden;
+
   line-height: 1.25;
 }
 

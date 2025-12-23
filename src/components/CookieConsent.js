@@ -88,7 +88,10 @@ export default function CookieConsent({ GA_MEASUREMENT_ID }) {
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-50 px-4 pb-4">
-      <div className="mx-auto max-w-3xl rounded-md border border-foreground/10 bg-background/95 backdrop-blur shadow-lg p-4">
+      <div
+        className="mx-auto max-w-3xl rounded-md border border-foreground/10 bg-background/95 backdrop-blur shadow-lg p-4 tracking-normal"
+        style={{ letterSpacing: "normal" }}
+      >
         <div className="flex flex-col gap-3">
           <div className="text-sm text-foreground/90">
             We use essential cookies to make this site work. With your consent,
