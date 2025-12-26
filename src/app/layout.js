@@ -3,6 +3,7 @@ import { Fustat, Roboto_Mono } from "next/font/google";
 import { Suspense } from "react";
 import { GoogleAnalytics } from "../components/GoogleAnalytics";
 import CookieConsent from "../components/CookieConsent";
+import RouteTransitionOverlay from "../components/RouteTransitionOverlay";
 
 const fustat = Fustat({
   subsets: ["latin"],
@@ -37,6 +38,7 @@ export default function RootLayout({ children }) {
         )}
       </head>
       <body>
+        <RouteTransitionOverlay />
         {gaId && <GoogleAnalytics GA_MEASUREMENT_ID={gaId} />}
         {gaId && (
           <Suspense fallback={null}>

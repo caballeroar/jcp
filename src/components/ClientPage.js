@@ -1,16 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 
-import AnimatedText from "./AnimatedText";
-import BackgroundAnimation from "./BackgroundAnimation";
+import Environment from "./Environment";
 import Hero from "./Hero";
 
 // Import dictionaries statically
 import enDict from "../dictionaries/en.json";
 import nlDict from "../dictionaries/nl.json";
 import { Menu } from "./ui";
+import MethodologyCasesGroup from "./MethodologyCasesGroup";
 
 const dictionaries = {
   en: enDict,
@@ -46,7 +45,7 @@ export default function ClientPage({ initialLocale, initialDict }) {
       />
 
       <main
-        className={` text-center px-4 md:px-6 bg-background transition-opacity duration-300 ${
+        className={` text-center  bg-background transition-opacity duration-300 ${
           isLoading ? "opacity-70" : "opacity-100"
         }`}
       >
@@ -54,10 +53,10 @@ export default function ClientPage({ initialLocale, initialDict }) {
           <Hero />
         </div>
         <div className="min-h-screen">
-          <BackgroundAnimation locale={locale} />
+          <Environment locale={locale} />
         </div>
         <div>
-          <div className="min-h-screen flex items-center justify-center px-6 bg-white" />
+          <MethodologyCasesGroup locale={locale} />
         </div>
         <div>
           <Hero />

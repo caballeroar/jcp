@@ -7,7 +7,7 @@ export default function Hero() {
   return (
     <section className="min-h-screen flex items-center justify-center px-6 relative z-10">
       <div className="w-full text-center px-8 sm:px-12 md:px-24 lg:px-40 xl:px-64">
-        <h1 className="text-xl md:text-4xl font-semibold text-foreground leading-tight">
+        <h1 className="text-xl md:text-4xl font-semibold color:[var(--content-dark)] leading-tight ">
           Your <span className={accent}>sustainability</span> and{" "}
           <span className={accent}>justice</span> challenges deserve human
           centered insight and action.

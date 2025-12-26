@@ -32,6 +32,11 @@ function parseConsentCookie() {
 }
 
 export default function CookieConsent({ GA_MEASUREMENT_ID }) {
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setHydrated(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
   const [open, setOpen] = useState(() => {
     const saved = parseConsentCookie();
     return !saved;
@@ -84,10 +89,12 @@ export default function CookieConsent({ GA_MEASUREMENT_ID }) {
     setOpen(false);
   }
 
-  if (!open) return null;
+  if (!hydrated || !open) return null;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 px-4 pb-4">
+    <div
+      className="fixed inset-x-0 bottom-0 z-50 px-4 pb-4"
+    >
       <div
         className="mx-auto max-w-3xl rounded-md border border-foreground/10 bg-background/95 backdrop-blur shadow-lg p-4 tracking-normal"
         style={{ letterSpacing: "normal" }}

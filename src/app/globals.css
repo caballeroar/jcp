@@ -6,7 +6,7 @@
   --content_light: #fff;
   --content_brand: #df4d20;
   --bg_brand: #df4d20;
-  --gb_box_neutral: #fff;
+  --bg_box_neutral: #fff;
   --bg_box_accent: #fff;
   --grey: #5d5d5d;
   --surface: #1c0707;
@@ -21,7 +21,7 @@
     --content_light: #1c0707;
     --content_brand: #df4d20;
     --bg_brand: #aa330e;
-    --gb_box_neutral: #1c0707;
+    --bg_box_neutral: #1c0707;
     --bg_box_accent: #494949;
     --grey: #5d5d5d;
     --surface: #f0f0f0;
@@ -32,12 +32,12 @@
 
 html {
   font-family: var(--font-fustat), Arial, Helvetica, sans-serif;
-
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  letter-spacing: -1.5px;
+  letter-spacing: -0.5px;
 }
+
 /* Roboto Mono utility */
 .font-roboto-mono {
   font-family: var(--font-roboto-mono), ui-monospace, SFMono-Regular, Menlo,
@@ -50,6 +50,33 @@ body {
 
   line-height: 1.25;
 }
+
+/* Monument Extended (local) */
+/* Note: add the actual font files into public/fonts to enable these. */
+@font-face {
+  font-family: "Monument Extended";
+  src: url("/fonts/MonumentExtended-Regular.woff2") format("woff2"),
+    url("/fonts/MonumentExtended-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Monument Extended";
+  src: url("/fonts/MonumentExtended-Bold.woff2") format("woff2"),
+    url("/fonts/MonumentExtended-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Utility class for Monument Extended */
+.font-monument-extended {
+  font-family: "Monument Extended", var(--font-fustat), Arial, Helvetica,
+    sans-serif !important;
+}
+
+/* (removed) reveal-up animation and helpers: no current usage */
 
 @keyframes spin-slow {
   0% {
@@ -64,8 +91,9 @@ body {
   animation: spin-slow 120s linear infinite;
 }
 
-/* Comprehensive CSS variable classes */
-.bg-background {
+/* (removed) slide-in-right animation: no current usage */
+
+/* .bg-background {
   background-color: var(--background) !important;
 }
 
@@ -79,35 +107,15 @@ body {
 
 .text-background {
   color: var(--background) !important;
-}
+} */
 
-.text-muted {
-  color: #666666 !important;
-}
+/* (removed) text-muted, text-subtle, border-foreground, border-muted: unused */
 
-.text-subtle {
-  color: #999999 !important;
-}
+/* (removed) dark overrides for unused utility classes */
 
-.border-foreground {
-  border-color: var(--foreground) !important;
-}
+/* Text stroke utilities */
+.text-stroke-brand {
+  -webkit-text-stroke: 2px var(--content_brand);
 
-.border-muted {
-  border-color: #cccccc !important;
-}
-
-/* Dark mode specific overrides */
-@media (prefers-color-scheme: dark) {
-  .text-muted {
-    color: #aaaaaa !important;
-  }
-
-  .text-subtle {
-    color: #777777 !important;
-  }
-
-  .border-muted {
-    border-color: #444444 !important;
-  }
+  color: transparent;
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-export default function BackgroundAnimation({ locale }) {
+export default function Environment({ locale }) {
   const [progress, setProgress] = useState(0);
   const [scrollRatio, setScrollRatio] = useState(0);
   const [autoTime, setAutoTime] = useState(0);
@@ -156,6 +156,9 @@ export default function BackgroundAnimation({ locale }) {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   };
 
+  // Stabilize SSR/CSR numeric precision to avoid hydration diffs
+  const round3 = (n) => Math.round(n * 1000) / 1000;
+
   // Parallax + fade sequencing (inner → outer)
   // - depths: increasing vertical parallax per ring
   // - opacities: staggered fade-in per ring using delays
@@ -168,6 +171,9 @@ export default function BackgroundAnimation({ locale }) {
   const offsetsY = delays.map(
     (_, i) => BASE_Y + depths[i] * PARALLAX_PX * progress
   );
+  // Rounded versions to stabilize SSR/CSR transform attributes
+  const offsetsYRounded = offsetsY.map(round3);
+  const scalesRounded = scales.map(round3);
 
   // Autonomous motion config — subtle continuous in/out movement
   const AUTO_AMP = 40; // small amplitude so scroll remains dominant
@@ -176,14 +182,13 @@ export default function BackgroundAnimation({ locale }) {
   // Overlay fade timing
   // - Start fading when the next section is ~25% visible
   // - Fade out over the next 20% of a viewport
-  const FADE_START_RATIO = 1.25; // next section ~25% visible
-  const FADE_DURATION_RATIO = 0.2; // fade over the next 20% of viewport scroll
+  const FADE_START_RATIO = 1.4; // next section ~25% visible
+  const FADE_DURATION_RATIO = 0.3; // fade over the next 20% of viewport scroll
   const globalOpacity = mounted
     ? 1 - clamp01((scrollRatio - FADE_START_RATIO) / FADE_DURATION_RATIO)
     : 1;
   return (
     <div
-      suppressHydrationWarning
       className="pointer-events-none fixed inset-0"
       style={{
         opacity: globalOpacity,
@@ -201,11 +206,11 @@ export default function BackgroundAnimation({ locale }) {
           >
             {/* Solid center ring (smallest) — scales first, no rotation */}
             <g
-              transform={`translate(0 ${offsetsY[0]})`}
+              transform={`translate(0 ${offsetsYRounded[0]})`}
               opacity={ease(opacities[0])}
             >
               <g
-                transform={`translate(500 500) scale(${scales[0]}) translate(-500 -500)`}
+                transform={`translate(500 500) scale(${scalesRounded[0]}) translate(-500 -500)`}
               >
                 <circle
                   cx="500"
@@ -220,7 +225,7 @@ export default function BackgroundAnimation({ locale }) {
 
             {/* Dashed rings — staggered scaling + independent rotation speeds */}
             <g
-              transform={`translate(0 ${offsetsY[1]})`}
+              transform={`translate(0 ${offsetsYRounded[1]})`}
               opacity={ease(opacities[1])}
             >
               {/* Inner dashed ring rotation (faster) */}
@@ -234,7 +239,7 @@ export default function BackgroundAnimation({ locale }) {
                 }}
               >
                 <g
-                  transform={`translate(500 500) scale(${scales[1]}) translate(-500 -500)`}
+                  transform={`translate(500 500) scale(${scalesRounded[1]}) translate(-500 -500)`}
                 >
                   <circle
                     cx="500"
@@ -250,7 +255,7 @@ export default function BackgroundAnimation({ locale }) {
               </g>
             </g>
             <g
-              transform={`translate(0 ${offsetsY[2]})`}
+              transform={`translate(0 ${offsetsYRounded[2]})`}
               opacity={ease(opacities[2])}
             >
               {/* Middle dashed ring rotation (medium) */}
@@ -264,7 +269,7 @@ export default function BackgroundAnimation({ locale }) {
                 }}
               >
                 <g
-                  transform={`translate(500 500) scale(${scales[2]}) translate(-500 -500)`}
+                  transform={`translate(500 500) scale(${scalesRounded[2]}) translate(-500 -500)`}
                 >
                   <circle
                     cx="500"
@@ -280,7 +285,7 @@ export default function BackgroundAnimation({ locale }) {
               </g>
             </g>
             <g
-              transform={`translate(0 ${offsetsY[3]})`}
+              transform={`translate(0 ${offsetsYRounded[3]})`}
               opacity={ease(opacities[3])}
             >
               {/* Outer dashed ring rotation (slowest) */}
@@ -294,7 +299,7 @@ export default function BackgroundAnimation({ locale }) {
                 }}
               >
                 <g
-                  transform={`translate(500 500) scale(${scales[3]}) translate(-500 -500)`}
+                  transform={`translate(500 500) scale(${scalesRounded[3]}) translate(-500 -500)`}
                 >
                   <circle
                     cx="500"
@@ -312,7 +317,7 @@ export default function BackgroundAnimation({ locale }) {
 
             {/* Inner label — centered "people/mensen" (Roboto Mono) */}
             <g
-              transform={`translate(0 ${offsetsY[0]})`}
+              transform={`translate(0 ${offsetsYRounded[0]})`}
               opacity={ease(opacities[0])}
             >
               <text
@@ -371,8 +376,8 @@ export default function BackgroundAnimation({ locale }) {
                 return (
                   <text
                     key={i}
-                    x={x}
-                    y={y}
+                    x={round3(x)}
+                    y={round3(y)}
                     textAnchor="middle"
                     className="font-roboto-mono"
                     style={{
