@@ -10,6 +10,7 @@ import enDict from "../dictionaries/en.json";
 import nlDict from "../dictionaries/nl.json";
 import { Menu } from "./ui";
 import MethodologyCasesGroup from "./MethodologyCasesGroup";
+import Testimonials from "./Testimonials";
 
 const dictionaries = {
   en: enDict,
@@ -57,6 +58,9 @@ export default function ClientPage({ initialLocale, initialDict }) {
         </div>
         <div>
           <MethodologyCasesGroup locale={locale} />
+        </div>
+        <div>
+          <Testimonials />
         </div>
         <div>
           <Hero />

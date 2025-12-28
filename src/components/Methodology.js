@@ -36,7 +36,7 @@ export default function Methodology({ locale }) {
               />
             </div>
           </div>
-          <div className="relative z-10">
+          <div className="relative z-10 text-[var(--content_dark)]">
             <p className="text-xl lg:text-3xl md:text-2xl text-foreground leading-relaxed">
               Every challenge revolves around people.
             </p>

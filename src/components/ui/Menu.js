@@ -60,7 +60,7 @@ export default function Menu({
               <button
                 type="button"
                 onClick={toggleMenu}
-                className="inline-flex items-center gap-2 ] px-4 text-sm font-bold translate-y-0.5 cursor-pointer"
+                className="inline-flex items-center gap-2 ] px-4 text-sm font-bold translate-y-0.5 cursor-pointer text-[var(--content_dark)]"
                 aria-expanded={open}
                 aria-controls="site-menu-panel"
               >

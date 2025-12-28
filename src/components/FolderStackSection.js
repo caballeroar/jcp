@@ -83,11 +83,11 @@ export default function FolderStackSection({
   // Number of folders
   const count = 4;
   // Cluster near bottom while staying scattered around center
-  const initialBottoms = ["-80%", "-46%", "-14%", "4%"];
+  const initialBottoms = ["-80%", "-46%", "-14%", "2%"];
   // Scatter around horizontal center
   const leftPositions = ["4%", "20%", "8%", "40%"];
   // Vertical offsets in pixels for subtle separation
-  const yOffsetsPx = [-500, -240, 8, 10];
+  const yOffsetsPx = [-550, -240, 8, 10];
 
   // Easing helper: smooth start and end, total travel preserved
   const ease = (t) => (1 - Math.cos(t * Math.PI)) / 2;
@@ -115,7 +115,7 @@ export default function FolderStackSection({
                   0
                 );
                 // Exit distance in px so item fully leaves the 72vh frame
-                const exitPx = Math.max(frameHeight * 1, 0);
+                const exitPx = Math.max(frameHeight * 0.9, 0);
                 const eased = ease(local);
                 // Last item stays; others exit upward by exitPx
                 const targetExit = i === segments - 1 ? 0 : exitPx;
