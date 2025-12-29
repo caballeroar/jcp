@@ -22,8 +22,6 @@ export default function ClientPage() {
         <Services />
 
         <Contact />
-
-        <Hero />
       </main>
     </>
   );
