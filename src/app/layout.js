@@ -1,13 +1,15 @@
 "use client";
 
-import "./globals.css";
+import { useState, Suspense } from "react";
 import { Fustat, Roboto_Mono } from "next/font/google";
-import { Suspense } from "react";
 import { GoogleAnalytics } from "../components/GoogleAnalytics";
+import "./globals.css";
+
 import CookieConsent from "../components/CookieConsent";
 import RouteTransitionOverlay from "../components/RouteTransitionOverlay";
 import { Menu } from "@/components/ui";
-import { useState } from "react";
+import Footer from "../components/Footer";
+
 import enDict from "../dictionaries/en.json";
 import nlDict from "../dictionaries/nl.json";
 
@@ -80,6 +82,7 @@ export default function RootLayout({ children, initialLocale, initialDict }) {
           </Suspense>
         )}
         {children}
+        <Footer />
       </body>
     </html>
   );
