@@ -1,9 +1,15 @@
+"use client";
+
 import "./globals.css";
 import { Fustat, Roboto_Mono } from "next/font/google";
 import { Suspense } from "react";
 import { GoogleAnalytics } from "../components/GoogleAnalytics";
 import CookieConsent from "../components/CookieConsent";
 import RouteTransitionOverlay from "../components/RouteTransitionOverlay";
+import { Menu } from "@/components/ui";
+import { useState } from "react";
+import enDict from "../dictionaries/en.json";
+import nlDict from "../dictionaries/nl.json";
 
 const fustat = Fustat({
   subsets: ["latin"],
@@ -19,8 +25,31 @@ const robotoMono = Roboto_Mono({
   variable: "--font-roboto-mono",
 });
 
-export default function RootLayout({ children }) {
+const dictionaries = {
+  en: enDict,
+  nl: nlDict,
+};
+
+export default function RootLayout({ children, initialLocale, initialDict }) {
   const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+  const [locale, setLocale] = useState(initialLocale);
+  const [dict, setDict] = useState(initialDict);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const switchLanguage = (newLocale) => {
+    if (newLocale === locale) return;
+
+    setIsLoading(true);
+
+    setTimeout(() => {
+      setLocale(newLocale);
+      setDict(dictionaries[newLocale]);
+      setIsLoading(false);
+
+      // Update URL without page reload
+      window.history.pushState({}, "", `/${newLocale}/`);
+    }, 200);
+  };
 
   return (
     <html className={`${fustat.variable} ${robotoMono.variable}`}>
@@ -38,6 +67,11 @@ export default function RootLayout({ children }) {
         )}
       </head>
       <body>
+        <Menu
+          locale={locale}
+          onLocaleToggle={switchLanguage}
+          localeDisabled={isLoading}
+        />
         <RouteTransitionOverlay />
         {gaId && <GoogleAnalytics GA_MEASUREMENT_ID={gaId} />}
         {gaId && (
