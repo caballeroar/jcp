@@ -1,12 +1,10 @@
-<svg width="341" height="341" viewBox="0 0 341 341" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="341" height="341" viewBox="0 0 341 341" fill="none" xmlns="http://www.w3.org/2000/svg">
 <circle cx="170.5" cy="170.5" r="170" stroke="#1C0707" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="8 8"/>
-<g id="Repeat group 1_inner" data-figma-trr="r6u1.5-0f">
 <circle cx="170.5" cy="95.5" r="49" stroke="#1C0707" stroke-width="2"/>
-</g>
-<use xlink:href="#Repeat%20group%201_inner" transform="translate(232.908 -62.4074) rotate(60)"/>
-<use xlink:href="#Repeat%20group%201_inner" transform="translate(403.408 108.093) rotate(120)"/>
-<use xlink:href="#Repeat%20group%201_inner" transform="translate(341 341) rotate(-180)"/>
-<use xlink:href="#Repeat%20group%201_inner" transform="translate(108.093 403.408) rotate(-120)"/>
-<use xlink:href="#Repeat%20group%201_inner" transform="translate(-62.4074 232.908) rotate(-60)"/>
+<circle cx="235.453" cy="133" r="49" transform="rotate(60 235.453 133)" stroke="#1C0707" stroke-width="2"/>
+<circle cx="235.453" cy="208" r="49" transform="rotate(120 235.453 208)" stroke="#1C0707" stroke-width="2"/>
+<circle cx="170.5" cy="245.5" r="49" transform="rotate(-180 170.5 245.5)" stroke="#1C0707" stroke-width="2"/>
+<circle cx="105.547" cy="208" r="49" transform="rotate(-120 105.547 208)" stroke="#1C0707" stroke-width="2"/>
+<circle cx="105.547" cy="133" r="49" transform="rotate(-60 105.547 133)" stroke="#1C0707" stroke-width="2"/>
 <circle cx="170.5" cy="170.5" r="11" fill="#1C0707" stroke="#1C0707" stroke-width="2"/>
 </svg>
