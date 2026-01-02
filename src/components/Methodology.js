@@ -82,44 +82,82 @@ export default function Methodology({ locale }) {
       <div
         className={
           expanded
-            ? "relative w-full h-full flex justify-center items-center overflow-hidden"
-            : "relative  flex justify-center items-center h-[60vh] my-48 overflow-hidden "
+            ? "relative w-full h-full flex justify-center items-center overflow-hidden transition-all duration-500 ease-in-out"
+            : "relative flex justify-center items-center h-[60vh] my-48 overflow-hidden transition-all duration-500 ease-in-out"
         }
         style={{
           background: "var(--bg_gradient)",
           transformOrigin: "50% 50%",
+          transform: expanded ? "scale(1)" : "scale(0.95)",
+          transition: "transform 500ms ease-in-out",
         }}
       >
+        {/* Collapsed state background SVG: spins in place */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center"
+        >
+          <div
+            className={`absolute transition-transform transition-opacity duration-700 ease-in-out ${
+              expanded ? "opacity-0" : "opacity-100"
+            }`}
+            style={{
+              width: "160%",
+              height: "160%",
+              left: "2%",
+              bottom: "-30%",
+              transform: expanded
+                ? "translateY(100%) rotate(0deg)"
+                : "translateY(0) rotate(360deg)",
+            }}
+          >
+            <div className="w-full h-full animate-spin-slow">
+              <Image
+                src="/assets/symbol_icon.svg"
+                alt="Brand Symbol Icon as background decoration"
+                fill
+                style={{ objectFit: "contain", opacity: 0.5 }}
+                priority={false}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Expanded state background SVG: slides in from left while rotating per section */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center"
+        >
+          <div
+            className={`absolute transition-transform transition-opacity duration-700 ease-in-out ${
+              expanded ? "opacity-100" : "opacity-0"
+            }`}
+            style={{
+              width: "200%",
+              height: "200%",
+              right: "-18%",
+              bottom: "-50%",
+              transform: expanded
+                ? `translate(0, 0) rotate(${sectionIdx * 90}deg)`
+                : `translate(-120%, 0) rotate(${sectionIdx * 90 - 270}deg)`,
+            }}
+          >
+            <Image
+              src="/assets/symbol_icon.svg"
+              alt="Brand Symbol Icon as background decoration"
+              fill
+              style={{ objectFit: "contain", opacity: 0.5 }}
+              priority={false}
+            />
+          </div>
+        </div>
+
         {expanded ? (
           <div
             ref={containerRef}
             className="relative w-full h-full py-24 z-20 flex flex-col items-start gap-8 overflow-hidden"
           >
-            {/* Rotating background image */}
-            <div
-              aria-hidden
-              className="w-5/6 pointer-events-none absolute inset-0 z-0 flex items-center justify-center"
-            >
-              <div
-                className="absolute transition-transform duration-1000"
-                style={{
-                  width: "200%",
-                  height: "200%",
-                  right: "-20%",
-                  bottom: "-50%",
-                  transform: `rotate(${sectionIdx * 90}deg)`,
-                }}
-              >
-                <Image
-                  src="/assets/symbol_icon.svg"
-                  alt="Brand Symbol Icon as background decoration"
-                  fill
-                  style={{ objectFit: "contain", opacity: 0.5 }}
-                  priority={false}
-                />
-              </div>
-            </div>
-            <div className="w-5/6  mx-auto">
+            <div className="w-5/6 mx-auto">
               <Button
                 theme="brand"
                 icon={<ArrowLeft size={20} weight="bold" />}
@@ -220,28 +258,6 @@ export default function Methodology({ locale }) {
           </div>
         ) : (
           <div className="relative h-full p-40 flex flex-col justify-center items-center text-[var(--content_dark)] overflow-hidden">
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 z-0"
-            >
-              <div
-                className="absolute animate-spin-slow "
-                style={{
-                  width: "160%",
-                  height: "160%",
-                  left: "2%",
-                  bottom: "-30%",
-                }}
-              >
-                <Image
-                  src="/assets/symbol_icon.svg"
-                  alt="Brand Symbol Icon as background decoration"
-                  fill
-                  style={{ objectFit: "contain", opacity: 0.5 }}
-                  priority={false}
-                />
-              </div>
-            </div>
             <p className="text-xl text-center lg:text-3xl md:text-2xl text-foreground leading-relaxed">
               Every challenge revolves around people.
             </p>
