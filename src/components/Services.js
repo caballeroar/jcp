@@ -1,5 +1,6 @@
 "use client";
 import { useState, useCallback } from "react";
+import Image from "next/image";
 
 export default function Services({ items = DEFAULT_SERVICES }) {
   const services =
@@ -27,14 +28,14 @@ export default function Services({ items = DEFAULT_SERVICES }) {
 
   return (
     <section>
-      <div className="mb-10">
+      <div className="mb-10 text-center">
         <h2 className="text font-monument-extended text-stroke-brand text-5xl md:text-9xl ">
           SERVICES
         </h2>
       </div>
 
       <div
-        className="flex w-full px-6 pt-28 pb-12 gap-6 bg-[var(--bg_brand)] cursor-pointer"
+        className="flex w-full px-6 pt-28 pb-12 gap-4 bg-[var(--bg_brand)] cursor-pointer"
         onMouseLeave={() => setActiveCol(null)}
         onMouseMove={(e) => handlePoint(e.clientX, e.currentTarget)}
         onTouchStart={(e) => {
@@ -47,75 +48,109 @@ export default function Services({ items = DEFAULT_SERVICES }) {
         }}
       >
         <div
-          className="flex px-4 flex-col min-w-0 transition-all duration-700 ease-out isolate h-[45vh] md:h-[80vh] overflow-y-auto overscroll-y-auto no-scrollbar [--stackBase:120px] md:[--stackBase:164px] [--stackGap:16px]"
-          style={{ flexBasis: basis("left"), WebkitOverflowScrolling: "touch" }}
+          className="flex px-4 flex-col min-w-0 transition-all duration-700 ease-out gap-4"
+          style={{ flexBasis: basis("left") }}
           onClick={() => setActiveCol("left")}
         >
-          <article className="sticky mb-3 top-0 z-0 rounded-xl border-[2px] border-white text-white bg-[var(--bg_brand)] px-8 py-20 flex flex-col gap-5 ">
-            <h3 className="text-base md:text-6xl font-regular tracking-tighter">
-              Empathy & Insights
-            </h3>
-            <p className="text-sm md:text-lg text-white ">
-              We uncover what truly matters to the people at the heart of your
-              challenge.
-            </p>
-          </article>
-          {leftServices.map((s, i) => (
-            <article
-              key={`${s.title}-${i}`}
-              className={`sticky rounded-xl border-[2px] border-white bg-[var(--bg_brand)] px-20 py-40 mb-2 flex flex-col transition-all duration-300 ease-out hover:z-50 hover:scale-[1.02] ${
-                i === leftServices.length - 1 ? "mb-12" : ""
-              }`}
-              style={{
-                top: `calc(var(--stackBase) + ${i} * var(--stackGap))`,
-                zIndex: 10 + i,
-              }}
-            >
-              <h3 className="text-base md:text-3xl  text-white font-semibold">
-                {s.title}
+          <article className="mb-3 rounded-xl border-[2px] border-white text-white bg-[var(--bg_brand)] px-5 pt-20 pb-5 flex flex-col  items-center gap-12 ">
+            <div className="flex flex-col items-center gap-4">
+              <h3 className="text-base md:text-5xl font-regular text-center tracking-tighter">
+                Empathy & Insights
               </h3>
-              <p className="text-sm md:text-base text-white leading-relaxed">
-                {s.description}
+              <p className="text-sm md:text-lg text-center ">
+                We uncover what truly matters to the people at the heart of your
+                challenge.
               </p>
-            </article>
-          ))}
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 auto-rows-fr w-full">
+              {leftServices.map((s, i) => (
+                <article
+                  key={`${s.title}-${i}`}
+                  className="rounded-xl border-[2px] border-white bg-[var(--bg_brand)] gap-4 pt-10 pb-4 px-1 flex flex-col items-center h-full transition-all duration-300 ease-out hover:z-50 hover:scale-[1.02]"
+                >
+                  {activeCol !== "left" && (
+                    <div className="flex flex-col pt-20 pb-4 gap-20 justify-between items-center h-full">
+                      {s.svg && (
+                        <Image
+                          src={s.svg}
+                          alt={s.title}
+                          width={160}
+                          height={160}
+                          className="object-contain max-h-40 brightness-0 invert"
+                        />
+                      )}
+                      <h3 className="mt-4 text-sm md:text-base text-white font-medium text-center font-roboto-mono uppercase">
+                        {s.title}
+                      </h3>
+                    </div>
+                  )}
+                  {activeCol === "left" && (
+                    <div className="flex flex-col pt-20 pb-4 gap-20 justify-between h-full">
+                      <p className="text-sm md:text-2xl px-20 text-white text-center">
+                        {s.description}
+                      </p>
+                      <h3 className="text-base md:text-md text-white font-medium mb-2 text-center font-roboto-mono uppercase ">
+                        {s.title}
+                      </h3>
+                    </div>
+                  )}
+                </article>
+              ))}
+            </div>
+          </article>
         </div>
         <div
-          className="flex flex-col  px-4 min-w-0 transition-all duration-700 ease-out isolate h-[65vh] md:h-[80vh] overflow-y-auto overscroll-y-auto no-scrollbar [--stackBase:120px] md:[--stackBase:164px] [--stackGap:16px]"
-          style={{
-            flexBasis: basis("right"),
-            WebkitOverflowScrolling: "touch",
-          }}
+          className="flex flex-col px-4 min-w-0 transition-all duration-700 ease-out gap-4"
+          style={{ flexBasis: basis("right") }}
           onClick={() => setActiveCol("right")}
         >
-          <article className="sticky mb-3 top-0 z-0 rounded-xl border-[2px] border-white text-white bg-[var(--bg_brand)] px-8 py-20 flex flex-col gap-5 ">
-            <h3 className="text-base md:text-6xl font-regular tracking-tighter">
-              Empathy & Insights
-            </h3>
-            <p className="text-sm md:text-lg text-white ">
-              We uncover what truly matters to the people at the heart of your
-              challenge.
-            </p>
-          </article>
-          {rightServices.map((s, i) => (
-            <article
-              key={`${s.title}-${i}`}
-              className={`sticky rounded-xl border-[2px] border-white bg-[var(--bg_brand)] px-20 py-40 mb-2  flex flex-col transition-all duration-300 ease-out hover:z-50 hover:scale-[1.02] ${
-                i === rightServices.length - 1 ? "mb-12" : ""
-              }`}
-              style={{
-                top: `calc(var(--stackBase) + ${i} * var(--stackGap))`,
-                zIndex: 10 + i,
-              }}
-            >
-              <h3 className="text-base md:text-3xl  text-white font-semibold">
-                {s.title}
+          <article className="mb-3 rounded-xl border-[2px] border-white text-white bg-[var(--bg_brand)] px-5 pt-20 pb-5 flex flex-col  items-center gap-12 ">
+            <div className="flex flex-col items-center gap-4">
+              <h3 className="text-base md:text-5xl font-regular tracking-tighter">
+                Strategy & Design
               </h3>
-              <p className="text-sm md:text-base text-white leading-relaxed">
-                {s.description}
+              <p className="text-sm md:text-lg text-center ">
+                We uncover what truly matters to the people at the heart of your
+                challenge.
               </p>
-            </article>
-          ))}
+            </div>
+            <div className="grid grid-cols-2 gap-4 auto-rows-fr w-full">
+              {rightServices.map((s, i) => (
+                <article
+                  key={`${s.title}-${i}`}
+                  className="rounded-xl border-[2px] border-white bg-[var(--bg_brand)] gap-4 pt-10 pb-4 px-1 flex flex-col items-center h-full transition-all duration-300 ease-out hover:z-50 hover:scale-[1.02]"
+                >
+                  {activeCol !== "right" && (
+                    <div className="flex flex-col pt-20 pb-4 gap-20 justify-between items-center h-full">
+                      {s.svg && (
+                        <Image
+                          src={s.svg}
+                          alt={s.title}
+                          width={160}
+                          height={160}
+                          className="object-contain max-h-40 brightness-0 invert"
+                        />
+                      )}
+                      <h3 className="mt-4 text-sm md:text-base text-white font-medium text-center font-roboto-mono uppercase">
+                        {s.title}
+                      </h3>
+                    </div>
+                  )}
+                  {activeCol === "right" && (
+                    <div className="flex flex-col pt-20 pb-4 gap-20 h-full">
+                      <p className="text-sm md:text-2xl px-20 text-white text-center">
+                        {s.description}
+                      </p>
+                      <h3 className="text-base md:text-md text-white font-medium mb-2 text-center font-roboto-mono uppercase ">
+                        {s.title}
+                      </h3>
+                    </div>
+                  )}
+                </article>
+              ))}
+            </div>
+          </article>
         </div>
       </div>
     </section>
@@ -124,32 +159,49 @@ export default function Services({ items = DEFAULT_SERVICES }) {
 
 const DEFAULT_SERVICES = [
   {
-    title: "Discovery & Alignment",
-    description:
-      "Facilitate workshops to uncover goals, align stakeholders, and define success criteria.",
+    svg: "/assets/stakeholder_mapping.svg",
+    title: "Stakeholder Mapping",
+    description: "Facilitate workshops to uncover goals, align stakeholders.",
   },
   {
-    title: "Strategy & Roadmapping",
+    svg: "/assets/participatory_research.svg",
+    title: "Participatory Research",
     description:
       "Translate insights into a practical plan with milestones, owners, and measurable outcomes.",
   },
   {
-    title: "Enablement & Delivery",
+    svg: "/assets/persona_design.svg",
+    title: "Persona Journey Design",
     description:
       "Equip teams with tools and coaching to drive change and deliver results consistently.",
   },
   {
-    title: "Measurement & Iteration",
+    svg: "/assets/empathy_workshop.svg",
+    title: "Empathy Workshops",
     description:
       "Set up feedback loops and reporting to learn, adapt, and improve over time.",
   },
   {
-    title: "Communication & Adoption",
+    svg: "/assets/problem_analysis.svg",
+    title: "Problem / Opportunity Analysis",
     description:
       "Create clear narratives and materials to build trust and drive adoption across the org.",
   },
   {
-    title: "Sustainability Integration",
+    svg: "/assets/cocreation_ideation.svg",
+    title: "Co-creation & Ideation",
+    description:
+      "Embed sustainability practices into operations with realistic targets and governance.",
+  },
+  {
+    svg: "/assets/strategy_design.svg",
+    title: "Strategy Design",
+    description:
+      "Create clear narratives and materials to build trust and drive adoption across the org.",
+  },
+  {
+    svg: "/assets/living_labs.svg",
+    title: "Living Labs & Pilot Projects",
     description:
       "Embed sustainability practices into operations with realistic targets and governance.",
   },
