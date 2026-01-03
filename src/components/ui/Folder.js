@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Button from "./Button";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -13,6 +14,7 @@ export default function FolderIcon({
   buttonLabel = "View",
   href,
 }) {
+  const [showOverlay, setShowOverlay] = useState(false);
   const pathname = usePathname();
   const firstSeg = pathname?.split("/").filter(Boolean)[0];
   const supportedLocales = ["en", "nl"]; // extend if more locales are added
@@ -24,7 +26,10 @@ export default function FolderIcon({
     href || (effectiveLocale ? `/${effectiveLocale}/cases` : "/cases");
   return (
     <div
-      className="relative w-full flex flex-col justify-end items-center p-4"
+      className="relative w-full flex flex-col justify-end items-center pb-1 md:pb-4"
+      onMouseEnter={() => setShowOverlay(true)}
+      onMouseLeave={() => setShowOverlay(false)}
+      onClick={() => setShowOverlay((v) => !v)}
       style={{
         aspectRatio: "180 / 120",
         color: "var(--content_dark)",
@@ -46,45 +51,56 @@ export default function FolderIcon({
           }}
         />
       </svg>
-      <div className="absolute overflow-hidden flex flex-col gap-3 z-10 px-4 py-3">
+      <div className="absolute overflow-hidden flex flex-col gap-3 z-10  px-2 md:px-4 py-2 md:py-4">
         <div className="flex justify-between items-end">
-          <div className="max-w-[50%]">
-            <h3 className="text-xl md:text-2xl text-left font-semibold color:[var(--content-dark)]">
+          <div className="max-w-[90%]">
+            <h3 className="text-md md:text-2xl text-left font-semibold color:[var(--content-dark)]">
               {title || "Title placeholder"}
             </h3>
-            <p className="mt-1 text-lg md:text-xl text-left leading-snug color:[var(--content-dark)] line-clamp-3">
+            <p className="mt-1 text-sm !leading-none md:text-xl text-left leading-snug color:[var(--content-dark)] line-clamp-3">
               {description ||
                 "Description placeholder text that briefly summarizes the case. Keep it concise and informative."}
             </p>
           </div>
-          <Button
-            href={targetHref}
-            iconPosition="right"
-            theme="light"
-            icon={<ArrowUpRight size={20} weight="bold" />}
-          >
-            {buttonLabel}
-          </Button>
         </div>
-        {imageSrc ? (
-          <Image
-            src={imageSrc}
-            alt={title || "Case thumbnail"}
-            width={600}
-            height={200}
-            unoptimized
-            className="w-full h-[200px] object-cover rounded-lg"
-          />
-        ) : (
-          <Image
-            src="https://placehold.co/600x200?text=Case+Thumbnail"
-            alt="Case thumbnail placeholder"
-            width={600}
-            height={200}
-            unoptimized
-            className="w-full h-[200px] object-cover rounded-lg"
-          />
-        )}
+        <div className="relative w-full h-[80px] md:h-[200px] group cursor-pointer">
+          {imageSrc ? (
+            <Image
+              src={imageSrc}
+              alt={title || "Case thumbnail"}
+              width={600}
+              height={200}
+              unoptimized
+              className="w-full h-full object-cover rounded-lg"
+            />
+          ) : (
+            <Image
+              src="https://placehold.co/600x200?text=Case+Thumbnail"
+              alt="Case thumbnail placeholder"
+              width={600}
+              height={200}
+              unoptimized
+              className="w-full h-full object-cover rounded-lg"
+            />
+          )}
+
+          <div
+            className={`absolute inset-0 flex items-center justify-center bg-black/40 transition-opacity duration-200 ease-out ${
+              showOverlay ? "opacity-100" : "opacity-0 pointer-events-none"
+            }`}
+          >
+            <div onClick={(e) => e.stopPropagation()}>
+              <Button
+                href={targetHref}
+                iconPosition="right"
+                theme="light"
+                icon={<ArrowUpRight size={20} weight="bold" />}
+              >
+                {buttonLabel}
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

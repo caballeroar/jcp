@@ -55,16 +55,14 @@ body {
 /* Note: add the actual font files into public/fonts to enable these. */
 @font-face {
   font-family: "Monument Extended";
-  src: url("/fonts/MonumentExtended-Regular.woff2") format("woff2"),
-    url("/fonts/MonumentExtended-Regular.woff") format("woff");
+  src: url("/fonts/MonumentExtended-Regular.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Monument Extended";
-  src: url("/fonts/MonumentExtended-Bold.woff2") format("woff2"),
-    url("/fonts/MonumentExtended-Bold.woff") format("woff");
+  src: url("/fonts/MonumentExtended-Ultrabold.otf") format("opentype");
   font-weight: 700;
   font-style: normal;
   font-display: swap;

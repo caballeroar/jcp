@@ -123,14 +123,14 @@ export default function FolderStackSection({
                 const travelPx = -(eased * targetExit) + yOffsetsPx[i];
                 // Consistent item width inside the frame
                 //LOOK HERE the width is in percentage to be responsive - be very because depending on the screen size the folder might be too small
-                const widthPct = "50%";
+                // const widthPct = "50%";
 
                 return (
                   <div
                     key={i}
-                    className="absolute "
+                    className="absolute w-full md:w-[50%]"
                     style={{
-                      width: widthPct,
+                      //   width: widthPct,
                       bottom: initialBottoms[i],
                       left: leftPositions[i],
                       zIndex: z,

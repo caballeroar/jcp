@@ -7,10 +7,7 @@ import FolderStackSection from "./FolderStackSection";
 
 export default function Cases({
   locale,
-  title = "CASES",
-
   imageSrc = "/assets/logo_icon.svg",
-  ctaLabel = "Explore Cases",
 
   externalBg = false,
 }) {
@@ -80,17 +77,17 @@ export default function Cases({
           <div className="absolute inset-0 bg-background/40 z-10" />
         </>
       )}
-      <div className="relative z-20 mx-auto max-w-5xl px-6 py-16 flex flex-col gap-6">
-        <h2 className="text font-monument-extended text-stroke-brand text-5xl md:text-9xl tracking-tight">
-          {title}
+      <div className="relative z-20 mx-auto max-w-5xl overflow-hidden px-6 py-16 flex flex-col items-center gap-6">
+        <h2 className="text font-monument-extended text-stroke-brand text-8xl md:text-9xl tracking-tight">
+          CASES
         </h2>
-        <p className="text-xl md:text-3xl text-left text-[var(--content_dark)] max-w-md mt-40">
+        <p className="text-xl md:text-3xl text-left text-[var(--content_dark)] max-w-md mt-20 md:mt-40">
           Explore our cases to discover what{" "}
           <span className={accent}>human centered</span> impact looks like in
           practice.
         </p>
       </div>
-      <div className="pt-16">
+      <div className="md:pt-16">
         <FolderStackSection locale={effectiveLocale} />
       </div>
     </section>

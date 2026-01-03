@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Switch } from ".";
 import LogoFull from "../../../public/assets/logo_full.svg";
+import LogoIcon from "../../../public/assets/logo_icon.svg";
 
 export default function Menu({
   items = [
@@ -20,6 +21,7 @@ export default function Menu({
 }) {
   const [open, setOpen] = useState(false);
   const overlayRef = useRef(null);
+  const [onBrandBackground, setOnBrandBackground] = useState(false);
 
   useEffect(() => {
     const onKey = (e) => {
@@ -29,53 +31,126 @@ export default function Menu({
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const target = document.getElementById("services-brand-area");
+    const header = document.getElementById("site-header");
+    if (!target || !header) return;
+
+    const updateState = () => {
+      const headerRect = header.getBoundingClientRect();
+      const headerHeight = headerRect.height || 0;
+      const targetRect = target.getBoundingClientRect();
+
+      // Header occupies viewport band [0, headerHeight].
+      // Consider it "over" the brand area when these bands overlap.
+      const isOverBrand =
+        targetRect.top < headerHeight && targetRect.bottom > 0;
+
+      setOnBrandBackground(isOverBrand);
+    };
+
+    updateState();
+
+    window.addEventListener("scroll", updateState, { passive: true });
+    window.addEventListener("resize", updateState);
+
+    return () => {
+      window.removeEventListener("scroll", updateState);
+      window.removeEventListener("resize", updateState);
+    };
+  }, []);
+
   const toggleMenu = () => setOpen((v) => !v);
 
   return (
     <div className={`w-full ${className}`}>
       {showHeader && (
-        <header
-          className="fixed top-0 left-0 right-0 z-50 w-full border-b"
-          style={{
-            borderColor: "color-mix(in srgb, var(--surface) 25%, transparent)",
-            background: "color-mix(in srgb, var(--background) 5%, transparent)",
-            backdropFilter: "blur(4px)",
-            WebkitBackdropFilter: "blur(4px)",
-          }}
-        >
-          <div
-            className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between tracking-normal"
-            style={{ letterSpacing: "normal" }}
+        <>
+          {/* Desktop / tablet top header */}
+          <header
+            id="site-header"
+            className="hidden md:block fixed top-0 left-0 right-0 z-50 w-full border-b"
+            style={{
+              borderColor:
+                "color-mix(in srgb, var(--surface) 25%, transparent)",
+              background:
+                "color-mix(in srgb, var(--background) 5%, transparent)",
+              backdropFilter: "blur(4px)",
+              WebkitBackdropFilter: "blur(4px)",
+            }}
           >
-            <div className="flex items-center gap-3">
-              <Image
-                src={LogoFull}
-                alt="Just Common People"
-                // width={160}
-                height={36}
-                priority
-              />
+            <div
+              className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between tracking-normal"
+              style={{ letterSpacing: "normal" }}
+            >
+              <div className="flex items-center gap-3">
+                <Image
+                  src={LogoFull}
+                  alt="Just Common People"
+                  // width={160}
+                  height={36}
+                  className={onBrandBackground ? "brightness-0 invert" : ""}
+                  priority
+                />
+              </div>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={toggleMenu}
+                  className="inline-flex items-center gap-2 px-4 text-sm font-bold translate-y-0.5 cursor-pointer text-[var(--content_dark)]"
+                  aria-expanded={open}
+                  aria-controls="site-menu-panel"
+                >
+                  MENU
+                </button>
+                {onLocaleToggle && (
+                  <Switch
+                    checked={locale === "nl"}
+                    disabled={localeDisabled}
+                    onChange={(v) => onLocaleToggle(v ? "nl" : "en")}
+                  />
+                )}
+              </div>
             </div>
-            <div className="flex items-center gap-3">
+          </header>
+
+          {/* Mobile bottom menu bar */}
+          <header
+            className="md:hidden fixed bottom-0 left-0 right-0 z-50 w-full border-t"
+            style={{
+              borderColor:
+                "color-mix(in srgb, var(--surface) 25%, transparent)",
+              background:
+                "color-mix(in srgb, var(--background) 10%, transparent)",
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
+            }}
+          >
+            <div className="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between">
               <button
                 type="button"
                 onClick={toggleMenu}
-                className="inline-flex items-center gap-2 ] px-4 text-sm font-bold translate-y-0.5 cursor-pointer text-[var(--content_dark)]"
+                className="flex items-center justify-between w-full gap-3 text-[var(--content_dark)]"
                 aria-expanded={open}
                 aria-controls="site-menu-panel"
               >
-                MENU
+                <span className="flex items-center gap-2">
+                  <Image
+                    src={LogoIcon}
+                    alt="Just Common People"
+                    height={28}
+                    priority
+                  />
+                </span>
+                <span className="text-sm font-bold tracking-wide uppercase">
+                  MENU
+                </span>
               </button>
-              {onLocaleToggle && (
-                <Switch
-                  checked={locale === "nl"}
-                  disabled={localeDisabled}
-                  onChange={(v) => onLocaleToggle(v ? "nl" : "en")}
-                />
-              )}
             </div>
-          </div>
-        </header>
+          </header>
+        </>
       )}
 
       {/* Slide-out panel */}

@@ -27,7 +27,7 @@ export default function Services({ items = DEFAULT_SERVICES }) {
   }, []);
 
   return (
-    <section>
+    <section id="services-section">
       <div className="mb-10 text-center">
         <h2 className="text font-monument-extended text-stroke-brand text-5xl md:text-9xl ">
           SERVICES
@@ -35,6 +35,7 @@ export default function Services({ items = DEFAULT_SERVICES }) {
       </div>
 
       <div
+        id="services-brand-area"
         className="flex w-full px-6 pt-28 pb-12 gap-4 bg-[var(--bg_brand)] cursor-pointer"
         onMouseLeave={() => setActiveCol(null)}
         onMouseMove={(e) => handlePoint(e.clientX, e.currentTarget)}
@@ -67,7 +68,7 @@ export default function Services({ items = DEFAULT_SERVICES }) {
               {leftServices.map((s, i) => (
                 <article
                   key={`${s.title}-${i}`}
-                  className="rounded-xl border-[2px] border-white bg-[var(--bg_brand)] gap-4 pt-10 pb-4 px-1 flex flex-col items-center h-full transition-all duration-300 ease-out hover:z-50 hover:scale-[1.02]"
+                  className="rounded-xl border-[2px] border-white bg-[var(--bg_brand)] gap-4 pt-10 pb-4 px-1 flex flex-col items-center h-full transition-all duration-300 ease-out hover:z-50 hover:bg-white/8 hover:scale-[1.02]"
                 >
                   {activeCol !== "left" && (
                     <div className="flex flex-col pt-20 pb-4 gap-20 justify-between items-center h-full">
@@ -91,7 +92,7 @@ export default function Services({ items = DEFAULT_SERVICES }) {
                         {s.description}
                       </p>
                       <h3 className="text-base md:text-md text-white font-medium mb-2 text-center font-roboto-mono uppercase ">
-                        {s.title}
+                        -- {s.title} --
                       </h3>
                     </div>
                   )}
@@ -119,7 +120,7 @@ export default function Services({ items = DEFAULT_SERVICES }) {
               {rightServices.map((s, i) => (
                 <article
                   key={`${s.title}-${i}`}
-                  className="rounded-xl border-[2px] border-white bg-[var(--bg_brand)] gap-4 pt-10 pb-4 px-1 flex flex-col items-center h-full transition-all duration-300 ease-out hover:z-50 hover:scale-[1.02]"
+                  className="rounded-xl border-[2px] border-white bg-[var(--bg_brand)] gap-4 pt-10 pb-4 px-1 flex flex-col items-center h-full transition-all duration-300 ease-out hover:bg-white/8 hover:z-50 hover:scale-[1.02]"
                 >
                   {activeCol !== "right" && (
                     <div className="flex flex-col pt-20 pb-4 gap-20 justify-between items-center h-full">
@@ -143,7 +144,7 @@ export default function Services({ items = DEFAULT_SERVICES }) {
                         {s.description}
                       </p>
                       <h3 className="text-base md:text-md text-white font-medium mb-2 text-center font-roboto-mono uppercase ">
-                        {s.title}
+                        -- {s.title} --
                       </h3>
                     </div>
                   )}

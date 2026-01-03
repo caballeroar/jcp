@@ -189,7 +189,7 @@ export default function Environment({ locale }) {
     : 1;
   return (
     <div
-      className="pointer-events-none fixed inset-0"
+      className="pointer-events-none fixed inset-0 flex flex-col items-center justify-center sm:top-[10%]"
       style={{
         opacity: globalOpacity,
         background: "var(--background)",

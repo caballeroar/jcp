@@ -74,7 +74,7 @@ export default function Methodology({ locale }) {
       className={
         expanded
           ? "fixed inset-0 z-50 w-screen h-screen flex items-center justify-center px-0 py-0 overflow-hidden"
-          : "w-4/6 m-auto flex items-center justify-center"
+          : "w-full sm:w-5/6 md:w-4/6 m-auto flex items-center justify-center"
       }
       aria-modal={expanded ? "true" : undefined}
       role={expanded ? "dialog" : undefined}
@@ -155,7 +155,7 @@ export default function Methodology({ locale }) {
         {expanded ? (
           <div
             ref={containerRef}
-            className="relative w-full h-full py-24 z-20 flex flex-col items-start gap-8 overflow-hidden"
+            className="relative w-full h-full py-8 md:py-24 z-20 flex flex-col items-start gap-8 overflow-hidden"
           >
             <div className="w-5/6 mx-auto">
               <Button
@@ -178,8 +178,8 @@ export default function Methodology({ locale }) {
                 switch (i) {
                   case 0:
                     return (
-                      <section className="flex justify-end pr-48">
-                        <div className="w-3/6">
+                      <section className="flex md:justify-end mt-20 lg:pr-48">
+                        <div className=" w-full md:w-4/6 lg:w-3/6 ">
                           <h2 className="text-6xl font-bold mb-2 text-[var(--content_brand)] mb-12">
                             Discovery.
                           </h2>
@@ -193,8 +193,8 @@ export default function Methodology({ locale }) {
                     );
                   case 1:
                     return (
-                      <section className="flex justify-end pr-48">
-                        <div className="w-3/6">
+                      <section className="flex md:justify-end mt-20 lg:pr-48">
+                        <div className=" w-full md:w-4/6 lg:w-3/6 ">
                           <h2 className="text-6xl font-bold mb-2 text-[var(--content_brand)] mb-12">
                             Listen.
                           </h2>
@@ -208,8 +208,8 @@ export default function Methodology({ locale }) {
                     );
                   case 2:
                     return (
-                      <section className="flex justify-end pr-48">
-                        <div className="w-3/6">
+                      <section className="flex md:justify-end mt-20 lg:pr-48">
+                        <div className=" w-full md:w-4/6 lg:w-3/6 ">
                           <h2 className="text-6xl font-bold mb-2 text-[var(--content_brand)] mb-12">
                             Translate.
                           </h2>
@@ -224,8 +224,8 @@ export default function Methodology({ locale }) {
                   case 3:
                   default:
                     return (
-                      <section className="flex justify-end pr-48">
-                        <div className="w-3/6">
+                      <section className="flex md:justify-end mt-20 lg:pr-48">
+                        <div className=" w-full md:w-4/6 lg:w-3/6 ">
                           <h2 className="text-6xl font-bold mb-2 text-[var(--content_brand)] mb-12">
                             Experience.
                           </h2>
@@ -257,7 +257,7 @@ export default function Methodology({ locale }) {
             </div>
           </div>
         ) : (
-          <div className="relative h-full p-40 flex flex-col justify-center items-center text-[var(--content_dark)] overflow-hidden">
+          <div className="relative h-full p-4 sm:p-20 md:p-16 lg:p-28 flex flex-col justify-center items-center text-[var(--content_dark)] overflow-hidden">
             <p className="text-xl text-center lg:text-3xl md:text-2xl text-foreground leading-relaxed">
               Every challenge revolves around people.
             </p>
