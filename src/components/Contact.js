@@ -5,7 +5,7 @@ import { ArrowRight } from "phosphor-react";
 
 export default function Contact() {
   return (
-    <section className="relative flex items-center w-4/6 h-[800px] py-24 mx-auto my-40 px-6 overflow-hidden">
+    <section className="relative flex items-center w-full md:w-4/6 h-[600px] md:h-[800px] py-24 mx-auto sm:py-20 md:my-40 px-6 overflow-hidden">
       {/* Background SVG */}
       <div className="absolute inset-0 -z-10" style={{ pointerEvents: "none" }}>
         <svg

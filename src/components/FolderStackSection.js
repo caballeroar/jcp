@@ -22,6 +22,8 @@ export default function FolderStackSection({
   // Measured frame height to compute exit distance in pixels
   const frameRef = useRef(null);
   const [frameHeight, setFrameHeight] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const [viewportWidth, setViewportWidth] = useState(0);
 
   // Bind scroll/resize to recompute progress inside the sticky range
   useEffect(() => {
@@ -79,15 +81,78 @@ export default function FolderStackSection({
     return () => window.removeEventListener("resize", measure);
   }, []);
 
+  // Track viewport size to switch positioning arrays for mobile
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const update = () => {
+      const width = window.innerWidth;
+      setViewportWidth(width);
+      setIsMobile(width < 768); // match Tailwind md breakpoint
+    };
+
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
   // Visual tuning
   // Number of folders
   const count = 4;
-  // Cluster near bottom while staying scattered around center
-  const initialBottoms = ["-80%", "-46%", "-14%", "2%"];
-  // Scatter around horizontal center
-  const leftPositions = ["4%", "20%", "8%", "40%"];
+  // Desktop positions: cluster near bottom while staying scattered around center
+  const desktopInitialBottoms = ["-56%", "-53%", "-46%", "2%"];
+  const desktopLeftPositions = [4, 20, 8, 40];
+
+  // Mobile positions: stack more tightly behind each other
+  const mobileInitialBottoms = ["-36%", "-38%", "-40%", "2%"];
+  const mobileLeftPositions = [0, 0, 0, 0];
+
+  const initialBottoms = isMobile
+    ? mobileInitialBottoms
+    : desktopInitialBottoms;
   // Vertical offsets in pixels for subtle separation
-  const yOffsetsPx = [-550, -240, 8, 10];
+  //   const yOffsetsPx = [-550, -240, 8, 10];
+  const yOffsetsPx = [-340, -340, -340, 10];
+
+  // Responsive folder width based on viewport width
+  //  - At 375px => 100% of container
+  //  - At 1440px => 50% of container
+  //  - Linearly interpolated in between, clamped to [50%, 100%]
+  const minViewport = 375;
+  const maxViewport = 1440;
+  const minFraction = 0.5; // 50%
+  const maxFraction = 1; // 100%
+  const vw = viewportWidth || minViewport;
+  const clampedVw = Math.min(Math.max(vw, minViewport), maxViewport);
+  const t = (clampedVw - minViewport) / (maxViewport - minViewport);
+  const widthFraction = maxFraction - t * (maxFraction - minFraction);
+  const folderWidth = `${widthFraction * 100}%`;
+
+  // Responsive horizontal positioning:
+  // - For very small screens (<= sm ~640px), keep folders centered
+  //   behind each other.
+  // - As the screen widens towards xl (1280px), gradually interpolate
+  //   from centered to the desktopLeftPositions values.
+  const centerLeftPercent = (1 - widthFraction) * 50; // centers the folder
+
+  const computeLeftPercent = (index) => {
+    const vwCurrent = viewportWidth || minViewport;
+
+    // Small screens: keep fully centered
+    if (vwCurrent <= 640) {
+      return centerLeftPercent;
+    }
+
+    // Large screens: reach full desktop positions
+    if (vwCurrent >= 1280) {
+      return desktopLeftPositions[index] ?? centerLeftPercent;
+    }
+
+    // In between 640 and 1280: interpolate
+    const tPos = (vwCurrent - 640) / (1280 - 640);
+    const desktopTarget = desktopLeftPositions[index] ?? centerLeftPercent;
+    return centerLeftPercent + tPos * (desktopTarget - centerLeftPercent);
+  };
 
   // Easing helper: smooth start and end, total travel preserved
   const ease = (t) => (1 - Math.cos(t * Math.PI)) / 2;
@@ -95,16 +160,16 @@ export default function FolderStackSection({
   return (
     <section ref={sectionRef} className="relative" style={{ height: "160vh" }}>
       <div ref={stickyRef} className="sticky top-0 h-screen">
-        <div className="relative w-full h-full flex items-center justify-center ">
+        <div className="relative w-full  h-[80%] md:h-full flex items-center justify-center ">
           <div
             ref={frameRef}
-            className="relative w-full h-[72vh] overflow-hidden "
+            className="relative w-full h-[80vh] overflow-hidden 2xl:px-40 "
             style={{ borderBottom: "2px solid var(--content_dark)" }}
           >
             <div className="sticky top-0 w-full h-full">
               {Array.from({ length: count }).map((_, i) => {
                 // Layer stacking order (front to back)
-                const z = 10 - i;
+                const z = 5 - i;
                 // Divide total progress into equal per-folder segments
                 const segments = count;
                 const segLen = 1 / segments;
@@ -128,11 +193,11 @@ export default function FolderStackSection({
                 return (
                   <div
                     key={i}
-                    className="absolute w-full md:w-[50%]"
+                    className="absolute"
                     style={{
-                      //   width: widthPct,
+                      width: folderWidth,
                       bottom: initialBottoms[i],
-                      left: leftPositions[i],
+                      left: `${computeLeftPercent(i)}%`,
                       zIndex: z,
                       transform: `translateY(${travelPx}px)`,
                     }}
@@ -144,7 +209,7 @@ export default function FolderStackSection({
             </div>
           </div>
         </div>
-        <div className="mt-[-6%] mx-auto w-fit">
+        <div className=" mt-12 md:mt-[-6%] xl:mt-[-4%] mx-auto w-fit">
           <Button href={targetHref} icon={<ArrowRight />}>
             {ctaLabel}
           </Button>

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
 export default function Services({ items = DEFAULT_SERVICES }) {
@@ -9,14 +9,33 @@ export default function Services({ items = DEFAULT_SERVICES }) {
   const leftServices = services.slice(0, mid);
   const rightServices = services.slice(mid);
   const [activeCol, setActiveCol] = useState(null); // 'left' | 'right' | null
+  const [activeLeftIndex, setActiveLeftIndex] = useState(null);
+  const [activeRightIndex, setActiveRightIndex] = useState(null);
+  const [viewportWidth, setViewportWidth] = useState(0);
+
+  const isXL = viewportWidth >= 1280; // Tailwind xl breakpoint
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const update = () => {
+      setViewportWidth(window.innerWidth);
+    };
+
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
 
   const basis = (col) => {
-    if (!activeCol) return "50%";
+    // Only resize columns on large screens; keep equal on smaller
+    if (!isXL || !activeCol) return "50%";
     return activeCol === col ? "70%" : "30%"; // 7/10 vs 3/10
   };
 
-  const handlePoint = useCallback((clientX, target) => {
-    if (!target) return;
+  const handlePoint = (clientX, target) => {
+    // Only use hover-based column resizing on xl and up
+    if (!isXL || !target) return;
     const rect = target.getBoundingClientRect();
     const x = clientX - rect.left;
     const center = rect.width * 0.5;
@@ -24,19 +43,19 @@ export default function Services({ items = DEFAULT_SERVICES }) {
     if (x < center - threshold) setActiveCol("left");
     else if (x > center + threshold) setActiveCol("right");
     else setActiveCol(null);
-  }, []);
+  };
 
   return (
     <section id="services-section">
       <div className="mb-10 text-center">
-        <h2 className="text font-monument-extended text-stroke-brand text-5xl md:text-9xl ">
+        <h2 className="text font-monument-extended text-stroke-brand text-5xl md:text-9xl overflow-hidden ">
           SERVICES
         </h2>
       </div>
 
       <div
         id="services-brand-area"
-        className="flex w-full px-6 pt-28 pb-12 gap-4 bg-[var(--bg_brand)] cursor-pointer"
+        className="flex flex-col xl:flex-row w-full px-2 xl:px-6 pt-28 pb-12 gap-4 bg-[var(--bg_brand)] cursor-pointer"
         onMouseLeave={() => setActiveCol(null)}
         onMouseMove={(e) => handlePoint(e.clientX, e.currentTarget)}
         onTouchStart={(e) => {
@@ -51,11 +70,10 @@ export default function Services({ items = DEFAULT_SERVICES }) {
         <div
           className="flex px-4 flex-col min-w-0 transition-all duration-700 ease-out gap-4"
           style={{ flexBasis: basis("left") }}
-          onClick={() => setActiveCol("left")}
         >
           <article className="mb-3 rounded-xl border-[2px] border-white text-white bg-[var(--bg_brand)] px-5 pt-20 pb-5 flex flex-col  items-center gap-12 ">
             <div className="flex flex-col items-center gap-4">
-              <h3 className="text-base md:text-5xl font-regular text-center tracking-tighter">
+              <h3 className="text-3xl md:text-5xl font-medium text-center tracking-tighter">
                 Empathy & Insights
               </h3>
               <p className="text-sm md:text-lg text-center ">
@@ -64,13 +82,16 @@ export default function Services({ items = DEFAULT_SERVICES }) {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 auto-rows-fr w-full">
+            <div className="grid grid-cols-full lg:grid-cols-2 gap-4 auto-rows-fr w-full">
               {leftServices.map((s, i) => (
                 <article
                   key={`${s.title}-${i}`}
                   className="rounded-xl border-[2px] border-white bg-[var(--bg_brand)] gap-4 pt-10 pb-4 px-1 flex flex-col items-center h-full transition-all duration-300 ease-out hover:z-50 hover:bg-white/8 hover:scale-[1.02]"
+                  onClick={() => {
+                    setActiveLeftIndex((prev) => (prev === i ? null : i));
+                  }}
                 >
-                  {activeCol !== "left" && (
+                  {activeLeftIndex !== i && (
                     <div className="flex flex-col pt-20 pb-4 gap-20 justify-between items-center h-full">
                       {s.svg && (
                         <Image
@@ -86,7 +107,7 @@ export default function Services({ items = DEFAULT_SERVICES }) {
                       </h3>
                     </div>
                   )}
-                  {activeCol === "left" && (
+                  {activeLeftIndex === i && (
                     <div className="flex flex-col pt-20 pb-4 gap-20 justify-between h-full">
                       <p className="text-sm md:text-2xl px-20 text-white text-center">
                         {s.description}
@@ -104,11 +125,10 @@ export default function Services({ items = DEFAULT_SERVICES }) {
         <div
           className="flex flex-col px-4 min-w-0 transition-all duration-700 ease-out gap-4"
           style={{ flexBasis: basis("right") }}
-          onClick={() => setActiveCol("right")}
         >
           <article className="mb-3 rounded-xl border-[2px] border-white text-white bg-[var(--bg_brand)] px-5 pt-20 pb-5 flex flex-col  items-center gap-12 ">
             <div className="flex flex-col items-center gap-4">
-              <h3 className="text-base md:text-5xl font-regular tracking-tighter">
+              <h3 className="text-3xl md:text-5xl font-medium text-center tracking-tighter">
                 Strategy & Design
               </h3>
               <p className="text-sm md:text-lg text-center ">
@@ -116,13 +136,16 @@ export default function Services({ items = DEFAULT_SERVICES }) {
                 challenge.
               </p>
             </div>
-            <div className="grid grid-cols-2 gap-4 auto-rows-fr w-full">
+            <div className="grid grid-cols-full lg:grid-cols-2 gap-4 auto-rows-fr w-full">
               {rightServices.map((s, i) => (
                 <article
                   key={`${s.title}-${i}`}
                   className="rounded-xl border-[2px] border-white bg-[var(--bg_brand)] gap-4 pt-10 pb-4 px-1 flex flex-col items-center h-full transition-all duration-300 ease-out hover:bg-white/8 hover:z-50 hover:scale-[1.02]"
+                  onClick={() => {
+                    setActiveRightIndex((prev) => (prev === i ? null : i));
+                  }}
                 >
-                  {activeCol !== "right" && (
+                  {activeRightIndex !== i && (
                     <div className="flex flex-col pt-20 pb-4 gap-20 justify-between items-center h-full">
                       {s.svg && (
                         <Image
@@ -138,8 +161,8 @@ export default function Services({ items = DEFAULT_SERVICES }) {
                       </h3>
                     </div>
                   )}
-                  {activeCol === "right" && (
-                    <div className="flex flex-col pt-20 pb-4 gap-20 h-full">
+                  {activeRightIndex === i && (
+                    <div className="flex flex-col pt-20 pb-4 gap-20 justify-between h-full">
                       <p className="text-sm md:text-2xl px-20 text-white text-center">
                         {s.description}
                       </p>

@@ -57,7 +57,7 @@ export default function Button({
         prefetch={prefetch}
         className={`group ${className || ""}`}
         {...props}
-        style={{ display: "flex" }}
+        style={{ display: "flex", transform: "translateY(1px)" }}
       >
         {iconPosition === "left" && (
           <span
@@ -67,10 +67,7 @@ export default function Button({
             {icon}
           </span>
         )}
-        <span
-          className={` ${baseButton}  `}
-          style={{ ...themeStyle, transform: "translateY(1px)" }}
-        >
+        <span className={` ${baseButton}  `} style={themeStyle}>
           {children}
         </span>
         {iconPosition === "right" && (
@@ -90,7 +87,7 @@ export default function Button({
       onClick={onClick}
       className={`group ${className || ""}`}
       {...props}
-      style={{ display: "flex" }}
+      style={{ display: "flex", transform: "translateY(1px)" }}
     >
       {iconPosition === "left" && (
         <span
@@ -100,16 +97,13 @@ export default function Button({
           {icon}
         </span>
       )}
-      <span
-        className={` ${baseButton}  `}
-        style={{ ...themeStyle, transform: "translateY(1px)" }}
-      >
+      <span className={` ${baseButton}  `} style={themeStyle}>
         {children}
       </span>
       {iconPosition === "right" && (
         <span
-          className={`${baseIcon} ${iconMargin} ${iconHoverClass}`}
-          style={themeStyle}
+          className={`${baseIcon} ${iconMargin} ${iconHoverClass} `}
+          style={{ ...themeStyle }}
         >
           {icon}
         </span>

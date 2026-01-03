@@ -26,7 +26,7 @@ export default function FolderIcon({
     href || (effectiveLocale ? `/${effectiveLocale}/cases` : "/cases");
   return (
     <div
-      className="relative w-full flex flex-col justify-end items-center pb-1 md:pb-4"
+      className="relative w-full flex flex-col justify-end items-center pb-2 sm:pb-2 md:pb-3 "
       onMouseEnter={() => setShowOverlay(true)}
       onMouseLeave={() => setShowOverlay(false)}
       onClick={() => setShowOverlay((v) => !v)}
@@ -51,19 +51,19 @@ export default function FolderIcon({
           }}
         />
       </svg>
-      <div className="absolute overflow-hidden flex flex-col gap-3 z-10  px-2 md:px-4 py-2 md:py-4">
+      <div className="absolute w-full overflow-hidden flex flex-col gap-3 z-10 px-2 sm:px-3 md:px-4 py-2 sm:py-3 md:py-4">
         <div className="flex justify-between items-end">
           <div className="max-w-[90%]">
-            <h3 className="text-md md:text-2xl text-left font-semibold color:[var(--content-dark)]">
+            <h3 className="text-md sm:text-lg md:text-2xl text-left font-semibold color:[var(--content-dark)]">
               {title || "Title placeholder"}
             </h3>
-            <p className="mt-1 text-sm !leading-none md:text-xl text-left leading-snug color:[var(--content-dark)] line-clamp-3">
+            <p className="mt-1 text-sm !leading-none sm:text-md md:text-lg text-left leading-snug color:[var(--content-dark)] line-clamp-3">
               {description ||
                 "Description placeholder text that briefly summarizes the case. Keep it concise and informative."}
             </p>
           </div>
         </div>
-        <div className="relative w-full h-[80px] md:h-[200px] group cursor-pointer">
+        <div className="relative w-full h-[100px] sm:h-[150px] md:h-[200px] group cursor-pointer">
           {imageSrc ? (
             <Image
               src={imageSrc}

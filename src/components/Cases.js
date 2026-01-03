@@ -81,11 +81,13 @@ export default function Cases({
         <h2 className="text font-monument-extended text-stroke-brand text-8xl md:text-9xl tracking-tight">
           CASES
         </h2>
-        <p className="text-xl md:text-3xl text-left text-[var(--content_dark)] max-w-md mt-20 md:mt-40">
-          Explore our cases to discover what{" "}
-          <span className={accent}>human centered</span> impact looks like in
-          practice.
-        </p>
+        <div className="flex justify-start w-full">
+          <p className="text-xl md:text-3xl text-left text-[var(--content_dark)] max-w-md mt-20 md:mt-40">
+            Explore our cases to discover what{" "}
+            <span className={accent}>human centered</span> impact looks like in
+            practice.
+          </p>
+        </div>
       </div>
       <div className="md:pt-16">
         <FolderStackSection locale={effectiveLocale} />

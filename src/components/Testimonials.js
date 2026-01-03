@@ -144,10 +144,10 @@ export default function Testimonials({ items }) {
   }, [order, testimonials.length]);
 
   return (
-    <section className="w-4/6 mx-auto my-80 flex items-center justify-center bg-[var(--bg_box_neutral)]/60 text-[var(--content_dark)]">
+    <section className=" w-5/6 md:w-4/6 max-w-4xl mx-auto my-80 flex items-center justify-center bg-[var(--bg_box_neutral)]/60 text-[var(--content_dark)]">
       <div className="py-32 overflow-hidden">
-        <div className="px-20 text-start w-4/6">
-          <h3 className="text-2xl md:text-3xl  tracking-tight mb-8">
+        <div className="w-full px-8 md:px-20 text-start  sm:w-5/6 lg:w-4/6">
+          <h3 className="text-xl md:text-2xl lg:text-3xl tracking-tight mb-8">
             We have helped organisations and business decipher difficult
             questions.
           </h3>
@@ -155,8 +155,8 @@ export default function Testimonials({ items }) {
         <div>
           <div className="relative  h-96 w-full mx-auto my-20 overflow-hidden">
             <div
-              className="absolute inset-0 flex flex-col gap-6 skew-wrap "
-              style={{ width: "110%", left: "-16%", top: "12%" }}
+              className="absolute inset-0 flex flex-col gap-6 skew-wrap w-[120%] "
+              style={{ left: "-20%", top: "12%" }}
             >
               {Array.from({ length: ROW_COUNT }).map((_, rowIdx) => {
                 const dir = rowIdx % 2 === 0 ? "left" : "right";
@@ -203,13 +203,13 @@ export default function Testimonials({ items }) {
             className="overflow-x-auto no-scrollbar snap-x snap-proximity px-6"
             style={{ overscrollBehavior: "contain" }}
           >
-            <div ref={trackRef} className="flex gap-6 py-20">
+            <div ref={trackRef} className="flex gap-2 py-20">
               {order.map((idx) => {
                 const t = testimonials[idx];
                 return (
                   <article
                     key={`testimonial-${idx}`}
-                    className="snap-center w-4/6 shrink-0 p-6 flex flex-col items-start gap-12 border-r-1 border-[var(--content_dark)]"
+                    className="snap-center w-5/6 md:w-4/6 shrink-0 p-3 md:p-6 flex flex-col items-start gap-12 border-r-1 border-[var(--content_dark)]"
                   >
                     <div className="flex items-start  w-full flex-col">
                       <div className="min-w-0 flex gap-1 flex-col">
