@@ -5,14 +5,14 @@ import Testimonials from "./Testimonials";
 import Services from "./Services";
 import Contact from "./Contact";
 
-export default function ClientPage() {
+export default function ClientPage({ initialLocale = "en" }) {
   return (
     <>
       <main>
         <Hero />
 
         <div className="min-h-screen">
-          <Environment />
+          <Environment locale={initialLocale} />
         </div>
 
         <MethodologyCasesGroup />

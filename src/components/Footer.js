@@ -9,7 +9,7 @@ export default function Footer() {
       <div className="absolute bottom-[-150%] inset-0 flex items-end justify-center">
         <div className="w-[80%] max-w-5xl aspect-square bg-[var(--content_brand)] rounded-full blur-3xl opacity-20" />
       </div>
-      <div className="flex flex-col  w-5/6 pb-2 border-b border-[var(--content_brand)]">
+      <div className="flex flex-col gap-6  w-5/6 pb-2 border-b border-[var(--content_brand)]">
         <div
           className="  relative mx-auto w-full h-48 md:h-64 "
           style={{ pointerEvents: "none" }}
@@ -62,11 +62,11 @@ export default function Footer() {
       </div>
 
       {/* Content */}
-      <div className="w-5/6 mx-auto  py-6 flex  md:justify-between ">
+      <div className="w-5/6 mx-auto py-6 flex  md:justify-between ">
         <div className="">
-          {/* <p className="text-sm text-[var(--content_brand)] font-semibold mt-1">
+          <p className="text-sm text-[var(--content_brand)] font-semibold mt-1">
             © {new Date().getFullYear()} JCP
-          </p> */}
+          </p>
         </div>
 
         <nav className="flex items-center gap-4 text-sm font-semibold">

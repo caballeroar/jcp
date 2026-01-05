@@ -1,4 +1,3 @@
-import { getDictionary } from "../../lib/i18n";
 import { notFound } from "next/navigation";
 import ClientPage from "../../components/ClientPage";
 
@@ -16,7 +15,5 @@ export default async function Page({ params }) {
     notFound();
   }
 
-  const dict = await getDictionary(locale);
-
-  return <ClientPage initialLocale={locale} initialDict={dict} />;
+  return <ClientPage initialLocale={locale} />;
 }

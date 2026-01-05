@@ -13,6 +13,16 @@
   ],
   "contact": "Neem contact met ons op via LinkedIn",
   "cta": "Contact Ons",
+  "environment": {
+    "innerLabel": "mensen"
+  },
+  "hero": {
+    "before": "Jouw ",
+    "sustainability": "duurzaamheids-",
+    "middle": " en ",
+    "justice": "rechtvaardigheids",
+    "after": "uitdagingen verdienen mensgerichte inzichten en actie."
+  },
   "nav": {
     "home": "Home",
     "about": "Over Ons",
@@ -20,6 +30,11 @@
     "cases": "Cases"
   },
   "pages": {
+    "home": {
+      "title": "Welcome to Our Journey",
+      "subtitle": "Empowering Change Through Sustainable Solutions",
+      "description": "Join us as we pave the way for a more equitable and sustainable future."
+    },
     "about": {
       "title": "Over Ons",
       "subtitle": "Onze missie en visie",

@@ -13,6 +13,16 @@
   ],
   "contact": "Contact us for inquiries on LinkedIn",
   "cta": "Contact Us",
+  "environment": {
+    "innerLabel": "people"
+  },
+  "hero": {
+    "before": "Your ",
+    "sustainability": "sustainability",
+    "middle": " and ",
+    "justice": "justice",
+    "after": " challenges deserve human centered insight and action."
+  },
   "nav": {
     "home": "Home",
     "about": "About",
@@ -20,6 +30,13 @@
     "cases": "Cases"
   },
   "pages": {
+    "home": {
+      "hero": {
+        "title": "Welcome to Our Journey"
+      },
+      "subtitle": "Empowering Change Through Sustainable Solutions",
+      "description": "Join us as we pave the way for a more equitable and sustainable future."
+    },
     "about": {
       "title": "About Us",
       "subtitle": "Our mission and vision",

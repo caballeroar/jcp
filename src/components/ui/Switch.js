@@ -41,7 +41,7 @@ export default function Switch({
       type="button"
       className={`
         flex justify-between text-xs relative grid grid-cols-2 items-center cursor-pointer select-none
-        transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2
+        transition-colors duration-200 ease-in-out
         disabled:cursor-not-allowed disabled:opacity-50 w-[48px] h-[24px] p-[1px] rounded-[6px] tracking-normal
       `}
       onClick={handleToggle}

@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useI18n } from "../lib/I18nContext";
 
 export default function Environment({ locale }) {
+  const i18n = useI18n();
   const [progress, setProgress] = useState(0);
   const [scrollRatio, setScrollRatio] = useState(0);
   const [autoTime, setAutoTime] = useState(0);
@@ -79,7 +81,10 @@ export default function Environment({ locale }) {
   // Words setup
   // - innerLabel: localized "people"
   // - WORDS: 20 sustainability-related keywords
-  const innerLabel = locale === "nl" ? "mensen" : "people";
+  const effectiveLocale = i18n?.locale || locale || "en";
+  const innerLabel =
+    i18n?.dict?.environment?.innerLabel ??
+    (effectiveLocale === "nl" ? "mensen" : "people");
   const WORDS = useMemo(
     () => [
       "climate",
