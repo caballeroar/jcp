@@ -187,7 +187,7 @@ export default function Environment({ locale }) {
   // Overlay fade timing
   // - Start fading when the next section is ~25% visible
   // - Fade out over the next 20% of a viewport
-  const FADE_START_RATIO = 1.4; // next section ~25% visible
+  const FADE_START_RATIO = 1.2; // next section ~25% visible
   const FADE_DURATION_RATIO = 0.3; // fade over the next 20% of viewport scroll
   const globalOpacity = mounted
     ? 1 - clamp01((scrollRatio - FADE_START_RATIO) / FADE_DURATION_RATIO)

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 
 export default function Services({ items = DEFAULT_SERVICES }) {
@@ -12,6 +12,8 @@ export default function Services({ items = DEFAULT_SERVICES }) {
   const [activeLeftIndex, setActiveLeftIndex] = useState(null);
   const [activeRightIndex, setActiveRightIndex] = useState(null);
   const [viewportWidth, setViewportWidth] = useState(0);
+  const sectionRef = useRef(null);
+  const [hasAnimated, setHasAnimated] = useState(false);
 
   const isXL = viewportWidth >= 1280; // Tailwind xl breakpoint
 
@@ -25,6 +27,22 @@ export default function Services({ items = DEFAULT_SERVICES }) {
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
+  }, []);
+
+  useEffect(() => {
+    if (!sectionRef.current) return;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        const e = entries[0];
+        if (e.isIntersecting) {
+          setHasAnimated(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.25 }
+    );
+    obs.observe(sectionRef.current);
+    return () => obs.disconnect();
   }, []);
 
   const basis = (col) => {
@@ -46,16 +64,24 @@ export default function Services({ items = DEFAULT_SERVICES }) {
   };
 
   return (
-    <section id="services-section">
-      <div className="mb-10 text-center">
-        <h2 className="text font-monument-extended text-stroke-brand text-5xl md:text-9xl overflow-hidden ">
+    <section id="services-section" ref={sectionRef}>
+      <div className="mb-10 flex justify-center">
+        <h2
+          className={`text font-monument-extended text-stroke-brand text-8xl md:text-9xl tracking-tight ${
+            hasAnimated ? "stagger-in" : "anim-init"
+          }`}
+          style={{ animationDelay: "0ms" }}
+        >
           SERVICES
         </h2>
       </div>
 
       <div
         id="services-brand-area"
-        className="flex flex-col xl:flex-row w-full px-2 xl:px-6 pt-28 pb-12 gap-4 bg-[var(--bg_brand)] cursor-pointer"
+        className={`flex flex-col xl:flex-row w-full px-2 xl:px-6 pt-28 pb-12 gap-4 bg-[var(--bg_brand)] cursor-pointer relative overflow-hidden ${
+          hasAnimated ? "animate-bg" : "container-pre"
+        }`}
+        style={{ animationDelay: "1s" }}
         onMouseLeave={() => setActiveCol(null)}
         onMouseMove={(e) => handlePoint(e.clientX, e.currentTarget)}
         onTouchStart={(e) => {
@@ -71,7 +97,12 @@ export default function Services({ items = DEFAULT_SERVICES }) {
           className="flex px-4 flex-col min-w-0 transition-all duration-700 ease-out gap-4"
           style={{ flexBasis: basis("left") }}
         >
-          <article className="mb-3 rounded-xl border-[2px] border-white text-white bg-[var(--bg_brand)] px-5 pt-20 pb-5 flex flex-col  items-center gap-12 ">
+          <article
+            className={`mb-3 rounded-xl border-[2px] border-white text-white bg-[var(--bg_brand)] px-5 pt-20 pb-5 flex flex-col items-center gap-12 ${
+              hasAnimated ? "stagger-in" : "anim-init"
+            }`}
+            style={{ animationDelay: "1400ms" }}
+          >
             <div className="flex flex-col items-center gap-4">
               <h3 className="text-3xl md:text-5xl font-medium text-center tracking-tighter">
                 Empathy & Insights
@@ -86,7 +117,10 @@ export default function Services({ items = DEFAULT_SERVICES }) {
               {leftServices.map((s, i) => (
                 <article
                   key={`${s.title}-${i}`}
-                  className="rounded-xl border-[2px] border-white bg-[var(--bg_brand)] gap-4 pt-10 pb-4 px-1 flex flex-col items-center h-full transition-all duration-300 ease-out hover:z-50 hover:bg-white/8 hover:scale-[1.02]"
+                  className={`rounded-xl border-[2px] border-white bg-[var(--bg_brand)] gap-4 pt-10 pb-4 px-1 flex flex-col items-center h-full transition-all duration-300 ease-out hover:z-50 hover:bg-white/8 hover:scale-[1.02] ${
+                    hasAnimated ? "stagger-in" : "anim-init"
+                  }`}
+                  style={{ animationDelay: `${1500 + i * 120}ms` }}
                   onClick={() => {
                     setActiveLeftIndex((prev) => (prev === i ? null : i));
                   }}
@@ -113,7 +147,7 @@ export default function Services({ items = DEFAULT_SERVICES }) {
                         {s.description}
                       </p>
                       <h3 className="text-base md:text-md text-white font-medium mb-2 text-center font-roboto-mono uppercase ">
-                        -- {s.title} --
+                        {s.title}
                       </h3>
                     </div>
                   )}
@@ -126,7 +160,12 @@ export default function Services({ items = DEFAULT_SERVICES }) {
           className="flex flex-col px-4 min-w-0 transition-all duration-700 ease-out gap-4"
           style={{ flexBasis: basis("right") }}
         >
-          <article className="mb-3 rounded-xl border-[2px] border-white text-white bg-[var(--bg_brand)] px-5 pt-20 pb-5 flex flex-col  items-center gap-12 ">
+          <article
+            className={`mb-3 rounded-xl border-[2px] border-white text-white bg-[var(--bg_brand)] px-5 pt-20 pb-5 flex flex-col items-center gap-12 ${
+              hasAnimated ? "stagger-in" : "anim-init"
+            }`}
+            style={{ animationDelay: "1400ms" }}
+          >
             <div className="flex flex-col items-center gap-4">
               <h3 className="text-3xl md:text-5xl font-medium text-center tracking-tighter">
                 Strategy & Design
@@ -140,7 +179,10 @@ export default function Services({ items = DEFAULT_SERVICES }) {
               {rightServices.map((s, i) => (
                 <article
                   key={`${s.title}-${i}`}
-                  className="rounded-xl border-[2px] border-white bg-[var(--bg_brand)] gap-4 pt-10 pb-4 px-1 flex flex-col items-center h-full transition-all duration-300 ease-out hover:bg-white/8 hover:z-50 hover:scale-[1.02]"
+                  className={`rounded-xl border-[2px] border-white bg-[var(--bg_brand)] gap-4 pt-10 pb-4 px-1 flex flex-col items-center h-full transition-all duration-300 ease-out hover:bg-white/8 hover:z-50 hover:scale-[1.02] ${
+                    hasAnimated ? "stagger-in" : "anim-init"
+                  }`}
+                  style={{ animationDelay: `${1500 + i * 120}ms` }}
                   onClick={() => {
                     setActiveRightIndex((prev) => (prev === i ? null : i));
                   }}
@@ -167,7 +209,7 @@ export default function Services({ items = DEFAULT_SERVICES }) {
                         {s.description}
                       </p>
                       <h3 className="text-base md:text-md text-white font-medium mb-2 text-center font-roboto-mono uppercase ">
-                        -- {s.title} --
+                        {s.title}
                       </h3>
                     </div>
                   )}
@@ -177,6 +219,55 @@ export default function Services({ items = DEFAULT_SERVICES }) {
           </article>
         </div>
       </div>
+
+      <style jsx>{`
+        .anim-init {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        .stagger-in {
+          opacity: 0;
+          transform: translateY(10px);
+          animation: fadeUp 600ms ease-out forwards;
+          will-change: transform, opacity;
+        }
+
+        /* Container pre-state to avoid flashing before grow-down */
+        .container-pre {
+          opacity: 0;
+          transform: scaleY(0.85);
+          transform-origin: top center;
+        }
+
+        /* Container grow-down animation */
+        #services-brand-area.animate-bg {
+          animation: bgGrowDown 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+          transform-origin: top center;
+          will-change: transform, opacity;
+        }
+
+        @keyframes fadeUp {
+          from {
+            opacity: 0;
+            transform: translateY(12px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes bgGrowDown {
+          from {
+            opacity: 0;
+            transform: scaleY(0);
+          }
+          to {
+            opacity: 1;
+            transform: scaleY(1);
+          }
+        }
+      `}</style>
     </section>
   );
 }

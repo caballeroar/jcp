@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Methodology from "./Methodology";
+
 import Cases from "./Cases";
+import Methodology2 from "./Methodology_2";
 
 export default function MethodologyCasesGroup({ locale }) {
   const groupRef = useRef(null);
@@ -53,7 +54,7 @@ export default function MethodologyCasesGroup({ locale }) {
       <div className="absolute inset-0 bg-background/40 z-10" />
 
       <div className="relative z-20 flex flex-col gap-16">
-        <Methodology locale={locale} />
+        <Methodology2 locale={locale} />
         <Cases locale={locale} externalBg />
       </div>
     </section>

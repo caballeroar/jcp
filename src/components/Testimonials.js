@@ -43,11 +43,13 @@ export default function Testimonials({ items }) {
   const testimonials = items && items.length ? items : DEFAULT_TESTIMONIALS;
   const containerRef = useRef(null);
   const trackRef = useRef(null);
+  const sectionRef = useRef(null);
   const initialOrder = useMemo(
     () => Array.from({ length: testimonials.length }, (_, i) => i),
     [testimonials.length]
   );
   const [order, setOrder] = useState(initialOrder);
+  const [inView, setInView] = useState(false);
   const ASSET_LOGOS = [
     { src: "/assets/globe.svg", alt: "Globe" },
     { src: "/assets/logo_full.svg", alt: "Full Logo" },
@@ -65,6 +67,24 @@ export default function Testimonials({ items }) {
   useEffect(() => {
     setOrder(initialOrder);
   }, [initialOrder]);
+
+  // IntersectionObserver to detect when section enters viewport
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
 
   // Circular carousel using React state: rotate `order` at boundaries
   useEffect(() => {
@@ -144,15 +164,38 @@ export default function Testimonials({ items }) {
   }, [order, testimonials.length]);
 
   return (
-    <section className=" w-5/6 md:w-4/6 max-w-4xl mx-auto my-80 flex items-center justify-center bg-[var(--bg_box_neutral)]/60 text-[var(--content_dark)]">
+    <section
+      ref={sectionRef}
+      className=" w-5/6 md:w-4/6 max-w-4xl mx-auto mb-80 flex items-center justify-center bg-[var(--bg_box_neutral)]/60 text-[var(--content_dark)]"
+      style={{
+        transform: inView ? "scale(1)" : "scale(0.9)",
+        opacity: inView ? 1 : 0,
+        transition: "transform 0.6s ease-out, opacity 0.6s ease-out",
+      }}
+    >
       <div className="py-32 overflow-hidden">
-        <div className="w-full px-8 md:px-20 text-start  sm:w-5/6 lg:w-4/6">
+        <div
+          className="w-full px-8 md:px-20 text-start  sm:w-5/6 lg:w-4/6"
+          style={{
+            opacity: inView ? 1 : 0,
+            transform: inView ? "translateY(0)" : "translateY(20px)",
+            transition:
+              "opacity 0.6s ease-out 0.2s, transform 0.6s ease-out 0.2s",
+          }}
+        >
           <h3 className="text-xl md:text-2xl lg:text-3xl tracking-tight mb-8">
             We have helped organisations and business decipher difficult
             questions.
           </h3>
         </div>
-        <div>
+        <div
+          style={{
+            opacity: inView ? 1 : 0,
+            transform: inView ? "translateY(0)" : "translateY(20px)",
+            transition:
+              "opacity 0.6s ease-out 0.4s, transform 0.6s ease-out 0.4s",
+          }}
+        >
           <div className="relative  h-96 w-full mx-auto my-20 overflow-hidden">
             <div
               className="absolute inset-0 flex flex-col gap-6 skew-wrap w-[120%] "
@@ -197,7 +240,15 @@ export default function Testimonials({ items }) {
           </div>
         </div>
 
-        <div className="relative mt-12 bg-[var(--bg_box_accent)]">
+        <div
+          className="relative mt-12 bg-[var(--bg_box_accent)]"
+          style={{
+            opacity: inView ? 1 : 0,
+            transform: inView ? "translateY(0)" : "translateY(20px)",
+            transition:
+              "opacity 0.6s ease-out 0.6s, transform 0.6s ease-out 0.6s",
+          }}
+        >
           <div
             ref={containerRef}
             className="overflow-x-auto no-scrollbar snap-x snap-proximity px-6"
