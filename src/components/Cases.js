@@ -108,7 +108,7 @@ export default function Cases({
   };
 
   return (
-    <section ref={sectionRef} className="relative w-full pt-80 mb-[-20%]">
+    <section ref={sectionRef} className="relative w-full pt-80 mb-[-28%]">
       {/* {!externalBg && (
         <>
           <div

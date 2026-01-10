@@ -9,13 +9,15 @@ export default function Services({ items = DEFAULT_SERVICES }) {
   const leftServices = services.slice(0, mid);
   const rightServices = services.slice(mid);
   const [activeCol, setActiveCol] = useState(null); // 'left' | 'right' | null
-  const [activeLeftIndex, setActiveLeftIndex] = useState(null);
-  const [activeRightIndex, setActiveRightIndex] = useState(null);
+  const [activeLeftSet, setActiveLeftSet] = useState(new Set());
+  const [activeRightSet, setActiveRightSet] = useState(new Set());
   const [viewportWidth, setViewportWidth] = useState(0);
   const sectionRef = useRef(null);
   const [hasAnimated, setHasAnimated] = useState(false);
 
   const isXL = viewportWidth >= 1280; // Tailwind xl breakpoint
+  const imgScaleClass = (side) =>
+    isXL && activeCol && activeCol !== side ? "scale-[0.8]" : "scale-100";
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -48,7 +50,7 @@ export default function Services({ items = DEFAULT_SERVICES }) {
   const basis = (col) => {
     // Only resize columns on large screens; keep equal on smaller
     if (!isXL || !activeCol) return "50%";
-    return activeCol === col ? "70%" : "30%"; // 7/10 vs 3/10
+    return activeCol === col ? "65%" : "35%"; // 7/10 vs 3/10
   };
 
   const handlePoint = (clientX, target) => {
@@ -58,20 +60,21 @@ export default function Services({ items = DEFAULT_SERVICES }) {
     const x = clientX - rect.left;
     const center = rect.width * 0.5;
     const threshold = Math.max(10, rect.width * 0.02);
-    if (x < center - threshold) setActiveCol("left");
-    else if (x > center + threshold) setActiveCol("right");
-    else setActiveCol(null);
+    let newCol = null;
+    if (x < center - threshold) newCol = "left";
+    else if (x > center + threshold) newCol = "right";
+    setActiveCol(() => {
+      // Clear the collapsed column's active cards
+      if (newCol === "left") setActiveRightSet(new Set());
+      else if (newCol === "right") setActiveLeftSet(new Set());
+      return newCol;
+    });
   };
 
   return (
     <section id="services-section" ref={sectionRef}>
       <div className="mb-10 flex justify-center">
-        <h2
-          className={`text font-monument-extended text-stroke-brand text-8xl md:text-9xl tracking-tight ${
-            hasAnimated ? "stagger-in" : "anim-init"
-          }`}
-          style={{ animationDelay: "0ms" }}
-        >
+        <h2 className="text font-monument-extended text-stroke-brand text-8xl md:text-9xl tracking-tight">
           SERVICES
         </h2>
       </div>
@@ -81,7 +84,7 @@ export default function Services({ items = DEFAULT_SERVICES }) {
         className={`flex flex-col xl:flex-row w-full px-2 xl:px-6 pt-28 pb-12 gap-4 bg-[var(--bg_brand)] cursor-pointer relative overflow-hidden ${
           hasAnimated ? "animate-bg" : "container-pre"
         }`}
-        style={{ animationDelay: "1s" }}
+        style={{ animationDelay: "800ms" }}
         onMouseLeave={() => setActiveCol(null)}
         onMouseMove={(e) => handlePoint(e.clientX, e.currentTarget)}
         onTouchStart={(e) => {
@@ -103,7 +106,7 @@ export default function Services({ items = DEFAULT_SERVICES }) {
             }`}
             style={{ animationDelay: "1400ms" }}
           >
-            <div className="flex flex-col items-center gap-4">
+            <div className="flex flex-col items-center gap-4 h-[140px]">
               <h3 className="text-3xl md:text-5xl font-medium text-center tracking-tighter">
                 Empathy & Insights
               </h3>
@@ -117,23 +120,29 @@ export default function Services({ items = DEFAULT_SERVICES }) {
               {leftServices.map((s, i) => (
                 <article
                   key={`${s.title}-${i}`}
-                  className={`rounded-xl border-[2px] border-white bg-[var(--bg_brand)] gap-4 pt-10 pb-4 px-1 flex flex-col items-center h-full transition-all duration-300 ease-out hover:z-50 hover:bg-white/8 hover:scale-[1.02] ${
+                  className={`rounded-xl border-[2px] border-white bg-[var(--bg_brand)] gap-4 pt-10 pb-4 px-1 flex flex-col items-center   overflow-hidden transition-all duration-300 ease-out hover:z-50 hover:bg-white/8 hover:scale-[1.02] ${
                     hasAnimated ? "stagger-in" : "anim-init"
                   }`}
-                  style={{ animationDelay: `${1500 + i * 120}ms` }}
+                  style={{ animationDelay: `${1000 + i * 120}ms` }}
                   onClick={() => {
-                    setActiveLeftIndex((prev) => (prev === i ? null : i));
+                    setActiveLeftSet((prev) => {
+                      const next = new Set(prev);
+                      next.has(i) ? next.delete(i) : next.add(i);
+                      return next;
+                    });
                   }}
                 >
-                  {activeLeftIndex !== i && (
-                    <div className="flex flex-col pt-20 pb-4 gap-20 justify-between items-center h-full">
+                  {!activeLeftSet.has(i) && (
+                    <div className="flex flex-col pt-20 gap-16 justify-between items-center h-[440px]">
                       {s.svg && (
                         <Image
                           src={s.svg}
                           alt={s.title}
                           width={160}
                           height={160}
-                          className="object-contain max-h-40 brightness-0 invert"
+                          className={`object-contain max-h-40 brightness-0 invert transition-transform duration-300 ease-out ${imgScaleClass(
+                            "left"
+                          )}`}
                         />
                       )}
                       <h3 className="mt-4 text-sm md:text-base text-white font-medium text-center font-roboto-mono uppercase">
@@ -141,12 +150,12 @@ export default function Services({ items = DEFAULT_SERVICES }) {
                       </h3>
                     </div>
                   )}
-                  {activeLeftIndex === i && (
-                    <div className="flex flex-col pt-20 pb-4 gap-20 justify-between h-full">
-                      <p className="text-sm md:text-2xl px-20 text-white text-center">
+                  {activeLeftSet.has(i) && (
+                    <div className="flex flex-col pt-20 gap-16 justify-between  h-[440px]">
+                      <p className="text-2xl px-10 text-white text-center">
                         {s.description}
                       </p>
-                      <h3 className="text-base md:text-md text-white font-medium mb-2 text-center font-roboto-mono uppercase ">
+                      <h3 className="text-base md:text-md text-white font-medium  text-center font-roboto-mono uppercase ">
                         {s.title}
                       </h3>
                     </div>
@@ -166,7 +175,7 @@ export default function Services({ items = DEFAULT_SERVICES }) {
             }`}
             style={{ animationDelay: "1400ms" }}
           >
-            <div className="flex flex-col items-center gap-4">
+            <div className="flex flex-col items-center gap-4 h-[140px]">
               <h3 className="text-3xl md:text-5xl font-medium text-center tracking-tighter">
                 Strategy & Design
               </h3>
@@ -179,23 +188,29 @@ export default function Services({ items = DEFAULT_SERVICES }) {
               {rightServices.map((s, i) => (
                 <article
                   key={`${s.title}-${i}`}
-                  className={`rounded-xl border-[2px] border-white bg-[var(--bg_brand)] gap-4 pt-10 pb-4 px-1 flex flex-col items-center h-full transition-all duration-300 ease-out hover:bg-white/8 hover:z-50 hover:scale-[1.02] ${
+                  className={`rounded-xl border-[2px] border-white bg-[var(--bg_brand)] gap-4 pt-10 pb-4 px-1  flex flex-col items-center  overflow-hidden transition-all duration-300 ease-out hover:bg-white/8 hover:z-50 hover:scale-[1.02] ${
                     hasAnimated ? "stagger-in" : "anim-init"
                   }`}
-                  style={{ animationDelay: `${1500 + i * 120}ms` }}
+                  style={{ animationDelay: `${1000 + i * 120}ms` }}
                   onClick={() => {
-                    setActiveRightIndex((prev) => (prev === i ? null : i));
+                    setActiveRightSet((prev) => {
+                      const next = new Set(prev);
+                      next.has(i) ? next.delete(i) : next.add(i);
+                      return next;
+                    });
                   }}
                 >
-                  {activeRightIndex !== i && (
-                    <div className="flex flex-col pt-20 pb-4 gap-20 justify-between items-center h-full">
+                  {!activeRightSet.has(i) && (
+                    <div className="flex flex-col pt-20 gap-16 justify-between items-center h-[440px] ">
                       {s.svg && (
                         <Image
                           src={s.svg}
                           alt={s.title}
                           width={160}
                           height={160}
-                          className="object-contain max-h-40 brightness-0 invert"
+                          className={`object-contain max-h-40 brightness-0 invert transition-transform duration-300 ease-out ${imgScaleClass(
+                            "right"
+                          )}`}
                         />
                       )}
                       <h3 className="mt-4 text-sm md:text-base text-white font-medium text-center font-roboto-mono uppercase">
@@ -203,12 +218,12 @@ export default function Services({ items = DEFAULT_SERVICES }) {
                       </h3>
                     </div>
                   )}
-                  {activeRightIndex === i && (
-                    <div className="flex flex-col pt-20 pb-4 gap-20 justify-between h-full">
-                      <p className="text-sm md:text-2xl px-20 text-white text-center">
+                  {activeRightSet.has(i) && (
+                    <div className="flex flex-col pt-20 gap-16 justify-between h-[440px]">
+                      <p className="text-2xl px-10 text-white text-center">
                         {s.description}
                       </p>
-                      <h3 className="text-base md:text-md text-white font-medium mb-2 text-center font-roboto-mono uppercase ">
+                      <h3 className="text-base md:text-md text-white font-medium text-center font-roboto-mono uppercase ">
                         {s.title}
                       </h3>
                     </div>
@@ -241,7 +256,7 @@ export default function Services({ items = DEFAULT_SERVICES }) {
 
         /* Container grow-down animation */
         #services-brand-area.animate-bg {
-          animation: bgGrowDown 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+          animation: bgGrowDown 1s cubic-bezier(0.22, 1, 0.36, 1) both;
           transform-origin: top center;
           will-change: transform, opacity;
         }
