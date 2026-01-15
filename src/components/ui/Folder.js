@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "./Button";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -11,10 +11,20 @@ export default function FolderIcon({
   title,
   description,
   imageSrc,
+  images = [],
   buttonLabel = "View",
   href,
 }) {
   const [showOverlay, setShowOverlay] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [nextIndex, setNextIndex] = useState(1);
+  const [isSwapping, setIsSwapping] = useState(false);
+  const [enterActive, setEnterActive] = useState(false);
+  const swapDurationMs = 800; // unified animation duration for transitions and timers
+  const gapPx = 4; // visual gap between images
+  const intervalMs = 5000; // time between swaps (slower pacing)
+  const intervalRef = useRef(null);
   const pathname = usePathname();
   const firstSeg = pathname?.split("/").filter(Boolean)[0];
   const supportedLocales = ["en", "nl"]; // extend if more locales are added
@@ -24,11 +34,45 @@ export default function FolderIcon({
   const effectiveLocale = locale ?? detectedLocale;
   const targetHref =
     href || (effectiveLocale ? `/${effectiveLocale}/cases` : "/cases");
+
+  // Setup auto-swap for carousel when there are 2+ images, with hover pause
+  useEffect(() => {
+    if (!Array.isArray(images) || images.length < 2) return;
+    // Clear any existing interval before (re)starting or pausing
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    if (isPaused) return; // paused: don't start interval
+    intervalRef.current = setInterval(() => {
+      setIsSwapping(true);
+      // trigger right-entering panel animation
+      setEnterActive(false);
+      requestAnimationFrame(() => setEnterActive(true));
+      // After the swap animation completes, advance indices and reset positions
+      setTimeout(() => {
+        setCurrentIndex((prev) => (prev + 1) % images.length);
+        setNextIndex((prev) => (prev + 1) % images.length);
+        setIsSwapping(false);
+        setEnterActive(false);
+      }, swapDurationMs);
+    }, intervalMs);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [images, isPaused]);
+  const displayImage = imageSrc || (Array.isArray(images) && images[0]);
   return (
     <div
       className="relative w-full flex flex-col justify-end items-center pb-2 sm:pb-2 md:pb-3 "
-      onMouseEnter={() => setShowOverlay(true)}
-      onMouseLeave={() => setShowOverlay(false)}
+      onMouseEnter={() => {
+        setShowOverlay(true);
+        setIsPaused(true);
+      }}
+      onMouseLeave={() => {
+        setShowOverlay(false);
+        setIsPaused(false);
+      }}
       onClick={() => setShowOverlay((v) => !v)}
       style={{
         aspectRatio: "180 / 120",
@@ -63,10 +107,85 @@ export default function FolderIcon({
             </p>
           </div>
         </div>
-        <div className="relative w-full h-[100px] sm:h-[150px] md:h-[200px] group cursor-pointer">
-          {imageSrc ? (
+        <div className="relative w-full h-[100px] sm:h-[150px] md:h-[200px] group cursor-pointer overflow-hidden">
+          {Array.isArray(images) && images.length >= 2 ? (
+            <div className="absolute inset-0">
+              <div className=" flex w-full h-full overflow-hidden relative">
+                {/* Left panel (current) */}
+                <div
+                  className="h-full relative"
+                  style={{
+                    flex: "0 0 auto",
+                    width: isSwapping
+                      ? `calc(0% - ${gapPx / 2}px)`
+                      : `calc(70% - ${gapPx / 2}px)`,
+                    marginRight: `${gapPx / 2}px`,
+                    transition: isSwapping
+                      ? `width ${swapDurationMs}ms ease-in-out`
+                      : "none",
+                  }}
+                >
+                  <Image
+                    src={images[currentIndex]}
+                    alt={title || "Case thumbnail"}
+                    width={600}
+                    height={200}
+                    unoptimized
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                </div>
+
+                {/* Right panel (next -> left) */}
+                <div
+                  className="h-full relative"
+                  style={{
+                    flex: "0 0 auto",
+                    width: isSwapping
+                      ? `calc(70% - ${gapPx / 2}px)`
+                      : `calc(30% - ${gapPx / 2}px)`,
+                    marginLeft: `${gapPx / 2}px`,
+                    transition: isSwapping
+                      ? `width ${swapDurationMs}ms ease-in-out`
+                      : "none",
+                  }}
+                >
+                  <Image
+                    src={images[nextIndex]}
+                    alt={title || "Case thumbnail next"}
+                    width={600}
+                    height={200}
+                    unoptimized
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                </div>
+
+                {/* Entering panel (third from right) - overlay to avoid layout jumps */}
+                {isSwapping && (
+                  <div
+                    className="absolute top-0 right-0 h-full z-10"
+                    style={{
+                      width: `calc(30% - ${gapPx / 2}px)`,
+                      transform: enterActive
+                        ? "translateX(0%)"
+                        : "translateX(100%)",
+                      transition: `transform ${swapDurationMs}ms ease-in-out`,
+                    }}
+                  >
+                    <Image
+                      src={images[(nextIndex + 1) % images.length]}
+                      alt={title || "Case thumbnail entering"}
+                      width={600}
+                      height={200}
+                      unoptimized
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          ) : displayImage ? (
             <Image
-              src={imageSrc}
+              src={displayImage}
               alt={title || "Case thumbnail"}
               width={600}
               height={200}

@@ -1,9 +1,11 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { Button } from "./ui";
 import { ArrowRight } from "phosphor-react";
+import { useI18n } from "../lib/I18nContext";
+import { Button } from "./ui";
 
-export default function Methodology2({ locale }) {
+export default function Methodology2() {
+  const { locale, dict } = useI18n();
   const accent = "font-bold mb-2 text-[var(--content_brand)]";
 
   const sectionRef = useRef(null);
@@ -62,6 +64,13 @@ export default function Methodology2({ locale }) {
   const textOpacity = textProgress;
   const textTranslateY = 20 * (1 - textProgress);
 
+  const heroPage = dict?.pages?.home || {};
+  const line1 =
+    heroPage?.subtitle || "Every challenge revolves around people.";
+  const line2Prefix =
+    heroPage?.description || "We help you strengthen";
+  const andWord = dict?.common?.and || "and"; // optional common key
+
   return (
     <section
       ref={sectionRef}
@@ -83,23 +92,28 @@ export default function Methodology2({ locale }) {
         }}
       >
         <p className="text-lg sm:text-xl md:text-3xl xl:text-4xl font-semibold  leading-tight text-center tracking-tight">
-          Every challenge revolves around people.
+          {line1}
         </p>
-        <p
-          className="mt-8
-         text-lg sm:text-xl md:text-3xl xl:text-4xl font-semibold  leading-tight text-center tracking-tight"
-        >
-          We help you strengthen <span className={accent}>understanding</span>,
-          <span className={accent}> trust</span> and
-          <span className={accent}> collaboration</span>.
+        <p className="mt-8 text-lg sm:text-xl md:text-3xl xl:text-4xl font-semibold  leading-tight text-center tracking-tight">
+          {line2Prefix}{" "}
+          <span className={accent}>
+            {dict?.pages?.home?.understanding || "understanding"}
+          </span>
+          , <span className={accent}>{dict?.pages?.home?.trust || "trust"}</span>{" "}
+          {andWord}{" "}
+          <span className={accent}>
+            {dict?.pages?.home?.collaboration || "collaboration"}
+          </span>
+          .
         </p>
 
         <Button
           theme="dark"
           icon={<ArrowRight size={20} weight="bold" />}
-          className="mt-8"
+          className="mt-12"
+          href={`/${locale}/methodology`}
         >
-          Methodology
+          {dict?.cta?.methodology || "Methodology"}
         </Button>
       </div>
     </section>

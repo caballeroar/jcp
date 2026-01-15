@@ -2,8 +2,10 @@
 
 import Button from "./ui/Button";
 import { ArrowRight } from "phosphor-react";
+import { useI18n } from "../lib/I18nContext";
 
 export default function Contact() {
+  const { locale, dict } = useI18n();
   return (
     <section className="relative flex items-center w-full md:w-4/6 h-[600px] md:h-[800px] py-24 mx-auto sm:py-20 md:my-40 px-6 overflow-hidden">
       {/* Background SVG */}
@@ -126,7 +128,7 @@ export default function Contact() {
           <Button
             icon={<ArrowRight size={20} weight="bold" />}
             theme="dark"
-            href="/contact"
+            href={`/${locale}/contact`}
           >
             Contact Us
           </Button>

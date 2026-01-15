@@ -1,21 +1,32 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { useI18n } from "../lib/I18nContext";
 
-export default function Services({ items = DEFAULT_SERVICES }) {
+export default function Services({ items }) {
+  const { dict } = useI18n();
+
+  // Prefer dictionary items under pages.services, then prop, then default
+  const dictItems = dict?.pages?.services?.items;
   const services =
-    Array.isArray(items) && items.length ? items : DEFAULT_SERVICES;
+    (Array.isArray(dictItems) && dictItems.length
+      ? dictItems
+      : Array.isArray(items) && items.length
+      ? items
+      : DEFAULT_SERVICES);
+
   const mid = Math.ceil(services.length / 2);
   const leftServices = services.slice(0, mid);
   const rightServices = services.slice(mid);
-  const [activeCol, setActiveCol] = useState(null); // 'left' | 'right' | null
+
+  const [activeCol, setActiveCol] = useState(null);
   const [activeLeftSet, setActiveLeftSet] = useState(new Set());
   const [activeRightSet, setActiveRightSet] = useState(new Set());
   const [viewportWidth, setViewportWidth] = useState(0);
   const sectionRef = useRef(null);
   const [hasAnimated, setHasAnimated] = useState(false);
 
-  const isXL = viewportWidth >= 1280; // Tailwind xl breakpoint
+  const isXL = viewportWidth >= 1280;
   const imgScaleClass = (side) =>
     isXL && activeCol && activeCol !== side ? "scale-[0.8]" : "scale-100";
 
@@ -48,9 +59,8 @@ export default function Services({ items = DEFAULT_SERVICES }) {
   }, []);
 
   const basis = (col) => {
-    // Only resize columns on large screens; keep equal on smaller
     if (!isXL || !activeCol) return "50%";
-    return activeCol === col ? "65%" : "35%"; // 7/10 vs 3/10
+    return activeCol === col ? "65%" : "35%";
   };
 
   const handlePoint = (clientX, target) => {
@@ -75,7 +85,7 @@ export default function Services({ items = DEFAULT_SERVICES }) {
     <section id="services-section" ref={sectionRef}>
       <div className="mb-10 flex justify-center">
         <h2 className="text font-monument-extended text-stroke-brand text-8xl md:text-9xl tracking-tight">
-          SERVICES
+          {dict?.pages?.services?.title || "SERVICES"}
         </h2>
       </div>
 
@@ -108,11 +118,11 @@ export default function Services({ items = DEFAULT_SERVICES }) {
           >
             <div className="flex flex-col items-center gap-4 h-[140px]">
               <h3 className="text-3xl md:text-5xl font-medium text-center tracking-tighter">
-                Empathy & Insights
+                {dict?.pages?.services?.leftHeader || "Empathy & Insights"}
               </h3>
               <p className="text-sm md:text-lg text-center ">
-                We uncover what truly matters to the people at the heart of your
-                challenge.
+                {dict?.pages?.services?.description ||
+                  "We uncover what truly matters to the people at the heart of your challenge."}
               </p>
             </div>
 
@@ -177,11 +187,11 @@ export default function Services({ items = DEFAULT_SERVICES }) {
           >
             <div className="flex flex-col items-center gap-4 h-[140px]">
               <h3 className="text-3xl md:text-5xl font-medium text-center tracking-tighter">
-                Strategy & Design
+                {dict?.pages?.services?.rightHeader || "Strategy & Design"}
               </h3>
               <p className="text-sm md:text-lg text-center ">
-                We uncover what truly matters to the people at the heart of your
-                challenge.
+                {dict?.pages?.services?.description ||
+                  "We uncover what truly matters to the people at the heart of your challenge."}
               </p>
             </div>
             <div className="grid grid-cols-full lg:grid-cols-2 gap-4 auto-rows-fr w-full">

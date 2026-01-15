@@ -1,6 +1,8 @@
 import { getDictionary } from "../../../lib/i18n";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Folder from "../../../components/ui/Folder";
+import { getCaseImages } from "../../../data/cases";
 
 const locales = ["en", "nl"];
 
@@ -16,53 +18,32 @@ export default async function CasesPage({ params }) {
   }
 
   const dict = await getDictionary(locale);
+  const folders = Array.isArray(dict?.pages?.cases?.folders)
+    ? dict.pages.cases.folders.map((f) => ({
+        ...f,
+        images: getCaseImages(f.slug),
+      }))
+    : [];
+
+  const outlinedHeading =
+    "text font-monument-extended text-stroke-brand text-8xl md:text-9xl tracking-tight";
 
   return (
-    <main className="min-h-screen bg-background text-foreground p-8">
-      <div className="max-w-4xl mx-auto">
-        {/* Navigation */}
-        <nav className="mb-12">
-          <Link
-            href={`/${locale}`}
-            className="text-foreground/60 hover:text-foreground transition-colors"
-          >
-            ← {dict.nav.home}
-          </Link>
-        </nav>
-
-        {/* Content */}
-        <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4">{dict.pages.cases.title}</h1>
-          <h2 className="text-xl font-light mb-8 text-foreground/70">
-            {dict.pages.cases.subtitle}
-          </h2>
-          <p className="text-lg text-foreground/80 max-w-2xl mx-auto leading-relaxed">
-            {dict.pages.cases.description}
-          </p>
-        </div>
-
-        {/* Language Switch */}
-        <div className="flex justify-center gap-4 mt-12 text-sm">
-          <Link
-            href="/en/cases"
-            className={`hover:underline transition-colors ${
-              locale === "en"
-                ? "text-foreground font-medium"
-                : "text-foreground/60"
-            }`}
-          >
-            English
-          </Link>
-          <Link
-            href="/nl/cases"
-            className={`hover:underline transition-colors ${
-              locale === "nl"
-                ? "text-foreground font-medium"
-                : "text-foreground/60"
-            }`}
-          >
-            Nederlands
-          </Link>
+    <main className="min-h-screen bg-background text-foreground p-8 ">
+      <div className="flex justify-center my-40">
+        <h1 className={outlinedHeading}>CASES</h1>
+      </div>
+      <div className="mx-auto mb-40 max-w-6xl">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-10">
+          {folders.map((item, index) => (
+            <Folder
+              key={index}
+              locale={locale}
+              title={item.client}
+              description={item.sentence}
+              images={item.images}
+            />
+          ))}
         </div>
       </div>
     </main>

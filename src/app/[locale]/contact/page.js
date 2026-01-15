@@ -11,7 +11,7 @@ export async function generateStaticParams() {
   return [{ locale: "en" }, { locale: "nl" }];
 }
 
-export default async function MethodologyPage({ params }) {
+export default async function ContactPage({ params }) {
   const { locale } = await params; // unwrap params
 
   if (!locales.includes(locale)) {
@@ -20,12 +20,12 @@ export default async function MethodologyPage({ params }) {
 
   const dict = await getDictionary(locale);
 
-  const outlinedHeading =
-    "text font-monument-extended text-stroke-brand text-8xl md:text-9xl tracking-tight uppercase";
-
   return (
-    <main>
-      <h1 className={outlinedHeading}>Methodology</h1>
+    <main
+      className="min-h-screen  text-foreground p-8"
+      style={{ background: "var(--bg_box_neutral)" }}
+    >
+      <Contact locale={locale} dict={dict} />
     </main>
   );
 }

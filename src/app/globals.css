@@ -112,6 +112,7 @@ body {
 /* (removed) dark overrides for unused utility classes */
 
 /* Text stroke utilities */
+
 .text-stroke-brand {
   -webkit-text-stroke: 2px var(--content_brand);
 

@@ -34,6 +34,9 @@ export default function Cases({
   const accent =
     "text-xl md:text-3xl font-bold mb-2 text-[var(--content_brand)]";
 
+  const outlinedHeading =
+    "text font-monument-extended text-stroke-brand text-8xl md:text-9xl tracking-tight";
+
   useEffect(() => {
     let raf = null;
     const onScroll = () => {
@@ -132,9 +135,7 @@ export default function Cases({
         </>
       )} */}
       <div className="relative z-20 mx-auto max-w-5xl overflow-hidden px-6 py-16 flex flex-col items-center gap-6">
-        <h2 className="text font-monument-extended text-stroke-brand text-8xl md:text-9xl tracking-tight">
-          CASES
-        </h2>
+        <h2 className={outlinedHeading}>CASES</h2>
         <div className="flex justify-start w-full">
           <p className="text-xl md:text-3xl text-left text-[var(--content_dark)] max-w-md mt-20 md:mt-40">
             Explore our cases to discover what{" "}

@@ -16,13 +16,7 @@
   "environment": {
     "innerLabel": "people"
   },
-  "hero": {
-    "before": "Your ",
-    "sustainability": "sustainability",
-    "middle": " and ",
-    "justice": "justice",
-    "after": " challenges deserve human centered insight and action."
-  },
+
   "nav": {
     "home": "Home",
     "about": "About",
@@ -32,25 +26,172 @@
   "pages": {
     "home": {
       "hero": {
-        "title": "Welcome to Our Journey"
+        "before": "Your ",
+        "sustainability": "sustainability",
+        "middle": " and ",
+        "justice": "justice",
+        "after": " challenges deserve human centered insight and action."
       },
-      "subtitle": "Empowering Change Through Sustainable Solutions",
-      "description": "Join us as we pave the way for a more equitable and sustainable future."
-    },
-    "about": {
-      "title": "About Us",
-      "subtitle": "Our mission and vision",
-      "description": "We are dedicated to creating positive change through human-centered approaches to sustainability and social justice."
-    },
-    "services": {
-      "title": "Our Services",
-      "subtitle": "What we offer",
-      "description": "Comprehensive consulting services for sustainability, equity, and community empowerment initiatives."
+      "environment": {
+        "words": [
+          "climate",
+          "equity",
+          "circular",
+          "resilience",
+          "energy",
+          "justice",
+          "community",
+          "inclusion",
+          "governance",
+          "policy",
+          "innovation",
+          "biodiversity",
+          "carbon",
+          "water",
+          "waste",
+          "ethics",
+          "transparency",
+          "impact",
+          "collaboration",
+          "stewardship"
+        ]
+      },
+      "methodology": {
+        "cta": "Methodology",
+        "sentence1": " Every challenge revolves around people.",
+        "sentence2": " We help you strengthen",
+        "coma": " , ",
+        "and": " and ",
+        "accent1": "understanding",
+        "accent2": "trust ",
+        "accent3": "collaboration."
+      },
+      "cases": {
+        "sentence1": "Explore our cases to discover what ",
+        "sentence2": "impact looks like in practice.",
+        "accent": "human centered",
+        "folders": [
+          {
+            "client": "Communities",
+            "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+          },
+          {
+            "client": "Communities",
+            "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+          },
+          {
+            "client": "Communities",
+            "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+          },
+          {
+            "client": "Communities",
+            "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+          }
+        ]
+      },
+      "testimonials": {
+        "sentence": "We have helped organisations and business decipher difficult questions.",
+        "quotes": [
+          {
+            "name": "Communities",
+            "position": "Communities",
+            "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+          },
+          {
+            "name": "Communities",
+            "position": "Communities",
+            "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+          },
+          {
+            "name": "Communities",
+            "position ": "Communities",
+            "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+          },
+          {
+            "name": "Communities",
+            "position": "Communities",
+            "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+          }
+        ]
+      },
+      "services": {
+        "service1": {
+          "title": "Consultancy",
+          "sentence": "We bieden deskundig advies om jouw duurzaamheids- en rechtvaardigheidsdoelen te bereiken.",
+          "subservices": [
+            {
+              "title": "Strategische Planning",
+              "description": "Impact Beoordeling"
+            },
+            {
+              "title": "Strategische Planning",
+              "description": "Impact Beoordeling"
+            },
+            {
+              "title": "Strategische Planning",
+              "description": "Impact Beoordeling"
+            },
+            {
+              "title": "Strategische Planning",
+              "description": "Impact Beoordeling"
+            }
+          ]
+        },
+        "service2": {
+          "title": "Consultancy",
+          "sentence": "We bieden deskundig advies om jouw duurzaamheids- en rechtvaardigheidsdoelen te bereiken.",
+          "subservices": [
+            {
+              "title": "Strategische Planning",
+              "description": "Impact Beoordeling"
+            },
+            {
+              "title": "Strategische Planning",
+              "description": "Impact Beoordeling"
+            },
+            {
+              "title": "Strategische Planning",
+              "description": "Impact Beoordeling"
+            },
+            {
+              "title": "Strategische Planning",
+              "description": "Impact Beoordeling"
+            }
+          ]
+        }
+      },
+      "contact": {
+        "sentence": "Klaar om samen een positieve impact te maken?",
+        "cta": "Neem contact met ons op",
+        "listen": "listen",
+        "experience": "experience",
+        "translate": "translate",
+        "identify": "identify"
+      }
     },
     "cases": {
-      "title": "Case Studies",
-      "subtitle": "Our work in action",
-      "description": "Real-world examples of our impact in communities and organizations worldwide."
+      "folders": [
+        {
+          "slug": "case-1",
+          "client": "Communities",
+          "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+        },
+        {
+          "slug": "case-2",
+          "client": "Communities",
+          "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+        },
+        {
+          "slug": "case-3",
+          "client": "Communities",
+          "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+        },
+        {
+          "slug": "case-4",
+          "client": "Communities",
+          "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+        }
+      ]
     }
   }
 }

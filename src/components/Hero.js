@@ -1,18 +1,15 @@
 "use client";
 
-import { ArrowRight } from "phosphor-react";
 import { useI18n } from "../lib/I18nContext";
-import { Button } from "./ui";
-import { redirect } from "next/dist/server/api-utils";
 
 export default function Hero() {
-  const { dict } = useI18n() || {};
+  const { dict } = useI18n();
+  // Safely read hero copy from dictionaries
+  const hero = dict?.pages?.home?.hero || {};
+  const { before, sustainability, middle, justice, after } = hero;
 
   const accent =
     "text-2xl sm:text-3xl md:text-5xl xl:text-6xl  mb-2 text-[var(--content_brand)] tracking-tight leading-tight";
-
-  const { hero = {} } = dict || {};
-  const { before, sustainability, middle, justice, after } = hero;
 
   // px-8 sm:px-12 md:px-24 lg:px-40 xl:px-64 2xl:px-96
 
@@ -28,13 +25,6 @@ export default function Hero() {
           {middle}
           <span className={accent}>{justice}</span> {after}
         </h1>
-        {/* <Button
-          href="/contact"
-          theme="light"
-          icon={<ArrowRight size={20} weight="bold" />}
-        >
-          Let’s Make Impact
-        </Button> */}
       </div>
     </section>
   );
