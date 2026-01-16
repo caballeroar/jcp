@@ -2,6 +2,8 @@ import { getDictionary } from "../../../lib/i18n";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 
+export const dynamicParams = false;
+
 const locales = ["en", "nl"];
 
 export async function generateStaticParams() {
@@ -9,7 +11,7 @@ export async function generateStaticParams() {
 }
 
 export default async function AboutPage({ params }) {
-  const { locale } = await params;
+  const { locale } = params;
 
   if (!locales.includes(locale)) {
     notFound();

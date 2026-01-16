@@ -1,7 +1,5 @@
 import { getDictionary } from "../../../lib/i18n";
 import { notFound } from "next/navigation";
-import BackButton from "../../../components/BackButton";
-import Contact from "@/components/Contact";
 
 export const dynamicParams = false;
 
@@ -12,7 +10,7 @@ export async function generateStaticParams() {
 }
 
 export default async function MethodologyPage({ params }) {
-  const { locale } = await params; // unwrap params
+  const { locale } = params;
 
   if (!locales.includes(locale)) {
     notFound();
@@ -25,7 +23,9 @@ export default async function MethodologyPage({ params }) {
 
   return (
     <main>
-      <h1 className={outlinedHeading}>Methodology</h1>
+      <h1 className={outlinedHeading}>
+        {dict?.pages?.methodology?.heading ?? "Methodology"}
+      </h1>
     </main>
   );
 }

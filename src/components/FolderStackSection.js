@@ -3,7 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import FolderIcon from "./ui/Folder";
+import FolderIcon from "./ui/Folder/Folder";
 import { Button } from "./ui";
 import { ArrowRight } from "phosphor-react";
 

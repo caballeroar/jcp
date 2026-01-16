@@ -1,11 +1,13 @@
 import { notFound } from "next/navigation";
 import ClientPage from "../../components/ClientPage";
 
-const locales = ["en", "nl"];
 export const dynamicParams = false;
 
-export function generateStaticParams() {
-  return [{ locale: "en" }, { locale: "nl" }];
+const locales = ["en", "nl"];
+
+export async function generateStaticParams() {
+  // IMPORTANT: the key must be named "locale" to match the [locale] segment
+  return locales.map((locale) => ({ locale }));
 }
 
 export default async function Page({ params }) {

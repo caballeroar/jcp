@@ -6,6 +6,8 @@ import Image from "next/image";
 import { Switch } from ".";
 import LogoFull from "../../../public/assets/logo_full.svg";
 import LogoIcon from "../../../public/assets/logo_icon.svg";
+import { useI18n } from "../../lib/I18nContext";
+import LanguageSwitcher from "./Switcher/LanguageSwitcher";
 
 export default function Menu({
   items = [
@@ -13,15 +15,17 @@ export default function Menu({
     { label: "Cases", slug: "cases" },
     { label: "Services", slug: "services" },
   ],
-  locale = "en",
-  onLocaleToggle,
-  localeDisabled = false,
+  // locale = "en",
+  // onLocaleToggle,
+  // localeDisabled = false,
   showHeader = true,
   className = "",
 }) {
   const [open, setOpen] = useState(false);
   const overlayRef = useRef(null);
   const [onBrandBackground, setOnBrandBackground] = useState(false);
+
+  const { locale } = useI18n();
 
   useEffect(() => {
     const onKey = (e) => {
@@ -105,13 +109,7 @@ export default function Menu({
                 >
                   MENU
                 </button>
-                {onLocaleToggle && (
-                  <Switch
-                    checked={locale === "nl"}
-                    disabled={localeDisabled}
-                    onChange={(v) => onLocaleToggle(v ? "nl" : "en")}
-                  />
-                )}
+                <LanguageSwitcher />
               </div>
             </div>
           </header>

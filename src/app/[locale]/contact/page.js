@@ -1,6 +1,5 @@
 import { getDictionary } from "../../../lib/i18n";
 import { notFound } from "next/navigation";
-import BackButton from "../../../components/BackButton";
 import Contact from "@/components/Contact";
 
 export const dynamicParams = false;
@@ -12,7 +11,7 @@ export async function generateStaticParams() {
 }
 
 export default async function ContactPage({ params }) {
-  const { locale } = await params; // unwrap params
+  const { locale } = params;
 
   if (!locales.includes(locale)) {
     notFound();

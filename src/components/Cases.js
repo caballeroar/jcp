@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Button from "./ui/Button";
 import FolderStackSection from "./FolderStackSection";
-import FolderIcon from "./ui/Folder";
+import FolderIcon from "./ui/Folder/Folder";
 import { ArrowRight } from "phosphor-react";
 
 export default function Cases({
@@ -155,6 +155,21 @@ export default function Cases({
           }}
         >
           <FolderIcon />
+          <FolderIcon
+            // title={cases?.folder?.client || "Client Name"}
+            description="Short case description"
+            // images={images}
+            // href={`/${locale}/cases?slug=${slug}`}
+          />
+
+          {/* title,
+  description,
+  imageSrc,
+  images = [],
+  buttonLabel = "View",
+  href,
+  onExpand,
+  isExpanded = false, */}
         </div>
         <div
           style={{

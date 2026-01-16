@@ -80,36 +80,17 @@ export default function Environment({ locale }) {
 
   // Words setup
   // - innerLabel: localized "people"
-  // - WORDS: 20 sustainability-related keywords
+  // - WORDS: sustainability-related keywords, localized via dictionaries
   const effectiveLocale = i18n?.locale || locale || "en";
   const innerLabel =
     i18n?.dict?.environment?.innerLabel ??
     (effectiveLocale === "nl" ? "mensen" : "people");
-  const WORDS = useMemo(
-    () => [
-      "climate",
-      "equity",
-      "circular",
-      "resilience",
-      "energy",
-      "justice",
-      "community",
-      "inclusion",
-      "governance",
-      "policy",
-      "innovation",
-      "biodiversity",
-      "carbon",
-      "water",
-      "waste",
-      "ethics",
-      "transparency",
-      "impact",
-      "collaboration",
-      "stewardship",
-    ],
-    []
-  );
+
+  const dictWords = i18n?.dict?.pages?.home?.environment?.words;
+
+  const WORDS = useMemo(() => {
+    return Array.isArray(dictWords) ? dictWords : [];
+  }, [dictWords]);
 
   // Assign words across OUTER rings with deterministic angles/phases
   // - ringAssignments: spread words across r=240, 320, 400
@@ -148,8 +129,6 @@ export default function Environment({ locale }) {
       };
     });
   }, [WORDS]);
-
-  // Words move based on scroll progress (no time-based rotation)
 
   // Helpers
   // - clamp01: clamp to [0,1]
@@ -390,7 +369,7 @@ export default function Environment({ locale }) {
                       letterSpacing: "normal",
                       fontSize: 20,
                       opacity: appear,
-                      fontFamily: "var(--font-roboto-mono)",
+                      fontFamily: "var(--font-roboto-mono)", // fixed closing parenthesis
                       textTransform: "capitalize",
                     }}
                     fontSize={14}
