@@ -65,22 +65,24 @@ export default function RootLayout({ children }) {
         )}
       </head>
       <body>
-        <I18nProvider value={{ locale, dict }}>
-          <Menu
-            locale={locale}
-            onLocaleToggle={switchLanguage}
-            localeDisabled={false}
-          />
-          <RouteTransitionOverlay />
-          {gaId && <GoogleAnalytics GA_MEASUREMENT_ID={gaId} />}
-          {gaId && (
-            <Suspense fallback={null}>
-              <CookieConsent GA_MEASUREMENT_ID={gaId} />
-            </Suspense>
-          )}
-          {children}
-          <Footer />
-        </I18nProvider>
+        <Suspense fallback={null}>
+          <I18nProvider value={{ locale, dict }}>
+            <Menu
+              locale={locale}
+              onLocaleToggle={switchLanguage}
+              localeDisabled={false}
+            />
+            <RouteTransitionOverlay />
+            {gaId && <GoogleAnalytics GA_MEASUREMENT_ID={gaId} />}
+            {gaId && (
+              <Suspense fallback={null}>
+                <CookieConsent GA_MEASUREMENT_ID={gaId} />
+              </Suspense>
+            )}
+            {children}
+            <Footer />
+          </I18nProvider>
+        </Suspense>
       </body>
     </html>
   );

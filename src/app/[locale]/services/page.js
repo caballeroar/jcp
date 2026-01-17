@@ -16,6 +16,13 @@ export default async function ServicesPage({ params }) {
   }
 
   const dict = await getDictionary(locale);
+  const servicesCopy = dict?.pages?.services ?? {};
+  const navCopy = dict?.nav ?? {};
+
+  const title = servicesCopy.title ?? "Services";
+  const subtitle = servicesCopy.subtitle ?? "";
+  const description = servicesCopy.description ?? "More details coming soon.";
+  const homeLabel = navCopy.home ?? "Home";
 
   return (
     <main className="min-h-screen bg-background text-foreground p-8">
@@ -26,20 +33,20 @@ export default async function ServicesPage({ params }) {
             href={`/${locale}`}
             className="text-foreground/60 hover:text-foreground transition-colors"
           >
-            ← {dict.nav.home}
+            ← {homeLabel}
           </Link>
         </nav>
 
         {/* Content */}
         <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4">
-            {dict.pages.services.title}
-          </h1>
-          <h2 className="text-xl font-light mb-8 text-foreground/70">
-            {dict.pages.services.subtitle}
-          </h2>
+          <h1 className="text-4xl font-bold mb-4">{title}</h1>
+          {subtitle && (
+            <h2 className="text-xl font-light mb-8 text-foreground/70">
+              {subtitle}
+            </h2>
+          )}
           <p className="text-lg text-foreground/80 max-w-2xl mx-auto leading-relaxed">
-            {dict.pages.services.description}
+            {description}
           </p>
         </div>
 
