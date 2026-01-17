@@ -11,6 +11,8 @@ export function useScrollProgress(ref, options = {}) {
     const update = () => {
       raf = null;
       const el = ref.current;
+      if (!el) return;
+
       const rect = el.getBoundingClientRect();
       const vh = window.innerHeight || 1;
 

@@ -7,14 +7,14 @@ import Contact from "./Contact";
 import Cases from "./Cases";
 import Methodology2 from "./Methodology_2";
 
-export default function ClientPage({ initialLocale = "en" }) {
+export default function ClientPage() {
   return (
     <>
       <main>
         <Hero />
 
         <div className="min-h-screen">
-          <Environment locale={initialLocale} />
+          <Environment />
         </div>
         <Methodology2 />
         <Cases />

@@ -161,8 +161,8 @@
         }
       },
       "contact": {
-        "sentence": "Klaar om samen een positieve impact te maken?",
-        "cta": "Neem contact met ons op",
+        "sentence": "Let’s create impact, together.",
+        "cta": "Contact us",
         "listen": "listen",
         "experience": "experience",
         "translate": "translate",
@@ -174,22 +174,26 @@
         {
           "slug": "case-1",
           "client": "Communities",
-          "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+          "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative.",
+          "cta": "View Case"
         },
         {
           "slug": "case-2",
           "client": "Communities",
-          "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+          "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative.",
+          "cta": "View Case"
         },
         {
           "slug": "case-3",
           "client": "Communities",
-          "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+          "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative.",
+          "cta": "View Case"
         },
         {
           "slug": "case-4",
           "client": "Communities",
-          "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+          "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative.",
+          "cta": "View Case"
         }
       ]
     }

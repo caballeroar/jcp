@@ -5,6 +5,7 @@ import { useI18n } from "../lib/I18nContext";
 
 export default function Environment({ locale }) {
   const i18n = useI18n();
+
   const [progress, setProgress] = useState(0);
   const [scrollRatio, setScrollRatio] = useState(0);
   const [autoTime, setAutoTime] = useState(0);
@@ -153,7 +154,7 @@ export default function Environment({ locale }) {
   const depths = [0.15, 0.25, 0.35, 0.45];
   const opacities = delays.map((d) => clamp01((progress - d) / FADE_WINDOW));
   const offsetsY = delays.map(
-    (_, i) => BASE_Y + depths[i] * PARALLAX_PX * progress
+    (_, i) => BASE_Y + depths[i] * PARALLAX_PX * progress,
   );
   // Rounded versions to stabilize SSR/CSR transform attributes
   const offsetsYRounded = offsetsY.map(round3);
@@ -337,7 +338,7 @@ export default function Environment({ locale }) {
                   autoPhase,
                   autoSpeed,
                 },
-                i
+                i,
               ) => {
                 const delta =
                   amp * Math.sin(progress * Math.PI * speed + phase);
@@ -346,7 +347,7 @@ export default function Environment({ locale }) {
                 const autoDelta =
                   AUTO_AMP *
                   Math.sin(
-                    tSec * 2 * Math.PI * AUTO_FREQ * autoSpeed + autoPhase
+                    tSec * 2 * Math.PI * AUTO_FREQ * autoSpeed + autoPhase,
                   );
                 // Keep words from coming too close to inner ring
                 const minR =
@@ -355,7 +356,7 @@ export default function Environment({ locale }) {
                 const x = 500 + r * Math.cos(angle);
                 const y = 500 + r * Math.sin(angle) + offsetsY[ringIndex];
                 const appear = ease(
-                  clamp01((progress - delays[ringIndex]) / (FADE_WINDOW * 0.9))
+                  clamp01((progress - delays[ringIndex]) / (FADE_WINDOW * 0.9)),
                 );
                 return (
                   <text
@@ -377,7 +378,7 @@ export default function Environment({ locale }) {
                     {w}
                   </text>
                 );
-              }
+              },
             )}
           </svg>
         </div>

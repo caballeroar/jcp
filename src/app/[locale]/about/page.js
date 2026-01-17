@@ -1,23 +1,23 @@
-import { getDictionary } from "../../../lib/i18n";
+import { useI18n } from "../lib/I18nContext";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 
-export const dynamicParams = false;
+// export const dynamicParams = false;
 
-const locales = ["en", "nl"];
+// const locales = ["en", "nl"];
 
-export async function generateStaticParams() {
-  return [{ locale: "en" }, { locale: "nl" }];
-}
+// export async function generateStaticParams() {
+//   return [{ locale: "en" }, { locale: "nl" }];
+// }
 
-export default async function AboutPage({ params }) {
-  const { locale } = params;
+export default function AboutPage() {
+  const { locale, dict } = useI18n();
 
-  if (!locales.includes(locale)) {
-    notFound();
-  }
+  // if (!locales.includes(locale)) {
+  //   notFound();
+  // }
 
-  const dict = await getDictionary(locale);
+  // const dict = await getDictionary(locale);
 
   return (
     <main className="min-h-screen bg-background text-foreground p-8">

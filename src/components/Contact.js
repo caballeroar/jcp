@@ -6,6 +6,7 @@ import { useI18n } from "../lib/I18nContext";
 
 export default function Contact() {
   const { locale, dict } = useI18n();
+
   return (
     <section className="relative flex items-center w-full md:w-4/6 h-[600px] md:h-[800px] py-24 mx-auto sm:py-20 md:my-40 px-6 overflow-hidden">
       {/* Background SVG */}
@@ -33,7 +34,7 @@ export default function Contact() {
                 fontSize="14"
                 className="font-roboto-mono rotate-60"
               >
-                Identify
+                {dict?.pages?.home?.contact?.identify}
               </text>
               <animateMotion dur="48s" repeatCount="indefinite" rotate="0">
                 <mpath xlinkHref="#contactPath1" />
@@ -58,7 +59,7 @@ export default function Contact() {
                 fontSize="14"
                 className="font-roboto-mono rotate-[-55deg]"
               >
-                Listen
+                {dict?.pages?.home?.contact?.listen}
               </text>
               <animateMotion dur="42s" repeatCount="indefinite" rotate="0">
                 <mpath xlinkHref="#contactPath2" />
@@ -83,7 +84,7 @@ export default function Contact() {
                 fontSize="14"
                 className="font-roboto-mono rotate-225"
               >
-                Translate
+                {dict?.pages?.home?.contact?.translate}
               </text>
               <animateMotion dur="46s" repeatCount="indefinite" rotate="0">
                 <mpath xlinkHref="#contactPath3" />
@@ -108,7 +109,7 @@ export default function Contact() {
                 fontSize="14"
                 className="font-roboto-mono rotate-124"
               >
-                Experience
+                {dict?.pages?.home?.contact?.experience}
               </text>
               <animateMotion dur="48s" repeatCount="indefinite" rotate="0">
                 <mpath xlinkHref="#contactPath4" />
@@ -121,7 +122,7 @@ export default function Contact() {
       {/* Overlay content */}
       <div className="relative max-w-4xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-[var(--content_dark)]">
-          Let’s create impact, together.
+          {dict?.pages?.home?.contact?.sentence}
         </h2>
 
         <div className="mt-8 inline-flex">
@@ -130,7 +131,7 @@ export default function Contact() {
             theme="dark"
             href={`/${locale}/contact`}
           >
-            Contact Us
+            {dict?.pages?.home?.contact?.cta}
           </Button>
         </div>
       </div>

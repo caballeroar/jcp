@@ -5,6 +5,7 @@ import Image from "next/image";
 import Button from "../Button";
 import { ArrowUpRight } from "phosphor-react";
 import { useCarouselSwap } from "./useCarouselSwap";
+// import { useI18n } from "../lib/I18nContext";
 
 export default function FolderIcon({
   title,
@@ -12,12 +13,14 @@ export default function FolderIcon({
   imageSrc,
   images = [],
   buttonLabel = "View",
+  cta,
   href,
   onExpand,
-  isExpanded = false,
 }) {
   const [showOverlay, setShowOverlay] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+
+  // const { dict, locale } = useI18n();
 
   const effectiveImages =
     images.length > 0 ? images : imageSrc ? [imageSrc] : [];
@@ -32,39 +35,35 @@ export default function FolderIcon({
   } = useCarouselSwap({
     imageCount: effectiveImages.length,
     isPaused,
-    isDisabled: isExpanded,
+    isDisabled: false,
   });
 
   const gapPx = 4;
 
   const handleActivate = () => {
-    if (onExpand) onExpand();
+    onExpand?.();
   };
 
   return (
     <div
       role="button"
       tabIndex={0}
-      aria-expanded={isExpanded}
+      aria-expanded="false"
       onClick={handleActivate}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") handleActivate();
       }}
       onMouseEnter={() => {
-        if (!isExpanded) {
-          setShowOverlay(true);
-          setIsPaused(true);
-        }
+        setShowOverlay(true);
+        setIsPaused(true);
       }}
       onMouseLeave={() => {
-        if (!isExpanded) {
-          setShowOverlay(false);
-          setIsPaused(false);
-        }
+        setShowOverlay(false);
+        setIsPaused(false);
       }}
       className="relative w-full flex flex-col justify-end items-center pb-2 cursor-pointer"
       style={{
-        aspectRatio: isExpanded ? "auto" : "180 / 120",
+        aspectRatio: "180 / 120",
         color: "var(--content_dark)",
       }}
     >
@@ -93,11 +92,7 @@ export default function FolderIcon({
         </p>
 
         {/* Image area */}
-        <div
-          className={`relative w-full overflow-hidden rounded-lg ${
-            isExpanded ? "h-[400px]" : "h-[180px]"
-          }`}
-        >
+        <div className="relative w-full overflow-hidden rounded-lg h-[180px]">
           {effectiveImages.length > 0 && (
             <>
               {/* Current image */}
@@ -167,9 +162,7 @@ export default function FolderIcon({
           {/* Overlay CTA */}
           <div
             className={`absolute inset-0 flex items-center justify-center bg-black/40 transition-opacity ${
-              showOverlay && !isExpanded
-                ? "opacity-100"
-                : "opacity-0 pointer-events-none"
+              showOverlay ? "opacity-100" : "opacity-0 pointer-events-none"
             }`}
             onClick={(e) => e.stopPropagation()}
           >
@@ -177,8 +170,12 @@ export default function FolderIcon({
               href={href}
               theme="light"
               icon={<ArrowUpRight size={20} weight="bold" />}
+              onClick={(event) => {
+                event.stopPropagation();
+                handleActivate();
+              }}
             >
-              {buttonLabel}
+              {cta || buttonLabel}
             </Button>
           </div>
         </div>
