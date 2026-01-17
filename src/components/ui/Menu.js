@@ -90,14 +90,15 @@ export default function Menu({
               style={{ letterSpacing: "normal" }}
             >
               <div className="flex items-center gap-3">
-                <Image
-                  src={LogoFull}
-                  alt="Just Common People"
-                  // width={160}
-                  height={36}
-                  className={onBrandBackground ? "brightness-0 invert" : ""}
-                  priority
-                />
+                <Link href={`/${locale}/`} className="inline-flex">
+                  <Image
+                    src={LogoFull}
+                    alt="Just Common People"
+                    height={36}
+                    className={onBrandBackground ? "brightness-0 invert" : ""}
+                    priority
+                  />
+                </Link>
               </div>
               <div className="flex items-center gap-3">
                 <button
@@ -135,12 +136,18 @@ export default function Menu({
                 aria-controls="site-menu-panel"
               >
                 <span className="flex items-center gap-2">
-                  <Image
-                    src={LogoIcon}
-                    alt="Just Common People"
-                    height={28}
-                    priority
-                  />
+                  <Link
+                    href={`/${locale}/`}
+                    className="inline-flex items-center gap-2"
+                    onClick={() => setOpen(false)}
+                  >
+                    <Image
+                      src={LogoIcon}
+                      alt="Just Common People"
+                      height={28}
+                      priority
+                    />
+                  </Link>
                 </span>
                 <span className="text-sm font-bold tracking-wide uppercase">
                   MENU

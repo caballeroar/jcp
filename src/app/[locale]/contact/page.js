@@ -7,18 +7,14 @@ export async function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
-export default async function MethodologyPage({ params }) {
+export default async function ContactPage({ params }) {
   const { locale } = await params;
   const dict = await getDictionary(locale).catch(() => ({}));
-  const copy = dict?.pages?.methodology ?? {};
+  const copy = dict?.pages?.contact ?? {};
 
   return (
     <main className="min-h-screen px-6 py-12 text-[var(--content_dark)] bg-[var(--background)] space-y-6">
-      <h1 className="text-4xl font-semibold">
-        {copy.heading ?? "Methodology"}
-      </h1>
-      {copy.sentence1 && <p className="text-lg">{copy.sentence1}</p>}
-      {copy.sentence2 && <p className="text-lg">{copy.sentence2}</p>}
+      <h1 className="text-4xl font-semibold">{copy.heading ?? "Contact"}</h1>
     </main>
   );
 }

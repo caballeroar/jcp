@@ -25,8 +25,6 @@ export default function Cases({
   const effectiveLocale = locale ?? detectedLocale ?? contextLocale;
 
   const sectionRef = useRef(null);
-  const [bgY, setBgY] = useState(0);
-  const [scrollY, setScrollY] = useState(0);
   const [viewportWidth, setViewportWidth] = useState(0);
   const [expandedIndex, setExpandedIndex] = useState(null);
   const baseOffset = -200; // shift image higher near the title
@@ -46,9 +44,7 @@ export default function Cases({
         const el = sectionRef.current;
         if (!el) return;
         const rect = el.getBoundingClientRect();
-        // Parallax factor: adjust 0.2-0.4 for more/less movement
-        setBgY(rect.top * 0.3);
-        setScrollY(rect.top);
+        el.style.setProperty("--cases-scroll", `${rect.top}px`);
       });
     };
     onScroll();
@@ -169,7 +165,6 @@ export default function Cases({
         {folderParallax.map((multiplier, index) => {
           const caseData = caseEntries[index];
           if (!caseData) return null;
-          const translateY = scrollY * multiplier;
           return (
             <div
               key={caseData.slug}
@@ -177,7 +172,7 @@ export default function Cases({
                 position: "relative",
                 width: folderWidth,
                 marginLeft: `${computeLeftPercent(index)}%`,
-                transform: `translateY(${translateY}px)`,
+                transform: `translateY(calc(var(--cases-scroll, 0px) * ${multiplier}))`,
                 transition: "transform 0.4s ease",
               }}
             >
@@ -194,7 +189,7 @@ export default function Cases({
         <div
           className="w-full flex justify-center mx-auto mt-100"
           style={{
-            transform: `translateY(${scrollY * 0.46}px)`,
+            transform: "translateY(calc(var(--cases-scroll, 0px) * 0.46))",
           }}
         >
           <Button href={targetHref} icon={<ArrowRight />}>

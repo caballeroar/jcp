@@ -64,7 +64,7 @@ export default function RootLayout({ children }) {
           </>
         )}
       </head>
-      <body className="bg-black text-white">
+      <body>
         <I18nProvider value={{ locale, dict }}>
           <Menu
             locale={locale}
