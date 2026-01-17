@@ -1,110 +1,55 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+
+import { useRef } from "react";
 import { ArrowRight } from "phosphor-react";
 import { useI18n } from "../lib/I18nContext";
 import { Button } from "./ui";
+import { useScrollProgress } from "../lib/hooks/useScrollProgress";
+import EllipseSvg from "./EllipseSvg";
+// import "../app/globals.css";
+
+const ELLIPSES = [
+  { rotation: -45 },
+  { rotation: 45 },
+  { rotation: -135 },
+  { rotation: 135 },
+];
 
 export default function Methodology2() {
   const { locale, dict } = useI18n();
-  const accent = "font-bold mb-2 text-[var(--content_brand)]";
-
   const sectionRef = useRef(null);
-  const [progress, setProgress] = useState(0);
 
-  // Simple scroll progress just for this section
-  useEffect(() => {
-    const handleScroll = () => {
-      const el = sectionRef.current;
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      const vh = window.innerHeight || 1;
+  useScrollProgress(sectionRef, { start: 0.15, end: 0.5 });
 
-      // 0 when section top is at bottom of viewport,
-      // 1 when the section is fully in view (section bottom reaches viewport top).
-      const start = vh;
-      const end = -rect.height;
-      const raw = (start - rect.top) / (start - end || 1);
-      const p = Math.max(0, Math.min(1, raw));
-      setProgress(p);
-    };
-
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
-    };
-  }, []);
-
-  const lerp = (a, b, t) => a + (b - a) * t;
-  // Ease-out to make ellipses slow down as they approach center
-  const easeOut = (t) => 1 - Math.pow(1 - t, 5);
-  const t = easeOut(progress);
-
-  // Motion: each ellipse starts off in its corner and moves toward
-  // a symmetric 2x2 grid around the center of the section.
-  const START_X = 600;
-  const START_Y = 400;
-  const END_X = 240;
-  const END_Y = 240;
-
-  const tlDx = lerp(-START_X, -END_X, t);
-  const tlDy = lerp(-START_Y, -END_Y, t);
-  const trDx = lerp(START_X, END_X, t);
-  const trDy = lerp(-START_Y, -END_Y, t);
-  const blDx = lerp(-START_X, -END_X, t);
-  const blDy = lerp(START_Y, END_Y, t);
-  const brDx = lerp(START_X, END_X, t);
-  const brDy = lerp(START_Y, END_Y, t);
-
-  const textRaw = (t - 0.6) / 0.3;
-  const textProgress = Math.max(0, Math.min(1, textRaw));
-  const textOpacity = textProgress;
-  const textTranslateY = 20 * (1 - textProgress);
-
-  const heroPage = dict?.pages?.home || {};
-  const line1 =
-    heroPage?.subtitle || "Every challenge revolves around people.";
-  const line2Prefix =
-    heroPage?.description || "We help you strengthen";
-  const andWord = dict?.common?.and || "and"; // optional common key
+  const accent = "font-bold mb-2 text-[var(--content_brand)]";
 
   return (
     <section
       ref={sectionRef}
-      className="relative w-full min-h-screen m-auto flex items-center justify-center overflow-visible"
+      className="methodology relative w-full min-h-screen flex items-center justify-center overflow-visible"
     >
-      {/* Four identical ellipses, each centered then offset by scroll-based dx/dy */}
+      {ELLIPSES.map((e, i) => (
+        <EllipseSvg key={i} index={i} rotation={e.rotation} />
+      ))}
 
-      <EllipseSvg dx={tlDx} dy={tlDy} rotation={-45} />
-      <EllipseSvg dx={trDx} dy={trDy} rotation={45} />
-      <EllipseSvg dx={blDx} dy={blDy} rotation={-135} />
-      <EllipseSvg dx={brDx} dy={brDy} rotation={135} />
-
-      <div
-        className="w-4/6 lg:w-3/6 2xl:w-2/6 flex flex-col justify-center items-center text-[var(--content_dark)] "
-        style={{
-          opacity: textOpacity,
-          transform: `translateY(${textTranslateY}px)`,
-          transition: "opacity 0.2s linear, transform 0.2s linear",
-        }}
-      >
-        <p className="text-lg sm:text-xl md:text-3xl xl:text-4xl font-semibold  leading-tight text-center tracking-tight">
-          {line1}
+      <div className="w-4/6 lg:w-3/6 flex flex-col items-center text-center relative z-10">
+        <p className="text-xl md:text-3xl font-semibold">
+          {dict?.pages?.home?.methodology?.sentence1}
         </p>
-        <p className="mt-8 text-lg sm:text-xl md:text-3xl xl:text-4xl font-semibold  leading-tight text-center tracking-tight">
-          {line2Prefix}{" "}
+
+        <p className="mt-8 text-xl md:text-3xl font-semibold">
+          {dict?.pages?.home?.methodology?.sentence2}{" "}
           <span className={accent}>
-            {dict?.pages?.home?.understanding || "understanding"}
+            {dict?.pages?.home?.methodology?.accent1}
           </span>
-          , <span className={accent}>{dict?.pages?.home?.trust || "trust"}</span>{" "}
-          {andWord}{" "}
+          ,{" "}
           <span className={accent}>
-            {dict?.pages?.home?.collaboration || "collaboration"}
+            {dict?.pages?.home?.methodology?.accent2}
+          </span>{" "}
+          and{" "}
+          <span className={accent}>
+            {dict?.pages?.home?.methodology?.accent3}
           </span>
-          .
         </p>
 
         <Button
@@ -113,34 +58,9 @@ export default function Methodology2() {
           className="mt-12"
           href={`/${locale}/methodology`}
         >
-          {dict?.cta?.methodology || "Methodology"}
+          {dict?.pages?.home?.methodology?.cta}
         </Button>
       </div>
     </section>
-  );
-}
-
-function EllipseSvg({ dx, dy, rotation }) {
-  return (
-    <svg
-      className="absolute top-1/2 left-1/2 w-[360px] h-auto overflow-visible pointer-events-none"
-      style={{
-        transform: `translate(-50%, -50%) translate(${dx}px, ${dy}px)`,
-      }}
-      viewBox="0 0 400 400"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <ellipse
-        cx="200"
-        cy="200"
-        rx="140"
-        ry="320"
-        transform={`rotate(${rotation} 200 200)`}
-        stroke="#DF4D20"
-        strokeOpacity="0.6"
-        strokeWidth="2"
-      />
-    </svg>
   );
 }

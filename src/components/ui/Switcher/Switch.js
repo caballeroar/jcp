@@ -14,6 +14,7 @@ export default function Switch({ checked, onToggle, disabled = false }) {
     borderRadius: 4,
     background: "var(--content_dark)",
     transition: "left 200ms ease-in-out",
+    zIndex: 1,
   };
 
   return (
@@ -27,6 +28,8 @@ export default function Switch({ checked, onToggle, disabled = false }) {
         relative grid grid-cols-2 items-center w-[48px] h-[24px]
         rounded-[6px] cursor-pointer select-none
         disabled:cursor-not-allowed disabled:opacity-50
+        gap-1
+       
       `}
       style={{
         border: "1px solid var(--content_dark)",
@@ -35,21 +38,23 @@ export default function Switch({ checked, onToggle, disabled = false }) {
       }}
     >
       <span
-        className="flex items-center justify-center font-semibold text-xs"
+        className="flex items-center justify-center font-bold text-xs z-2"
         style={{
           width: 20,
           height: 20,
           transform: "translateY(1px)",
+          color: checked ? "var(--content_light)" : "var(--content_dark)",
         }}
       >
         EN
       </span>
       <span
-        className="flex items-center justify-center font-semibold text-xs"
+        className="flex items-center justify-center font-bold text-xs z-2"
         style={{
           width: 20,
           height: 20,
           transform: "translateY(1px)",
+          color: checked ? "var(--content_dark)" : "var(--content_light)",
         }}
       >
         NL

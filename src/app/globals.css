@@ -12,6 +12,7 @@
   --surface: #1c0707;
   --logos: #494949;
   --bg_gradient: linear-gradient(180deg, #fff 80%, #f0f0f0 100%);
+  --foreground: var(--content_dark);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -27,6 +28,7 @@
     --surface: #f0f0f0;
     --logos: #dfdfdf;
     --bg_gradient: linear-gradient(180deg, #494949 80%, #5d5d5d 100%);
+    --foreground: var(--content_light);
   }
 }
 
@@ -40,8 +42,9 @@ html {
 
 /* Roboto Mono utility */
 .font-roboto-mono {
-  font-family: var(--font-roboto-mono), ui-monospace, SFMono-Regular, Menlo,
-    Monaco, Consolas, "Liberation Mono", monospace !important;
+  font-family:
+    var(--font-roboto-mono), ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, "Liberation Mono", monospace !important;
 }
 
 body {
@@ -70,8 +73,8 @@ body {
 
 /* Utility class for Monument Extended */
 .font-monument-extended {
-  font-family: "Monument Extended", var(--font-fustat), Arial, Helvetica,
-    sans-serif !important;
+  font-family:
+    "Monument Extended", var(--font-fustat), Arial, Helvetica, sans-serif !important;
 }
 
 /* (removed) reveal-up animation and helpers: no current usage */
@@ -160,4 +163,71 @@ body {
 }
 .no-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari */
+}
+
+/* ================================
+   Scroll-driven ellipse animation
+   ================================ */
+
+.methodology {
+  --p: var(--scroll-progress, 0);
+  position: relative;
+}
+
+.ellipse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 360px;
+  pointer-events: none;
+  will-change: transform;
+  transform: translate(-50%, -50%)
+    translate(
+      calc(var(--x-start) + (var(--x-end) - var(--x-start)) * var(--p)),
+      calc(var(--y-start) + (var(--y-end) - var(--y-start)) * var(--p))
+    );
+  color: var(--content_brand);
+}
+
+.ellipse ellipse {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2px;
+  opacity: 0.6;
+}
+
+/* Declarative ellipse positions */
+.ellipse[data-index="0"] {
+  --x-start: -600px;
+  --y-start: -400px;
+  --x-end: -240px;
+  --y-end: -240px;
+}
+
+.ellipse[data-index="1"] {
+  --x-start: 600px;
+  --y-start: -400px;
+  --x-end: 240px;
+  --y-end: -240px;
+}
+
+.ellipse[data-index="2"] {
+  --x-start: -600px;
+  --y-start: 400px;
+  --x-end: -240px;
+  --y-end: 240px;
+}
+
+.ellipse[data-index="3"] {
+  --x-start: 600px;
+  --y-start: 400px;
+  --x-end: 240px;
+  --y-end: 240px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .ellipse {
+    transform: translate(-50%, -50%);
+  }
 }
