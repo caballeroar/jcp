@@ -39,6 +39,18 @@ export default function FolderIcon({
   });
 
   const gapPx = 4;
+  const primaryWidth = `calc(70% - ${gapPx}px)`;
+  const secondaryWidth = `calc(30% - ${gapPx}px)`;
+  const currentTransform = isSwapping ? "translateX(-110%)" : "translateX(0)";
+  const nextWidth = isSwapping ? primaryWidth : secondaryWidth;
+  const nextLeft = isSwapping ? "0%" : "70%";
+  const enteringLeft = enterActive ? "70%" : "100%";
+  const animationEase = `${swapDurationMs}ms ease-in-out`;
+  const currentTransition = isSwapping ? `transform ${animationEase}` : "none";
+  const nextTransition = isSwapping
+    ? `left ${animationEase}, width ${animationEase}`
+    : "none";
+  const enteringTransition = `left ${animationEase}`;
 
   const handleActivate = () => {
     onExpand?.();
@@ -95,14 +107,12 @@ export default function FolderIcon({
         <div className="relative w-full overflow-hidden rounded-lg h-[180px]">
           {effectiveImages.length > 0 && (
             <>
-              {/* Current image */}
               <div
-                className="absolute h-full"
+                className="absolute top-0 left-0 h-full overflow-hidden rounded-lg"
                 style={{
-                  width: isSwapping
-                    ? `calc(0% - ${gapPx}px)`
-                    : `calc(70% - ${gapPx}px)`,
-                  transition: `width ${swapDurationMs}ms ease-in-out`,
+                  width: primaryWidth,
+                  transform: currentTransform,
+                  transition: currentTransition,
                 }}
               >
                 <Image
@@ -114,15 +124,13 @@ export default function FolderIcon({
                 />
               </div>
 
-              {/* Next image */}
               {effectiveImages.length > 1 && (
                 <div
-                  className="absolute right-0 h-full"
+                  className="absolute top-0 h-full overflow-hidden rounded-lg"
                   style={{
-                    width: isSwapping
-                      ? `calc(70% - ${gapPx}px)`
-                      : `calc(30% - ${gapPx}px)`,
-                    transition: `width ${swapDurationMs}ms ease-in-out`,
+                    width: nextWidth,
+                    left: nextLeft,
+                    transition: nextTransition,
                   }}
                 >
                   <Image
@@ -135,16 +143,13 @@ export default function FolderIcon({
                 </div>
               )}
 
-              {/* Entering image */}
-              {isSwapping && effectiveImages.length > 2 && (
+              {effectiveImages.length > 2 && isSwapping && (
                 <div
-                  className="absolute top-0 right-0 h-full"
+                  className="absolute top-0 h-full overflow-hidden rounded-lg"
                   style={{
-                    width: `calc(30% - ${gapPx}px)`,
-                    transform: enterActive
-                      ? "translateX(0)"
-                      : "translateX(100%)",
-                    transition: `transform ${swapDurationMs}ms ease-in-out`,
+                    width: secondaryWidth,
+                    left: enteringLeft,
+                    transition: enteringTransition,
                   }}
                 >
                   <Image
