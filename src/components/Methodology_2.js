@@ -5,14 +5,23 @@ import { ArrowRight } from "phosphor-react";
 import { useI18n } from "../lib/I18nContext";
 import { Button } from "./ui";
 import { useScrollProgress } from "../hooks/useScrollProgress";
-import EllipseSvg from "./EllipseSvg";
+import EllipseSvg from "./ui/EllipseSvg";
 // import "../app/globals.css";
 
 const ELLIPSES = [
-  { rotation: -45 },
-  { rotation: 45 },
-  { rotation: -135 },
-  { rotation: 135 },
+  {
+    rotation: -45,
+    coords: { xStart: -600, yStart: -400, xEnd: -260, yEnd: -220 },
+  },
+  {
+    rotation: 45,
+    coords: { xStart: 600, yStart: -400, xEnd: 260, yEnd: -220 },
+  },
+  {
+    rotation: -135,
+    coords: { xStart: -600, yStart: 400, xEnd: -260, yEnd: 260 },
+  },
+  { rotation: 135, coords: { xStart: 600, yStart: 400, xEnd: 260, yEnd: 260 } },
 ];
 
 export default function Methodology2() {
@@ -28,12 +37,13 @@ export default function Methodology2() {
       ref={sectionRef}
       className="methodology relative w-full min-h-screen flex items-center justify-center overflow-visible"
     >
-      {ELLIPSES.map((e, i) => (
+      {ELLIPSES.map((ellipse, i) => (
         <EllipseSvg
-          className={"opacity-60 w-[360px]"}
           key={i}
           index={i}
-          rotation={e.rotation}
+          rotation={ellipse.rotation}
+          className="opacity-60 w-[360px]"
+          coords={ellipse.coords}
         />
       ))}
 

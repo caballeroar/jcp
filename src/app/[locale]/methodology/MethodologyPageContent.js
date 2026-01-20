@@ -2,14 +2,23 @@
 
 import { useEffect, useRef } from "react";
 import { ArrowRight } from "phosphor-react";
-import { Button } from "./ui";
-import EllipseSvg from "./EllipseSvg";
+import { Button } from "../../../components/ui/Button";
+import EllipseSvg from "../../../components/ui/EllipseSvg";
 
 const ELLIPSES = [
-  { rotation: -45 },
-  { rotation: 45 },
-  { rotation: -135 },
-  { rotation: 135 },
+  {
+    rotation: -45,
+    coords: { xStart: -900, yStart: -520, xEnd: -320, yEnd: -220 },
+  },
+  {
+    rotation: 45,
+    coords: { xStart: 900, yStart: -520, xEnd: 320, yEnd: -220 },
+  },
+  {
+    rotation: -135,
+    coords: { xStart: -900, yStart: 520, xEnd: -320, yEnd: 400 },
+  },
+  { rotation: 135, coords: { xStart: 900, yStart: 520, xEnd: 320, yEnd: 400 } },
 ];
 
 const ENTRANCE_DURATION = 1500;
@@ -76,10 +85,11 @@ export default function MethodologyPageContent({ copy, locale, ctaLabel }) {
     >
       {ELLIPSES.map((ellipse, index) => (
         <EllipseSvg
-          className={"opacity-30 w-[440px]"}
           key={index}
           index={index}
           rotation={ellipse.rotation}
+          className="opacity-30 w-[440px]"
+          coords={ellipse.coords}
         />
       ))}
 

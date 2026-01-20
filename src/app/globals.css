@@ -52,6 +52,7 @@ body {
   color: var(--foreground);
 
   line-height: 1.25;
+  overflow-x: hidden;
 }
 
 /* Monument Extended (local) */
@@ -174,15 +175,17 @@ body {
   --p-offset: var(--scroll-progress-offset, 0);
   --p: clamp(0, calc(var(--p-base) + var(--p-offset)), 1);
   position: relative;
+  overflow: visible;
 }
 
 .ellipse {
   position: absolute;
   top: 50%;
   left: 50%;
-  /* width: 360px; */
   pointer-events: none;
   will-change: transform;
+  transform: translate(-50%, -50%)
+    translate(calc(var(--x-start)), calc(var(--y-start)));
   transform: translate(-50%, -50%)
     translate(
       calc(var(--x-start) + (var(--x-end) - var(--x-start)) * var(--p)),
@@ -195,36 +198,6 @@ body {
   fill: none;
   stroke: currentColor;
   stroke-width: 2px;
-  /* opacity: 0.6; */
-}
-
-/* Declarative ellipse positions */
-.ellipse[data-index="0"] {
-  --x-start: -900px;
-  --y-start: -520px;
-  --x-end: -320px;
-  --y-end: -220px;
-}
-
-.ellipse[data-index="1"] {
-  --x-start: 900px;
-  --y-start: -520px;
-  --x-end: 320px;
-  --y-end: -220px;
-}
-
-.ellipse[data-index="2"] {
-  --x-start: -900px;
-  --y-start: 520px;
-  --x-end: -320px;
-  --y-end: 400px;
-}
-
-.ellipse[data-index="3"] {
-  --x-start: 900px;
-  --y-start: 520px;
-  --x-end: 320px;
-  --y-end: 400px;
 }
 
 /* Reduced motion support */

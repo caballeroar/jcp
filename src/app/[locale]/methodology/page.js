@@ -1,5 +1,5 @@
 import { getDictionary } from "../../../lib/i18n";
-import MethodologyPageContent from "../../../components/MethodologyPageContent";
+import MethodologyPageContent from "./MethodologyPageContent";
 
 export const dynamicParams = false;
 const locales = ["en", "nl"];

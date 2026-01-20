@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import Image from "next/image";
 import { useI18n } from "../lib/I18nContext";
 
@@ -9,19 +9,21 @@ export default function Services({ items }) {
   // Prefer dictionary items under pages.services, then prop, then default
   const dictItems = dict?.pages?.services?.items;
   const services =
-    (Array.isArray(dictItems) && dictItems.length
+    Array.isArray(dictItems) && dictItems.length
       ? dictItems
       : Array.isArray(items) && items.length
-      ? items
-      : DEFAULT_SERVICES);
+        ? items
+        : DEFAULT_SERVICES;
 
   const mid = Math.ceil(services.length / 2);
   const leftServices = services.slice(0, mid);
   const rightServices = services.slice(mid);
 
   const [activeCol, setActiveCol] = useState(null);
-  const [activeLeftSet, setActiveLeftSet] = useState(new Set());
-  const [activeRightSet, setActiveRightSet] = useState(new Set());
+  const [expandedMap, setExpandedMap] = useState(() => ({
+    left: new Set(),
+    right: new Set(),
+  }));
   const [viewportWidth, setViewportWidth] = useState(0);
   const sectionRef = useRef(null);
   const [hasAnimated, setHasAnimated] = useState(false);
@@ -29,6 +31,44 @@ export default function Services({ items }) {
   const isXL = viewportWidth >= 1280;
   const imgScaleClass = (side) =>
     isXL && activeCol && activeCol !== side ? "scale-[0.8]" : "scale-100";
+
+  const columns = useMemo(
+    () => [
+      {
+        id: "left",
+        heading: dict?.pages?.services?.leftHeader || "Empathy & Insights",
+        description:
+          dict?.pages?.services?.description ||
+          "We uncover what truly matters to the people at the heart of your challenge.",
+        services: leftServices,
+      },
+      {
+        id: "right",
+        heading: dict?.pages?.services?.rightHeader || "Strategy & Design",
+        description:
+          dict?.pages?.services?.description ||
+          "We uncover what truly matters to the people at the heart of your challenge.",
+        services: rightServices,
+      },
+    ],
+    [dict, leftServices, rightServices],
+  );
+
+  const toggleCard = useCallback(
+    (columnId, index) => {
+      setExpandedMap((prev) => {
+        const next = {
+          left: new Set(prev.left),
+          right: new Set(prev.right),
+        };
+        const bucket = next[columnId];
+        if (bucket.has(index)) bucket.delete(index);
+        else bucket.add(index);
+        return next;
+      });
+    },
+    [setExpandedMap],
+  );
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -52,7 +92,7 @@ export default function Services({ items }) {
           obs.disconnect();
         }
       },
-      { threshold: 0.25 }
+      { threshold: 0.25 },
     );
     obs.observe(sectionRef.current);
     return () => obs.disconnect();
@@ -75,8 +115,10 @@ export default function Services({ items }) {
     else if (x > center + threshold) newCol = "right";
     setActiveCol(() => {
       // Clear the collapsed column's active cards
-      if (newCol === "left") setActiveRightSet(new Set());
-      else if (newCol === "right") setActiveLeftSet(new Set());
+      if (newCol === "left")
+        setExpandedMap((prev) => ({ ...prev, right: new Set() }));
+      else if (newCol === "right")
+        setExpandedMap((prev) => ({ ...prev, left: new Set() }));
       return newCol;
     });
   };
@@ -106,143 +148,19 @@ export default function Services({ items }) {
             handlePoint(e.touches[0].clientX, e.currentTarget);
         }}
       >
-        <div
-          className="flex px-4 flex-col min-w-0 transition-all duration-700 ease-out gap-4"
-          style={{ flexBasis: basis("left") }}
-        >
-          <article
-            className={`mb-3 rounded-xl border-[2px] border-white text-white bg-[var(--bg_brand)] px-5 pt-20 pb-5 flex flex-col items-center gap-12 ${
-              hasAnimated ? "stagger-in" : "anim-init"
-            }`}
-            style={{ animationDelay: "1400ms" }}
-          >
-            <div className="flex flex-col items-center gap-4 h-[140px]">
-              <h3 className="text-3xl md:text-5xl font-medium text-center tracking-tighter">
-                {dict?.pages?.services?.leftHeader || "Empathy & Insights"}
-              </h3>
-              <p className="text-sm md:text-lg text-center ">
-                {dict?.pages?.services?.description ||
-                  "We uncover what truly matters to the people at the heart of your challenge."}
-              </p>
-            </div>
-
-            <div className="grid grid-cols-full lg:grid-cols-2 gap-4 auto-rows-fr w-full">
-              {leftServices.map((s, i) => (
-                <article
-                  key={`${s.title}-${i}`}
-                  className={`rounded-xl border-[2px] border-white bg-[var(--bg_brand)] gap-4 pt-10 pb-4 px-1 flex flex-col items-center   overflow-hidden transition-all duration-300 ease-out hover:z-50 hover:bg-white/8 hover:scale-[1.02] ${
-                    hasAnimated ? "stagger-in" : "anim-init"
-                  }`}
-                  style={{ animationDelay: `${1000 + i * 120}ms` }}
-                  onClick={() => {
-                    setActiveLeftSet((prev) => {
-                      const next = new Set(prev);
-                      next.has(i) ? next.delete(i) : next.add(i);
-                      return next;
-                    });
-                  }}
-                >
-                  {!activeLeftSet.has(i) && (
-                    <div className="flex flex-col pt-20 gap-16 justify-between items-center h-[440px]">
-                      {s.svg && (
-                        <Image
-                          src={s.svg}
-                          alt={s.title}
-                          width={160}
-                          height={160}
-                          className={`object-contain max-h-40 brightness-0 invert transition-transform duration-300 ease-out ${imgScaleClass(
-                            "left"
-                          )}`}
-                        />
-                      )}
-                      <h3 className="mt-4 text-sm md:text-base text-white font-medium text-center font-roboto-mono uppercase">
-                        {s.title}
-                      </h3>
-                    </div>
-                  )}
-                  {activeLeftSet.has(i) && (
-                    <div className="flex flex-col pt-20 gap-16 justify-between  h-[440px]">
-                      <p className="text-2xl px-10 text-white text-center">
-                        {s.description}
-                      </p>
-                      <h3 className="text-base md:text-md text-white font-medium  text-center font-roboto-mono uppercase ">
-                        {s.title}
-                      </h3>
-                    </div>
-                  )}
-                </article>
-              ))}
-            </div>
-          </article>
-        </div>
-        <div
-          className="flex flex-col px-4 min-w-0 transition-all duration-700 ease-out gap-4"
-          style={{ flexBasis: basis("right") }}
-        >
-          <article
-            className={`mb-3 rounded-xl border-[2px] border-white text-white bg-[var(--bg_brand)] px-5 pt-20 pb-5 flex flex-col items-center gap-12 ${
-              hasAnimated ? "stagger-in" : "anim-init"
-            }`}
-            style={{ animationDelay: "1400ms" }}
-          >
-            <div className="flex flex-col items-center gap-4 h-[140px]">
-              <h3 className="text-3xl md:text-5xl font-medium text-center tracking-tighter">
-                {dict?.pages?.services?.rightHeader || "Strategy & Design"}
-              </h3>
-              <p className="text-sm md:text-lg text-center ">
-                {dict?.pages?.services?.description ||
-                  "We uncover what truly matters to the people at the heart of your challenge."}
-              </p>
-            </div>
-            <div className="grid grid-cols-full lg:grid-cols-2 gap-4 auto-rows-fr w-full">
-              {rightServices.map((s, i) => (
-                <article
-                  key={`${s.title}-${i}`}
-                  className={`rounded-xl border-[2px] border-white bg-[var(--bg_brand)] gap-4 pt-10 pb-4 px-1  flex flex-col items-center  overflow-hidden transition-all duration-300 ease-out hover:bg-white/8 hover:z-50 hover:scale-[1.02] ${
-                    hasAnimated ? "stagger-in" : "anim-init"
-                  }`}
-                  style={{ animationDelay: `${1000 + i * 120}ms` }}
-                  onClick={() => {
-                    setActiveRightSet((prev) => {
-                      const next = new Set(prev);
-                      next.has(i) ? next.delete(i) : next.add(i);
-                      return next;
-                    });
-                  }}
-                >
-                  {!activeRightSet.has(i) && (
-                    <div className="flex flex-col pt-20 gap-16 justify-between items-center h-[440px] ">
-                      {s.svg && (
-                        <Image
-                          src={s.svg}
-                          alt={s.title}
-                          width={160}
-                          height={160}
-                          className={`object-contain max-h-40 brightness-0 invert transition-transform duration-300 ease-out ${imgScaleClass(
-                            "right"
-                          )}`}
-                        />
-                      )}
-                      <h3 className="mt-4 text-sm md:text-base text-white font-medium text-center font-roboto-mono uppercase">
-                        {s.title}
-                      </h3>
-                    </div>
-                  )}
-                  {activeRightSet.has(i) && (
-                    <div className="flex flex-col pt-20 gap-16 justify-between h-[440px]">
-                      <p className="text-2xl px-10 text-white text-center">
-                        {s.description}
-                      </p>
-                      <h3 className="text-base md:text-md text-white font-medium text-center font-roboto-mono uppercase ">
-                        {s.title}
-                      </h3>
-                    </div>
-                  )}
-                </article>
-              ))}
-            </div>
-          </article>
-        </div>
+        {columns.map((column) => (
+          <ServiceColumn
+            key={column.id}
+            column={column}
+            flexBasis={basis(column.id)}
+            hasAnimated={hasAnimated}
+            isXL={isXL}
+            activeCol={activeCol}
+            expandedSet={expandedMap[column.id]}
+            onToggleCard={(index) => toggleCard(column.id, index)}
+            imgScaleClass={imgScaleClass(column.id)}
+          />
+        ))}
       </div>
 
       <style jsx>{`
@@ -294,6 +212,96 @@ export default function Services({ items }) {
         }
       `}</style>
     </section>
+  );
+}
+
+function ServiceColumn({
+  column,
+  flexBasis,
+  hasAnimated,
+  isXL,
+  activeCol,
+  expandedSet,
+  onToggleCard,
+  imgScaleClass,
+}) {
+  return (
+    <div
+      className="flex px-4 flex-col min-w-0 transition-all duration-700 ease-out gap-4"
+      style={{ flexBasis }}
+    >
+      <article
+        className={`mb-3 rounded-xl border-[2px] border-white text-white bg-[var(--bg_brand)] px-5 pt-20 pb-5 flex flex-col items-center gap-12 ${
+          hasAnimated ? "stagger-in" : "anim-init"
+        }`}
+        style={{ animationDelay: "1400ms" }}
+      >
+        <div className="flex flex-col items-center gap-4 h-[140px]">
+          <h3 className="text-3xl md:text-5xl font-medium text-center tracking-tighter">
+            {column.heading}
+          </h3>
+          <p className="text-sm md:text-lg text-center ">
+            {column.description}
+          </p>
+        </div>
+        <div className="grid grid-cols-full lg:grid-cols-2 gap-4 auto-rows-fr w-full">
+          {column.services.map((service, index) => {
+            const isExpanded = expandedSet.has(index);
+            return (
+              <article
+                key={`${service.title}-${index}`}
+                className={`rounded-xl border-[2px] border-white bg-[var(--bg_brand)] gap-4 pt-10 pb-4 px-1 flex flex-col items-center overflow-hidden transition-all duration-300 ease-out hover:bg-white/8 hover:z-50 hover:scale-[1.02] ${
+                  hasAnimated ? "stagger-in" : "anim-init"
+                }`}
+                style={{ animationDelay: `${1000 + index * 120}ms` }}
+                onClick={() => onToggleCard(index)}
+              >
+                {!isExpanded ? (
+                  <CollapsedCard
+                    service={service}
+                    imgScaleClass={imgScaleClass}
+                  />
+                ) : (
+                  <ExpandedCard service={service} />
+                )}
+              </article>
+            );
+          })}
+        </div>
+      </article>
+    </div>
+  );
+}
+
+function CollapsedCard({ service, imgScaleClass }) {
+  return (
+    <div className="flex flex-col pt-20 gap-16 justify-between items-center h-[440px]">
+      {service.svg && (
+        <Image
+          src={service.svg}
+          alt={service.title}
+          width={160}
+          height={160}
+          className={`object-contain max-h-40 brightness-0 invert transition-transform duration-300 ease-out ${imgScaleClass}`}
+        />
+      )}
+      <h3 className="mt-4 text-sm md:text-base text-white font-medium text-center font-roboto-mono uppercase">
+        {service.title}
+      </h3>
+    </div>
+  );
+}
+
+function ExpandedCard({ service }) {
+  return (
+    <div className="flex flex-col pt-20 gap-16 justify-between h-[440px]">
+      <p className="text-2xl px-10 text-white text-center">
+        {service.description}
+      </p>
+      <h3 className="text-base md:text-md text-white font-medium text-center font-roboto-mono uppercase ">
+        {service.title}
+      </h3>
+    </div>
   );
 }
 
