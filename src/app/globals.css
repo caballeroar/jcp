@@ -170,7 +170,9 @@ body {
    ================================ */
 
 .methodology {
-  --p: var(--scroll-progress, 0);
+  --p-base: var(--scroll-progress, 0);
+  --p-offset: var(--scroll-progress-offset, 0);
+  --p: clamp(0, calc(var(--p-base) + var(--p-offset)), 1);
   position: relative;
 }
 
@@ -178,7 +180,7 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 360px;
+  /* width: 360px; */
   pointer-events: none;
   will-change: transform;
   transform: translate(-50%, -50%)
@@ -193,36 +195,36 @@ body {
   fill: none;
   stroke: currentColor;
   stroke-width: 2px;
-  opacity: 0.6;
+  /* opacity: 0.6; */
 }
 
 /* Declarative ellipse positions */
 .ellipse[data-index="0"] {
-  --x-start: -600px;
-  --y-start: -400px;
-  --x-end: -240px;
-  --y-end: -240px;
+  --x-start: -900px;
+  --y-start: -520px;
+  --x-end: -320px;
+  --y-end: -220px;
 }
 
 .ellipse[data-index="1"] {
-  --x-start: 600px;
-  --y-start: -400px;
-  --x-end: 240px;
-  --y-end: -240px;
+  --x-start: 900px;
+  --y-start: -520px;
+  --x-end: 320px;
+  --y-end: -220px;
 }
 
 .ellipse[data-index="2"] {
-  --x-start: -600px;
-  --y-start: 400px;
-  --x-end: -240px;
-  --y-end: 240px;
+  --x-start: -900px;
+  --y-start: 520px;
+  --x-end: -320px;
+  --y-end: 400px;
 }
 
 .ellipse[data-index="3"] {
-  --x-start: 600px;
-  --y-start: 400px;
-  --x-end: 240px;
-  --y-end: 240px;
+  --x-start: 900px;
+  --y-start: 520px;
+  --x-end: 320px;
+  --y-end: 400px;
 }
 
 /* Reduced motion support */

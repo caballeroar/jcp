@@ -1,4 +1,5 @@
 import { getDictionary } from "../../../lib/i18n";
+import MethodologyPageContent from "../../../components/MethodologyPageContent";
 
 export const dynamicParams = false;
 const locales = ["en", "nl"];
@@ -8,17 +9,15 @@ export async function generateStaticParams() {
 }
 
 export default async function MethodologyPage({ params }) {
-  const { locale } = await params;
+  const { locale } = params;
   const dict = await getDictionary(locale).catch(() => ({}));
   const copy = dict?.pages?.methodology ?? {};
+  const homeCopy = dict?.pages?.home?.methodology ?? {};
+  const ctaLabel = copy?.cta ?? homeCopy?.cta ?? null;
 
   return (
-    <main className="min-h-screen px-6 py-12 text-[var(--content_dark)] bg-[var(--background)] space-y-6">
-      <h1 className="text-4xl font-semibold">
-        {copy.heading ?? "Methodology"}
-      </h1>
-      {copy.sentence1 && <p className="text-lg">{copy.sentence1}</p>}
-      {copy.sentence2 && <p className="text-lg">{copy.sentence2}</p>}
+    <main className="relative min-h-screen bg-[var(--background)] text-[var(--content_dark)]">
+      <MethodologyPageContent copy={copy} locale={locale} ctaLabel={ctaLabel} />
     </main>
   );
 }

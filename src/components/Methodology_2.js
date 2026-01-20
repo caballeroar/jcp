@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { ArrowRight } from "phosphor-react";
 import { useI18n } from "../lib/I18nContext";
 import { Button } from "./ui";
-import { useScrollProgress } from "../lib/hooks/useScrollProgress";
+import { useScrollProgress } from "../hooks/useScrollProgress";
 import EllipseSvg from "./EllipseSvg";
 // import "../app/globals.css";
 
@@ -29,7 +29,12 @@ export default function Methodology2() {
       className="methodology relative w-full min-h-screen flex items-center justify-center overflow-visible"
     >
       {ELLIPSES.map((e, i) => (
-        <EllipseSvg key={i} index={i} rotation={e.rotation} />
+        <EllipseSvg
+          className={"opacity-60 w-[360px]"}
+          key={i}
+          index={i}
+          rotation={e.rotation}
+        />
       ))}
 
       <div className="w-4/6 lg:w-3/6 flex flex-col items-center text-center relative z-10">

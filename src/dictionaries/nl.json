@@ -184,23 +184,28 @@
       "folders": [
         {
           "slug": "case-1",
-          "client": "Communities",
-          "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+          "client": "Klantnaam",
+          "sentence": "We bieden deskundig advies om jouw duurzaamheids- en rechtvaardigheidsdoelen te bereiken."
         },
         {
           "slug": "case-2",
-          "client": "Communities",
-          "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+          "client": "Klantnaam",
+          "sentence": "We bieden deskundig advies om jouw duurzaamheids- en rechtvaardigheidsdoelen te bereiken."
         },
         {
           "slug": "case-3",
-          "client": "Communities",
-          "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+          "client": "Klantnaam",
+          "sentence": "We bieden deskundig advies om jouw duurzaamheids- en rechtvaardigheidsdoelen te bereiken."
         },
         {
           "slug": "case-4",
-          "client": "Communities",
-          "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+          "client": "Klantnaam",
+          "sentence": "We bieden deskundig advies om jouw duurzaamheids- en rechtvaardigheidsdoelen te bereiken."
+        },
+        {
+          "slug": "case-5",
+          "client": "Klantnaam",
+          "sentence": "We bieden deskundig advies om jouw duurzaamheids- en rechtvaardigheidsdoelen te bereiken."
         }
       ]
     },

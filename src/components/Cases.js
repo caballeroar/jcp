@@ -8,6 +8,8 @@ import FolderIcon from "./ui/Folder/Folder";
 import { ArrowRight } from "phosphor-react";
 import { useI18n } from "../lib/I18nContext";
 import { getCaseImages } from "../data/cases";
+import { useCaseModal } from "../hooks/useCaseModal";
+import CasesModal from "./CasesModal";
 
 export default function Cases({
   locale,
@@ -26,7 +28,6 @@ export default function Cases({
 
   const sectionRef = useRef(null);
   const [viewportWidth, setViewportWidth] = useState(0);
-  const [expandedIndex, setExpandedIndex] = useState(null);
   const baseOffset = -200; // shift image higher near the title
 
   const accent =
@@ -117,34 +118,16 @@ export default function Cases({
     cta: entry?.cta,
     images: getCaseImages(entry?.slug || `case-${idx + 1}`),
   }));
-  const totalCases = caseEntries.length;
   const defaultCta = casesCopy.cta ?? "View case";
-  const hasCases = totalCases > 0;
-  const activeCase =
-    expandedIndex !== null && expandedIndex < totalCases
-      ? caseEntries[expandedIndex]
-      : null;
-  const isModalOpen = Boolean(activeCase);
-
-  const openCase = (index) => {
-    if (!caseEntries[index]) return;
-    setExpandedIndex(index);
-  };
-  const closeCase = () => setExpandedIndex(null);
-  const cycleCase = (delta) => {
-    if (!hasCases || expandedIndex === null) return;
-    setExpandedIndex((expandedIndex + delta + totalCases) % totalCases);
-  };
-
-  useEffect(() => {
-    if (!isModalOpen || typeof document === "undefined") return;
-    const { style } = document.body;
-    const previous = style.overflow;
-    style.overflow = "hidden";
-    return () => {
-      style.overflow = previous;
-    };
-  }, [isModalOpen]);
+  const {
+    expandedIndex,
+    activeCase,
+    isOpen,
+    totalCases,
+    openCase,
+    closeCase,
+    cycleCase,
+  } = useCaseModal(caseEntries);
 
   const folderParallax = [0.1, 0.3, 0.4, 0.25];
   const expandedWidth = "min(640px, 90vw)";
@@ -173,7 +156,7 @@ export default function Cases({
                 width: folderWidth,
                 marginLeft: `${computeLeftPercent(index)}%`,
                 transform: `translateY(calc(var(--cases-scroll, 0px) * ${multiplier}))`,
-                transition: "transform 0.4s ease",
+                willChange: "transform",
               }}
             >
               <FolderIcon
@@ -197,67 +180,19 @@ export default function Cases({
           </Button>
         </div>
       </div>
-      {isModalOpen && (
-        <div className="fixed inset-0 z-[9999] bg-[var(--background)]/95 backdrop-blur-lg">
-          <div className="mx-auto flex min-h-screen max-w-5xl flex-col gap-8 px-6 py-10 text-[var(--content_dark)]">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <button
-                type="button"
-                onClick={() => cycleCase(-1)}
-                className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--content_brand)]"
-              >
-                Prev
-              </button>
-              <p className="font-roboto-mono text-sm text-[var(--grey)]">
-                {expandedIndex + 1} / {totalCases}
-              </p>
-              <button
-                type="button"
-                onClick={() => cycleCase(1)}
-                className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--content_brand)]"
-              >
-                Next
-              </button>
-            </div>
-
-            <article className="rounded-3xl h-[50vh] border border-[var(--surface)]/10 bg-[var(--bg_box_neutral)] p-8 shadow-2xl">
-              <h3 className="text-3xl font-semibold">{activeCase.client}</h3>
-              <p className="mt-4 text-lg leading-relaxed">
-                {activeCase.sentence}
-              </p>
-            </article>
-
-            <div className="grid gap-4 md:grid-cols-2">
-              {caseEntries.map((entry, idx) => (
-                <button
-                  key={`${entry.client}-${idx}`}
-                  type="button"
-                  onClick={() => openCase(idx)}
-                  className={`rounded-2xl border p-4 text-left transition-colors ${
-                    idx === expandedIndex
-                      ? "border-[var(--content_brand)] bg-[var(--content_brand)]/5"
-                      : "border-[var(--surface)]/10"
-                  }`}
-                >
-                  <p className="text-sm font-semibold uppercase tracking-wide">
-                    {entry.client}
-                  </p>
-                  <p className="mt-2 text-sm text-[var(--grey)] line-clamp-2">
-                    {entry.sentence}
-                  </p>
-                </button>
-              ))}
-            </div>
-
-            <button
-              type="button"
-              onClick={closeCase}
-              className="self-center rounded-full border border-[var(--surface)]/20 px-8 py-3 text-sm font-semibold"
-            >
-              Close
-            </button>
-          </div>
-        </div>
+      {isOpen && (
+        <CasesModal
+          isOpen={isOpen}
+          activeCase={activeCase}
+          expandedIndex={expandedIndex}
+          totalCases={totalCases}
+          cases={caseEntries}
+          onClose={closeCase}
+          onPrev={() => cycleCase(-1)}
+          onNext={() => cycleCase(1)}
+          onSelectCase={openCase}
+          locale={effectiveLocale}
+        />
       )}
     </section>
   );

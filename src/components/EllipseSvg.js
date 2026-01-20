@@ -1,7 +1,7 @@
-export default function EllipseSvg({ rotation, index }) {
+export default function EllipseSvg({ rotation, index, className }) {
   return (
     <svg
-      className="ellipse overflow-visible"
+      className={`ellipse overflow-visible ${className}`}
       data-index={index}
       viewBox="0 0 400 400"
       aria-hidden
