@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { ArrowRight } from "phosphor-react";
-import { Button } from "../../../components/ui/Button";
+import Button from "../../../components/ui/Button";
 import EllipseSvg from "../../../components/ui/EllipseSvg";
 
 const ELLIPSES = [
@@ -106,6 +106,16 @@ export default function MethodologyPageContent({ copy, locale, ctaLabel }) {
           <p className="text-lg md:text-2xl text-[var(--content_dark)]/80">
             {copy.sentence2}
           </p>
+        )}
+        {ctaLabel && (
+          <Button
+            theme="dark"
+            icon={<ArrowRight size={20} weight="bold" />}
+            className="mt-10"
+            href={`/${locale}/contact`}
+          >
+            {ctaLabel}
+          </Button>
         )}
       </div>
     </section>

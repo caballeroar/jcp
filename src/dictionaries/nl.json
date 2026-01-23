@@ -209,6 +209,59 @@
         }
       ]
     },
+    "services": {
+      "heading": "Onze Diensten",
+      "services": [
+        {
+          "id": "stakeholder-mapping",
+          "title": "Stakeholder Mapping",
+          "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops.",
+          "svg": "/assets/stakeholder_mapping.svg"
+        },
+        {
+          "id": "participatory-research",
+          "title": "Participatory Research",
+          "description": "Engage users and domain experts directly to uncover needs, motivations, and constraints through hands-on research methods.",
+          "svg": "/assets/participatory_research.svg"
+        },
+        {
+          "id": "persona-journeys",
+          "title": "Persona & Journey Design",
+          "description": "Translate research insights into actionable personas and journey maps that guide design and product decisions.",
+          "svg": "/assets/persona_design.svg"
+        },
+        {
+          "id": "empathy-workshops",
+          "title": "Empathy Workshops",
+          "description": "Build shared understanding across teams by immersing stakeholders in user perspectives and real-world scenarios.",
+          "svg": "/assets/empathy_workshop.svg"
+        },
+        {
+          "id": "problem-analysis",
+          "title": "Problem & Opportunity Analysis",
+          "description": "Frame complex challenges clearly by identifying root causes, opportunities, and measurable success criteria.",
+          "svg": "/assets/problem_analysis.svg"
+        },
+        {
+          "id": "co-creation",
+          "title": "Co-creation & Ideation",
+          "description": "Facilitate structured ideation sessions that turn insights into concepts collaboratively with multidisciplinary teams.",
+          "svg": "/assets/cocreation_ideation.svg"
+        },
+        {
+          "id": "strategy-design",
+          "title": "Strategy Design",
+          "description": "Define clear design and product strategies that connect business objectives with user needs and technical feasibility.",
+          "svg": "/assets/strategy_design.svg"
+        },
+        {
+          "id": "living-labs",
+          "title": "Living Labs & Pilot Projects",
+          "description": "Validate ideas in real contexts through pilots and experiments before scaling into full-fledged solutions.",
+          "svg": "/assets/living_labs.svg"
+        }
+      ]
+    },
     "contact": {
       "heading": "Neem contact op"
     }
