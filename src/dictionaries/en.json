@@ -180,6 +180,8 @@
       "accent3": "samenwerking."
     },
     "cases": {
+      "heading": "Cases",
+
       "folders": [
         {
           "slug": "case-1",
@@ -262,6 +264,9 @@
     },
     "contact": {
       "heading": "Contact Us"
+    },
+    "about": {
+      "heading": "About"
     }
   }
 }

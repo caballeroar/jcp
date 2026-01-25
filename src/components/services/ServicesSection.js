@@ -47,7 +47,7 @@ export default function ServicesSection({
 
   return (
     <section id="services-section" className="space-y-10">
-      <Header title={heading} />
+      <Header title={heading} level="h2" />
       <ServicesInteractive columns={columns} />
     </section>
   );

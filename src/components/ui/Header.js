@@ -1,9 +1,11 @@
-export default function Header({ title }) {
+export default function Header({ title, level = "h1" }) {
+  const HeadingTag = level;
+
   return (
     <div className="mb-10 flex justify-center">
-      <h2 className="font-monument-extended text-stroke-brand text-8xl md:text-9xl">
+      <HeadingTag className="font-monument-extended text-stroke-brand text-4xl md:text-7xl xl:text-8xl uppercase text-center">
         {title}
-      </h2>
+      </HeadingTag>
     </div>
   );
 }

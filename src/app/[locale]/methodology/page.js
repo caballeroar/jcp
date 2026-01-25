@@ -9,7 +9,7 @@ export async function generateStaticParams() {
 }
 
 export default async function MethodologyPage({ params }) {
-  const { locale } = params;
+  const { locale } = await params;
   const dict = await getDictionary(locale).catch(() => ({}));
   const copy = dict?.pages?.methodology ?? {};
   const homeCopy = dict?.pages?.home?.methodology ?? {};

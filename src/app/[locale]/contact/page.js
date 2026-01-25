@@ -1,3 +1,4 @@
+import Header from "@/components/ui/Header";
 import { getDictionary } from "../../../lib/i18n";
 
 export const dynamicParams = false;
@@ -14,7 +15,7 @@ export default async function ContactPage({ params }) {
 
   return (
     <main className="min-h-screen px-6 py-12 text-[var(--content_dark)] bg-[var(--background)] space-y-6">
-      <h1 className="text-4xl font-semibold">{copy.heading ?? "Contact"}</h1>
+      <Header title={copy.heading ?? "Contact Us"} level="h1" />
     </main>
   );
 }

@@ -181,6 +181,8 @@
       "accent3": "samenwerking."
     },
     "cases": {
+      "heading": "Cases",
+
       "folders": [
         {
           "slug": "case-1",
@@ -264,6 +266,9 @@
     },
     "contact": {
       "heading": "Neem contact op"
+    },
+    "about": {
+      "heading": "Over Ons"
     }
   }
 }

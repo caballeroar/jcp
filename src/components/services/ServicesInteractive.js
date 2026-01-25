@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo, useRef, useEffect } from "react";
+import { useState, useCallback, useRef } from "react";
 import { getHoverColumn } from "../../utils/service";
 import { useViewportWidth } from "../../hooks/useViewportWidth";
 import { useIntersectionOnce } from "../../hooks/useIntersectionOnce";
@@ -9,35 +9,40 @@ import Animations from "./Animation";
 
 export default function ServicesInteractive({ columns = [] }) {
   const containerRef = useRef(null);
+
   const width = useViewportWidth();
   const isDesktop = width >= 1280;
+
   const [activeCol, setActiveCol] = useState(null);
-  const [expanded, setExpanded] = useState(() => ({}));
+
+  /**
+   * Stores only user-triggered expansions
+   * Missing keys are treated as `null`
+   */
+  const [expanded, setExpanded] = useState({});
+
   const visible = useIntersectionOnce(containerRef);
 
-  useEffect(() => {
-    setExpanded(
-      columns.reduce(
-        (acc, column) => ({
-          ...acc,
-          [column.id]: expanded[column.id] ?? null,
-        }),
-        {},
-      ),
-    );
-  }, [columns]);
-
-  const handlePointerMove = useCallback(
-    (event) => {
+  /**
+   * Hover intent handler
+   */
+  const handleHoverX = useCallback(
+    (clientX) => {
       if (!isDesktop || !containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
-      setActiveCol(getHoverColumn(event.clientX, rect));
+      setActiveCol(getHoverColumn(clientX, rect));
     },
     [isDesktop],
   );
 
-  const resetHover = useCallback(() => setActiveCol(null), []);
+  const resetHover = useCallback(() => {
+    setActiveCol(null);
+  }, []);
 
+  /**
+   * Toggle expansion per column
+   * No derived state, no effects
+   */
   const handleToggle = useCallback((columnId, index) => {
     setExpanded((prev) => ({
       ...prev,
@@ -45,27 +50,17 @@ export default function ServicesInteractive({ columns = [] }) {
     }));
   }, []);
 
-  const className = useMemo(
-    () =>
-      `flex flex-col xl:flex-row w-full px-2 xl:px-6 pt-28 pb-12 gap-4 bg-[var(--bg_brand)] cursor-pointer relative overflow-hidden ${
-        visible ? "animate-bg" : "container-pre"
-      }`,
-    [visible],
-  );
-
   return (
     <div
       id="services-brand-area"
       ref={containerRef}
-      className={className}
-      onPointerMove={handlePointerMove}
+      className={`flex flex-col xl:flex-row w-full px-2 xl:px-6 pt-28 pb-12 gap-4 bg-[var(--bg_brand)] cursor-pointer relative overflow-hidden ${
+        visible ? "animate-bg" : "container-pre"
+      }`}
+      onPointerMove={(e) => handleHoverX(e.clientX)}
       onPointerLeave={resetHover}
-      onTouchStart={(e) =>
-        e.touches?.[0] && handlePointerMove({ clientX: e.touches[0].clientX })
-      }
-      onTouchMove={(e) =>
-        e.touches?.[0] && handlePointerMove({ clientX: e.touches[0].clientX })
-      }
+      onTouchStart={(e) => e.touches?.[0] && handleHoverX(e.touches[0].clientX)}
+      onTouchMove={(e) => e.touches?.[0] && handleHoverX(e.touches[0].clientX)}
     >
       {columns.map((column) => (
         <ServiceColumn
@@ -77,6 +72,7 @@ export default function ServicesInteractive({ columns = [] }) {
           onToggle={handleToggle}
         />
       ))}
+
       <Animations />
     </div>
   );

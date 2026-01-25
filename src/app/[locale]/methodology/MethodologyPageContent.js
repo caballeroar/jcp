@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { ArrowRight } from "phosphor-react";
 import Button from "../../../components/ui/Button";
 import EllipseSvg from "../../../components/ui/EllipseSvg";
+import Header from "@/components/ui/Header";
 
 const ELLIPSES = [
   {
@@ -94,9 +95,7 @@ export default function MethodologyPageContent({ copy, locale, ctaLabel }) {
       ))}
 
       <div className="w-full mx-auto text-center space-y-6 relative z-10 mt-[14%]">
-        <h1 className="text text-center uppercase font-monument-extended text-stroke-brand text-6xl md:text-8xl tracking-tight">
-          {copy?.heading ?? "Methodology"}
-        </h1>
+        <Header title={copy?.heading || "Methodology"} level="h2" />
         {copy?.sentence1 && (
           <p className="text-2xl md:text-3xl font-semibold text-[var(--content_dark)]">
             {copy.sentence1}

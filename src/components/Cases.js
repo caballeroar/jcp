@@ -1,40 +1,31 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
 import Button from "./ui/Button";
-import FolderStackSection from "./FolderStackSection";
 import FolderIcon from "./ui/Folder/Folder";
 import { ArrowRight } from "phosphor-react";
 import { useI18n } from "../lib/I18nContext";
 import { getCaseImages } from "../data/cases";
 import { useCaseModal } from "../hooks/useCaseModal";
 import CasesModal from "./CasesModal";
+import Header from "./ui/Header";
 
-export default function Cases({
-  locale,
-  href,
-  imageSrc = "/assets/logo_icon.svg",
-  externalBg = false,
-}) {
-  const { locale: contextLocale, dict } = useI18n();
-  const pathname = usePathname();
-  const firstSeg = pathname?.split("/").filter(Boolean)[0];
-  const supportedLocales = ["en", "nl"];
-  const detectedLocale = supportedLocales.includes(firstSeg)
-    ? firstSeg
-    : undefined;
-  const effectiveLocale = locale ?? detectedLocale ?? contextLocale;
-
+export default function Cases({ href }) {
+  const { locale, dict } = useI18n();
   const sectionRef = useRef(null);
   const [viewportWidth, setViewportWidth] = useState(0);
-  const baseOffset = -200; // shift image higher near the title
 
-  const accent =
-    "text-xl md:text-3xl font-bold mb-2 text-[var(--content_brand)]";
+  const casesCopy = dict?.pages?.home?.cases ?? {};
+  const {
+    heading = "CASES",
+    sentence1 = "Explore our cases to discover what ",
+    sentence2 = "impact looks like in practice.",
+    accent: accentText = "human centered",
+    folders = [],
+    cta: exploreCta = "Explore cases",
+  } = casesCopy;
 
-  const outlinedHeading =
-    "text font-monument-extended text-stroke-brand text-8xl md:text-9xl tracking-tight";
+  const defaultCta = casesCopy.defaultCta ?? "View case";
 
   useEffect(() => {
     let raf = null;
@@ -107,18 +98,13 @@ export default function Cases({
     return centerLeftPercent + tPos * (desktopTarget - centerLeftPercent);
   };
 
-  const targetHref =
-    href || (effectiveLocale ? `/${effectiveLocale}/cases` : "/cases");
-
-  const casesCopy = dict?.pages?.home?.cases ?? {};
-  const caseEntries = (casesCopy.folders ?? []).map((entry, idx) => ({
+  const caseEntries = folders.map((entry, idx) => ({
     slug: entry?.slug || `case-${idx + 1}`,
     client: entry?.client ?? "",
     sentence: entry?.sentence ?? "",
     cta: entry?.cta,
     images: getCaseImages(entry?.slug || `case-${idx + 1}`),
   }));
-  const defaultCta = casesCopy.cta ?? "View case";
   const {
     expandedIndex,
     activeCase,
@@ -130,17 +116,16 @@ export default function Cases({
   } = useCaseModal(caseEntries);
 
   const folderParallax = [0.1, 0.3, 0.4, 0.25];
-  const expandedWidth = "min(640px, 90vw)";
+  const accent =
+    "text-xl md:text-3xl font-bold mb-2 text-[var(--content_brand)]";
 
   return (
     <section ref={sectionRef} className="relative w-full pt-80 mb-[-28%]">
       <div className="relative z-20 mx-auto max-w-5xl overflow-hidden px-6 py-16 flex flex-col items-center gap-6">
-        <h2 className={outlinedHeading}>CASES</h2>
+        <Header title={heading} level="h2" />
         <div className="flex justify-start w-full">
           <p className="text-xl md:text-3xl text-left text-[var(--content_dark)] max-w-md mt-20 md:mt-40">
-            Explore our cases to discover what{" "}
-            <span className={accent}>human centered</span> impact looks like in
-            practice.
+            {sentence1} <span className={accent}>{accentText}</span> {sentence2}
           </p>
         </div>
       </div>
@@ -175,8 +160,8 @@ export default function Cases({
             transform: "translateY(calc(var(--cases-scroll, 0px) * 0.46))",
           }}
         >
-          <Button href={targetHref} icon={<ArrowRight />}>
-            Explore Cases
+          <Button href={`/${locale}/cases`} icon={<ArrowRight />}>
+            {exploreCta}
           </Button>
         </div>
       </div>
@@ -191,7 +176,7 @@ export default function Cases({
           onPrev={() => cycleCase(-1)}
           onNext={() => cycleCase(1)}
           onSelectCase={openCase}
-          locale={effectiveLocale}
+          locale={locale}
         />
       )}
     </section>
