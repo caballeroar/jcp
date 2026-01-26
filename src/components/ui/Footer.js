@@ -2,16 +2,30 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Footer() {
+  const pathname = usePathname();
+  const isServicesPage = pathname?.includes("/services");
+  const bgColor = isServicesPage ? "var(--bg_brand)" : "transparent";
+  const fontColor = isServicesPage ? "white" : "var(--bg_brand)";
+  const imageFilter = isServicesPage ? "brightness-0 invert" : "";
+
   return (
-    <footer className=" relative w-full overflow-hidden flex flex-col items-center ">
-      <div className="absolute bottom-[-150%] inset-0 flex items-end justify-center">
+    <footer
+      className=" relative w-full overflow-hidden flex flex-col items-center mb-14 md:mb-0 "
+      style={{ backgroundColor: bgColor }}
+    >
+      {/* do not remove the commented lines below - they are for future design iterations */}
+      {/* <div className="absolute bottom-[-150%] inset-0 flex items-end justify-center">
         <div className="w-[80%] max-w-5xl aspect-square bg-[var(--content_brand)] rounded-full blur-3xl opacity-20" />
-      </div>
-      <div className="flex flex-col gap-6  w-5/6 pb-2 border-b border-[var(--content_brand)]">
+      </div> */}
+      <div
+        className="flex flex-col gap-6  w-5/6 pb-2 border-b"
+        style={{ borderColor: fontColor }}
+      >
         <div
-          className="  relative mx-auto w-full h-48 md:h-64 "
+          className="relative mx-auto w-full h-32 md:h-64 "
           style={{ pointerEvents: "none" }}
           aria-hidden="true"
         >
@@ -19,10 +33,10 @@ export default function Footer() {
             src="/assets/official_logo_full.svg"
             alt=""
             fill
-            className="object-contain"
+            className={`object-contain ${imageFilter}`}
           />
         </div>
-        <p className="font-roboto-mono italic text-sm w-2/6">
+        <p className="font-roboto-mono italic text-sm md:w-2/6">
           Just Common People is a creative, human centred & strategic agency
         </p>
         <div className="flex items-center gap-1 pt-20">
@@ -39,6 +53,7 @@ export default function Footer() {
               aria-hidden="true"
               width={20}
               height={20}
+              className={imageFilter}
             />
             <span className="sr-only">Instagram</span>
           </Link>
@@ -55,6 +70,7 @@ export default function Footer() {
               aria-hidden="true"
               width={20}
               height={20}
+              className={imageFilter}
             />
             <span className="sr-only">LinkedIn</span>
           </Link>
@@ -62,19 +78,25 @@ export default function Footer() {
       </div>
 
       {/* Content */}
-      <div className="w-5/6 mx-auto py-6 flex  md:justify-between ">
-        <div className="">
-          <p className="text-sm text-[var(--content_brand)] font-semibold mt-1">
+      <div
+        className="w-5/6 mx-auto py-6 flex justify-between "
+        style={{ color: fontColor }}
+      >
+        <div>
+          <p
+            className="text-sm font-semibold mt-1"
+            style={{ color: fontColor }}
+          >
             © {new Date().getFullYear()} JCP
           </p>
         </div>
 
         <nav className="flex items-center gap-4 text-sm font-semibold">
-          <Link href="/privacy" className="  text-[var(--content_brand)]">
+          <Link href="/privacy" style={{ color: fontColor }}>
             Privacy
           </Link>
 
-          <Link href="/cookies" className="  text-[var(--content_brand)]">
+          <Link href="/cookies" style={{ color: fontColor }}>
             Cookies
           </Link>
         </nav>

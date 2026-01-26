@@ -12,7 +12,6 @@
   --surface: #1c0707;
   --logos: #494949;
   --bg_gradient: linear-gradient(180deg, #fff 80%, #f0f0f0 100%);
-  --foreground: var(--content_dark);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -28,7 +27,6 @@
     --surface: #f0f0f0;
     --logos: #dfdfdf;
     --bg_gradient: linear-gradient(180deg, #494949 80%, #5d5d5d 100%);
-    --foreground: var(--content_light);
   }
 }
 
@@ -48,9 +46,8 @@ html {
 }
 
 body {
-  background-color: var(--background);
-  color: var(--foreground);
-
+  /* background-color: var(--background); */
+  color: var(--content_dark);
   line-height: 1.25;
   overflow-x: hidden;
 }
@@ -119,7 +116,10 @@ body {
 
 .text-stroke-brand {
   -webkit-text-stroke: 1.2px var(--content_brand);
-
+  color: transparent;
+}
+.text-stroke-white {
+  -webkit-text-stroke: 1.2px white;
   color: transparent;
 }
 

@@ -7,13 +7,16 @@ import { GoogleAnalytics } from "../components/GoogleAnalytics";
 import "./globals.css";
 
 import CookieConsent from "../components/CookieConsent";
-import RouteTransitionOverlay from "../components/RouteTransitionOverlay";
-import { Menu } from "@/components/ui";
-import Footer from "../components/Footer";
+import Footer from "../components/ui/Footer";
 import { I18nProvider } from "../lib/I18nContext";
 
 import enDict from "../dictionaries/en.json";
 import nlDict from "../dictionaries/nl.json";
+
+import { MenuProvider } from "../components/ui/MenuFolder/MenuProvider";
+import { DesktopHeader } from "../components/ui/MenuFolder/DesktopHeader.js";
+import { MobileHeader } from "../components/ui/MenuFolder/MobileHeader";
+import { MenuDrawer } from "../components/ui/MenuFolder/MenuDrawer";
 
 const fustat = Fustat({
   subsets: ["latin"],
@@ -37,6 +40,7 @@ const dictionaries = {
 export default function RootLayout({ children }) {
   const pathname = usePathname();
   const router = useRouter();
+
   const firstSeg = pathname?.split("/").filter(Boolean)[0];
   const supportedLocales = ["en", "nl"];
   const locale = supportedLocales.includes(firstSeg) ? firstSeg : "en";
@@ -49,14 +53,26 @@ export default function RootLayout({ children }) {
     router.push(`/${newLocale}/`);
   };
 
+  const isServicesPage = pathname?.includes("/services");
+  const onBrandBackground = isServicesPage;
+  const bgColor = isServicesPage ? "var(--bg_brand)" : "var(--background)";
+
+  const buildHref = (slug = "") => (slug ? `/${locale}/${slug}` : `/${locale}`);
+
+  const navItems = [
+    { label: dict.nav.services, slug: "services" },
+    { label: dict.nav.cases, slug: "cases" },
+    { label: dict.nav.methodology, slug: "methodology" },
+    { label: dict.nav.about, slug: "about" },
+    { label: dict.nav.contact, slug: "contact" },
+  ];
+
   return (
     <html className={`${fustat.variable} ${robotoMono.variable}`}>
       <head>
         {gaId && (
           <>
-            {/* Define dataLayer/gtag without inline JS for CSP safety */}
             <script defer src="/gtag-init.js" />
-            {/* Load GA4 gtag library */}
             <script
               async
               src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
@@ -64,21 +80,22 @@ export default function RootLayout({ children }) {
           </>
         )}
       </head>
-      <body>
+
+      <body style={{ backgroundColor: bgColor }}>
         <Suspense fallback={null}>
           <I18nProvider value={{ locale, dict }}>
-            <Menu
-              locale={locale}
-              onLocaleToggle={switchLanguage}
-              localeDisabled={false}
-            />
-            <RouteTransitionOverlay />
+            <MenuProvider>
+              <DesktopHeader buildHref={buildHref} invert={onBrandBackground} />
+              <MobileHeader buildHref={buildHref} invert={onBrandBackground} />
+              <MenuDrawer items={navItems} buildHref={buildHref} />
+            </MenuProvider>
             {gaId && <GoogleAnalytics GA_MEASUREMENT_ID={gaId} />}
             {gaId && (
               <Suspense fallback={null}>
                 <CookieConsent GA_MEASUREMENT_ID={gaId} />
               </Suspense>
             )}
+
             {children}
             <Footer />
           </I18nProvider>

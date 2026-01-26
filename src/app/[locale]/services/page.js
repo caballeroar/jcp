@@ -22,8 +22,11 @@ export default async function ServicesPage({ params }) {
   const title = servicesCopy.heading ?? "Services";
 
   return (
-    <main className="min-h-screen bg-background text-foreground p-8">
-      <Header title={title} level="h1" />
+    <main
+      data-brand-bg
+      className="min-h-screen bg-[var(--bg_brand)] text-foreground p-8"
+    >
+      <Header title={title} level="h1" variant="white" />
     </main>
   );
 }

@@ -53,6 +53,7 @@ export default function ServicesInteractive({ columns = [] }) {
   return (
     <div
       id="services-brand-area"
+      data-brand-bg
       ref={containerRef}
       className={`flex flex-col xl:flex-row w-full px-2 xl:px-6 pt-28 pb-12 gap-4 bg-[var(--bg_brand)] cursor-pointer relative overflow-hidden ${
         visible ? "animate-bg" : "container-pre"
