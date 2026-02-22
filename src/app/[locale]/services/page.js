@@ -2,6 +2,7 @@ import { getDictionary } from "../../../lib/i18n";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/ui/Header";
+import InteractiveServices from "./InteractiveServices";
 
 const locales = ["en", "nl"];
 
@@ -18,6 +19,9 @@ export default async function ServicesPage({ params }) {
 
   const dict = await getDictionary(locale);
   const servicesCopy = dict?.pages?.services ?? {};
+  const services = Array.isArray(servicesCopy?.services)
+    ? servicesCopy.services
+    : [];
 
   const title = servicesCopy.heading ?? "Services";
 
@@ -27,6 +31,11 @@ export default async function ServicesPage({ params }) {
       className="min-h-screen bg-[var(--bg_brand)] text-foreground p-8"
     >
       <Header title={title} level="h1" variant="white" />
+      <InteractiveServices
+        services={services}
+        copy={servicesCopy}
+        locale={locale}
+      />
     </main>
   );
 }

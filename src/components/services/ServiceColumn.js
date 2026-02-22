@@ -7,15 +7,11 @@ function ServiceColumn({
   column,
   isDesktop,
   activeCol,
-  expandedIndex,
+  expandedIndexes = [],
   onToggle,
 }) {
   const basis =
-    !isDesktop || !activeCol
-      ? "50%"
-      : activeCol === column.id
-        ? "65%"
-        : "35%";
+    !isDesktop || !activeCol ? "50%" : activeCol === column.id ? "65%" : "35%";
   const dimmed = (side) =>
     isDesktop && activeCol && activeCol !== side ? "scale-[0.85]" : "scale-100";
 
@@ -25,7 +21,7 @@ function ServiceColumn({
       style={{ flexBasis: basis }}
     >
       <article className="mb-3 rounded-xl border-[2px] border-white text-white bg-[var(--bg_brand)] px-5 pt-20 pb-5 flex flex-col items-center gap-12 stagger-in">
-        <div className="flex flex-col items-center gap-4 text-center max-w-xl">
+        <div className="flex flex-col items-center gap-4 text-center max-w-xl h-40">
           <h3 className="text-3xl md:text-5xl font-medium tracking-tighter">
             {column.heading}
           </h3>
@@ -36,7 +32,7 @@ function ServiceColumn({
             <ServiceCard
               key={service.id ?? `${column.id}-${index}`}
               service={service}
-              expanded={expandedIndex === index}
+              expanded={expandedIndexes.includes(index)}
               dimmed={dimmed(column.id)}
               onClick={() => onToggle(column.id, index)}
             />

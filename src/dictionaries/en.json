@@ -116,46 +116,54 @@
       },
       "services": {
         "service1": {
-          "title": "Consultancy",
+          "title": "Empathy & Insights",
           "sentence": "We bieden deskundig advies om jouw duurzaamheids- en rechtvaardigheidsdoelen te bereiken.",
           "subservices": [
             {
-              "title": "Strategische Planning",
-              "description": "Impact Beoordeling"
+              "title": "Stakeholder Mapping",
+              "description": "Impact Assessment this is a longer text lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+              "img": "/assets/stakeholder_mapping.svg"
             },
             {
-              "title": "Strategische Planning",
-              "description": "Impact Beoordeling"
+              "title": "Strategic Planning",
+              "description": "Impact Assessment",
+              "img": "/assets/strategy_design.svg"
             },
             {
-              "title": "Strategische Planning",
-              "description": "Impact Beoordeling"
+              "title": "Strategic Planning",
+              "description": "Impact Assessment",
+              "img": "/assets/strategy_design.svg"
             },
             {
-              "title": "Strategische Planning",
-              "description": "Impact Beoordeling"
+              "title": "Strategic Planning",
+              "description": "Impact Assessment",
+              "img": "/assets/strategy_design.svg"
             }
           ]
         },
         "service2": {
-          "title": "Consultancy",
+          "title": "Strategy & Design",
           "sentence": "We bieden deskundig advies om jouw duurzaamheids- en rechtvaardigheidsdoelen te bereiken.",
           "subservices": [
             {
-              "title": "Strategische Planning",
-              "description": "Impact Beoordeling"
+              "title": "Strategic Planning",
+              "description": "Impact Assessment",
+              "img": "/assets/strategy_design.svg"
             },
             {
-              "title": "Strategische Planning",
-              "description": "Impact Beoordeling"
+              "title": "Strategic Planning",
+              "description": "Impact Assessment",
+              "img": "/assets/strategy_design.svg"
             },
             {
-              "title": "Strategische Planning",
-              "description": "Impact Beoordeling"
+              "title": "Strategic Planning",
+              "description": "Impact Assessment",
+              "img": "/assets/strategy_design.svg"
             },
             {
-              "title": "Strategische Planning",
-              "description": "Impact Beoordeling"
+              "title": "Strategic Planning",
+              "description": "Impact Assessment",
+              "img": "/assets/strategy_design.svg"
             }
           ]
         }
@@ -213,52 +221,198 @@
       "heading": "Services",
       "services": [
         {
-          "id": "stakeholder-mapping",
-          "title": "Stakeholder Mapping",
-          "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops.",
-          "svg": "/assets/stakeholder_mapping.svg"
+          "id": "service-1",
+          "title": "Empathy & Insights",
+          "description": "We uncover what truly matters to the people at the heart of your ESG challenge.",
+          "subService": [
+            {
+              "id": "stakeholder-mapping",
+              "title": "Stakeholder Mapping",
+              "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops.",
+              "svg": "/assets/stakeholder_mapping.svg",
+              "methodology": "Identify",
+              "methodDescription": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops.",
+              "subService": [
+                {
+                  "title": "Data Research & Analysis",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                },
+                {
+                  "title": "Stakeholder Mapping Workshops",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                },
+                {
+                  "title": "Partnership Opportunity Scans",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                }
+              ]
+            },
+            {
+              "id": "participatory-research",
+              "title": "Participatory Research",
+              "description": "Engage users and domain experts directly to uncover needs, motivations, and constraints through hands-on research methods.",
+              "svg": "/assets/participatory_research.svg",
+              "methodology": "Listen",
+              "methodDescription": "Engage users and domain experts directly to uncover needs, motivations, and constraints through hands-on research methods.",
+              "subService": [
+                {
+                  "title": "Interviews",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                },
+                {
+                  "title": "Questionnaires & Surveys",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                },
+                {
+                  "title": "Focus Groups",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                }
+              ]
+            },
+            {
+              "id": "persona-journeys",
+              "title": "Persona & Journey Design",
+              "description": "Translate research insights into actionable personas and journey maps that guide design and product decisions.",
+              "svg": "/assets/persona_design.svg",
+              "methodology": "Translate",
+              "methodDescription": "Translate research insights into actionable personas and journey maps that guide design and product decisions.",
+              "subService": [
+                {
+                  "title": "Persona Design",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                },
+                {
+                  "title": "Journey Design",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                }
+              ]
+            },
+            {
+              "id": "empathy-workshops",
+              "title": "Empathy Workshops",
+              "description": "Build shared understanding across teams by immersing stakeholders in user perspectives and real-world scenarios.",
+              "svg": "/assets/empathy_workshop.svg",
+              "methodology": "Experience",
+              "methodDescription": "Build shared understanding across teams by immersing stakeholders in user perspectives and real-world scenarios.",
+              "subService": [
+                {
+                  "title": "Workshops",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                }
+              ]
+            }
+          ]
         },
         {
-          "id": "participatory-research",
-          "title": "Participatory Research",
-          "description": "Engage users and domain experts directly to uncover needs, motivations, and constraints through hands-on research methods.",
-          "svg": "/assets/participatory_research.svg"
-        },
-        {
-          "id": "persona-journeys",
-          "title": "Persona & Journey Design",
-          "description": "Translate research insights into actionable personas and journey maps that guide design and product decisions.",
-          "svg": "/assets/persona_design.svg"
-        },
-        {
-          "id": "empathy-workshops",
-          "title": "Empathy Workshops",
-          "description": "Build shared understanding across teams by immersing stakeholders in user perspectives and real-world scenarios.",
-          "svg": "/assets/empathy_workshop.svg"
-        },
-        {
-          "id": "problem-analysis",
-          "title": "Problem & Opportunity Analysis",
-          "description": "Frame complex challenges clearly by identifying root causes, opportunities, and measurable success criteria.",
-          "svg": "/assets/problem_analysis.svg"
-        },
-        {
-          "id": "co-creation",
-          "title": "Co-creation & Ideation",
-          "description": "Facilitate structured ideation sessions that turn insights into concepts collaboratively with multidisciplinary teams.",
-          "svg": "/assets/cocreation_ideation.svg"
-        },
-        {
-          "id": "strategy-design",
-          "title": "Strategy Design",
-          "description": "Define clear design and product strategies that connect business objectives with user needs and technical feasibility.",
-          "svg": "/assets/strategy_design.svg"
-        },
-        {
-          "id": "living-labs",
-          "title": "Living Labs & Pilot Projects",
-          "description": "Validate ideas in real contexts through pilots and experiments before scaling into full-fledged solutions.",
-          "svg": "/assets/living_labs.svg"
+          "id": "service-2",
+          "title": "Strategy & Design",
+          "description": "We uncover what truly matters to the people at the heart of your ESG challenge.",
+          "subService": [
+            {
+              "id": "problem-analysis",
+              "title": "Problem & Opportunity Analysis",
+              "description": "Frame complex challenges clearly by identifying root causes, opportunities, and measurable success criteria.",
+              "svg": "/assets/problem_analysis.svg",
+              "methodology": "Identify",
+              "methodDescription": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops.",
+              "subService": [
+                {
+                  "title": "Problem",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                },
+                {
+                  "title": "Solution",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                }
+              ]
+            },
+            {
+              "id": "cocreation-ideation",
+              "title": "Co-creation & Ideation",
+              "description": "Turn insights into tangible concepts and prototypes that can be tested and iterated with users and stakeholders.",
+              "svg": "/assets/concept_development.svg",
+              "methodology": "Listen",
+              "methodDescription": "Turn insights into tangible concepts and prototypes that can be tested and iterated with users and stakeholders.",
+              "subService": [
+                {
+                  "title": "Expert Meetings",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                },
+                {
+                  "title": "Collaborative Ideation Sessions",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                },
+                {
+                  "title": "Preassure Cooker Sessions",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                },
+                {
+                  "title": "Design Sprints",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                }
+              ]
+            },
+            {
+              "id": "strategy-design",
+              "title": "Strategy Design",
+              "description": "Define clear design and product strategies that connect business objectives with user needs and technical feasibility.",
+              "svg": "/assets/strategy_design.svg",
+              "methodology": "Translate",
+              "methodDescription": "Define clear design and product strategies that connect business objectives with user needs and technical feasibility.",
+              "subService": [
+                {
+                  "title": "Development of ToC and Impact Logic",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                },
+                {
+                  "title": "Partnership Strategy",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                },
+                {
+                  "title": "Action Roadmaps and Plans",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                },
+                {
+                  "title": "Toolkit",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                }
+              ]
+            },
+            {
+              "id": "living-labs",
+              "title": "Living Labs & Pilot Projects",
+              "description": "Validate ideas in real contexts through pilots and experiments before scaling into full-fledged solutions.",
+              "svg": "/assets/living_labs.svg",
+              "methodology": "Experience",
+              "methodDescription": "Validate ideas in real contexts through pilots and experiments before scaling into full-fledged solutions.",
+              "subService": [
+                {
+                  "title": "Co-design & Coordination of Pilots",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                },
+                {
+                  "title": "Leadership Coaching & Advisory",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                },
+                {
+                  "title": "On-site Facilitation",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                },
+                {
+                  "title": "Narrative for Change",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                },
+                {
+                  "title": "Communication & Dissemination",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                },
+                {
+                  "title": "Data Collection & Evaluation",
+                  "description": "Identify key stakeholders, clarify goals, and align decision-makers through structured mapping and facilitated workshops."
+                }
+              ]
+            }
+          ]
         }
       ]
     },

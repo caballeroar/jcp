@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import Header from "../ui/Header";
+
 import ServicesInteractive from "./ServicesInteractive";
 
 export default function ServicesSection({
@@ -10,11 +11,16 @@ export default function ServicesSection({
   leftDescription,
   rightDescription,
   defaultDescription,
+  columns: columnsOverride = [],
 }) {
-  const midpoint = Math.ceil(services.length / 2) || 1;
+  const columns = useMemo(() => {
+    if (columnsOverride.length) {
+      return columnsOverride;
+    }
 
-  const columns = useMemo(
-    () => [
+    const midpoint = Math.ceil(services.length / 2);
+
+    return [
       {
         id: "left",
         heading: leftHeader ?? "Empathy & Insights",
@@ -33,21 +39,25 @@ export default function ServicesSection({
           "We translate insights into aligned strategy, execution, and impact.",
         services: services.slice(midpoint),
       },
-    ],
-    [
-      services,
-      midpoint,
-      leftHeader,
-      rightHeader,
-      leftDescription,
-      rightDescription,
-      defaultDescription,
-    ],
-  );
+    ];
+  }, [
+    columnsOverride,
+    services,
+    leftHeader,
+    rightHeader,
+    leftDescription,
+    rightDescription,
+    defaultDescription,
+  ]);
 
   return (
-    <section id="services-section" className="space-y-10">
-      <Header title={heading} level="h2" />
+    <section
+      id="services-section"
+      className="space-y-10 flex flex-col items-center"
+    >
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <Header title={heading} level="h2" />
+      </div>
       <ServicesInteractive columns={columns} />
     </section>
   );

@@ -5,11 +5,13 @@ import { getHoverColumn } from "../../utils/service";
 import { useViewportWidth } from "../../hooks/useViewportWidth";
 import { useIntersectionOnce } from "../../hooks/useIntersectionOnce";
 import ServiceColumn from "./ServiceColumn";
-import Animations from "./Animation";
+import { ArrowRight } from "phosphor-react";
+import { Button } from "../ui";
+import { useI18n } from "@/lib/I18nContext";
 
 export default function ServicesInteractive({ columns = [] }) {
   const containerRef = useRef(null);
-
+  const { locale } = useI18n();
   const width = useViewportWidth();
   const isDesktop = width >= 1280;
 
@@ -17,7 +19,7 @@ export default function ServicesInteractive({ columns = [] }) {
 
   /**
    * Stores only user-triggered expansions
-   * Missing keys are treated as `null`
+   * Missing keys are treated as empty
    */
   const [expanded, setExpanded] = useState({});
 
@@ -40,41 +42,87 @@ export default function ServicesInteractive({ columns = [] }) {
   }, []);
 
   /**
-   * Toggle expansion per column
-   * No derived state, no effects
+   * Toggle expansion per column (user-triggered only)
    */
   const handleToggle = useCallback((columnId, index) => {
-    setExpanded((prev) => ({
-      ...prev,
-      [columnId]: prev[columnId] === index ? null : index,
-    }));
+    setExpanded((prev) => {
+      const current = new Set(prev[columnId] ?? []);
+
+      if (current.has(index)) {
+        current.delete(index);
+      } else {
+        current.add(index);
+      }
+
+      const nextEntries = Array.from(current);
+
+      if (!nextEntries.length) {
+        const nextState = { ...prev };
+        delete nextState[columnId];
+        return nextState;
+      }
+
+      return {
+        ...prev,
+        [columnId]: nextEntries,
+      };
+    });
   }, []);
+
+  /**
+   * Derive desktop-visible expansions
+   * No effect. No cascading renders.
+   */
+  const getVisibleExpanded = useCallback(
+    (columnId) => {
+      if (!isDesktop) {
+        return expanded[columnId] ?? [];
+      }
+
+      if (!activeCol) return [];
+
+      if (columnId !== activeCol) return [];
+
+      return expanded[columnId] ?? [];
+    },
+    [expanded, activeCol, isDesktop],
+  );
 
   return (
     <div
       id="services-brand-area"
       data-brand-bg
       ref={containerRef}
-      className={`flex flex-col xl:flex-row w-full px-2 xl:px-6 pt-28 pb-12 gap-4 bg-[var(--bg_brand)] cursor-pointer relative overflow-hidden ${
-        visible ? "animate-bg" : "container-pre"
-      }`}
       onPointerMove={(e) => handleHoverX(e.clientX)}
       onPointerLeave={resetHover}
       onTouchStart={(e) => e.touches?.[0] && handleHoverX(e.touches[0].clientX)}
       onTouchMove={(e) => e.touches?.[0] && handleHoverX(e.touches[0].clientX)}
+      className="bg-[var(--bg_brand)] flex flex-col items-center"
     >
-      {columns.map((column) => (
-        <ServiceColumn
-          key={column.id}
-          column={column}
-          isDesktop={isDesktop}
-          activeCol={activeCol}
-          expandedIndex={expanded[column.id] ?? null}
-          onToggle={handleToggle}
-        />
-      ))}
-
-      <Animations />
+      <div
+        className={`flex flex-col xl:flex-row w-full px-2 xl:px-6 pt-28 pb-12 gap-4  cursor-pointer relative overflow-hidden ${
+          visible ? "animate-bg" : "container-pre"
+        }`}
+      >
+        {columns.map((column) => (
+          <ServiceColumn
+            key={column.id}
+            column={column}
+            isDesktop={isDesktop}
+            activeCol={activeCol}
+            expandedIndexes={getVisibleExpanded(column.id)}
+            onToggle={handleToggle}
+          />
+        ))}
+      </div>
+      <Button
+        className="py-20"
+        href={`/${locale}/services`}
+        icon={<ArrowRight />}
+        theme="brand"
+      >
+        View Services
+      </Button>
     </div>
   );
 }

@@ -9,13 +9,15 @@ export default function ServiceCard({ service, expanded, dimmed, onClick }) {
       {!expanded ? (
         <>
           {service.svg ? (
-            <Image
-              src={service.svg}
-              alt={service.title ?? "Service"}
-              width={160}
-              height={160}
-              className={`object-contain max-h-40 brightness-0 invert transition-transform duration-300 ${dimmed}`}
-            />
+            <div className="flex w-full h-full justify-center pt-8">
+              <Image
+                src={service.svg}
+                alt={service.title ?? "Service"}
+                width={160}
+                height={160}
+                className={`object-contain max-h-40 brightness-0 invert transition-transform duration-300 ${dimmed}`}
+              />
+            </div>
           ) : (
             <div className="h-40 w-full flex items-center justify-center text-sm uppercase font-roboto-mono opacity-60">
               {service.title}
@@ -27,9 +29,11 @@ export default function ServiceCard({ service, expanded, dimmed, onClick }) {
         </>
       ) : (
         <>
-          <p className="text-2xl text-center px-4 leading-relaxed">
-            {service.description}
-          </p>
+          <div className="flex w-full h-full justify-center pt-8">
+            <p className="text-2xl text-center px-4 leading-1.2">
+              {service.description}
+            </p>
+          </div>
           <h3 className="text-base font-roboto-mono uppercase text-center">
             {service.title}
           </h3>
