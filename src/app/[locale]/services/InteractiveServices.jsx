@@ -274,7 +274,7 @@ export default function InteractiveServices({ services = [] }) {
                       key={item.id}
                       className="flex h-[320px] flex-col items-center gap-6 rounded-xl border border-white/50 bg-white/5 p-8 text-center"
                     >
-                      <p className="text-sm uppercase font-roboto-mono tracking-[2px] text-white/80">
+                      <p className="text-md uppercase font-roboto-mono text-white">
                         {item.title}
                       </p>
                       {item.description && (
