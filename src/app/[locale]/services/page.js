@@ -30,7 +30,9 @@ export default async function ServicesPage({ params }) {
       data-brand-bg
       className="min-h-screen bg-[var(--bg_brand)] text-foreground p-8"
     >
-      <Header title={title} level="h1" variant="white" />
+      <div className="pt-40">
+        <Header title={title} level="h1" variant="white" />
+      </div>
       <InteractiveServices
         services={services}
         copy={servicesCopy}

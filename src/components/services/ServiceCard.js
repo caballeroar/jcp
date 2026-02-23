@@ -4,7 +4,7 @@ export default function ServiceCard({ service, expanded, dimmed, onClick }) {
   return (
     <article
       onClick={onClick}
-      className="rounded-xl border-[2px] border-white bg-[var(--bg_brand)] text-white flex flex-col items-center justify-between gap-6 pt-10 pb-6 px-4 h-[440px] cursor-pointer transition-all duration-300 ease-out hover:bg-white/10 hover:scale-[1.02]"
+      className="rounded-xl border-1 hover:border-2 border-white/50 bg-[var(--bg_brand)] text-white flex flex-col items-center justify-between gap-6 pt-10 pb-6 px-4 h-[440px] cursor-pointer transition-all duration-300 ease-out hover:bg-white/10 hover:border-white hover:scale-[1.02]"
     >
       {!expanded ? (
         <>

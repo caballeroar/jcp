@@ -97,7 +97,7 @@ export default function ServicesInteractive({ columns = [] }) {
       onPointerLeave={resetHover}
       onTouchStart={(e) => e.touches?.[0] && handleHoverX(e.touches[0].clientX)}
       onTouchMove={(e) => e.touches?.[0] && handleHoverX(e.touches[0].clientX)}
-      className="bg-[var(--bg_brand)] flex flex-col items-center"
+      className="bg-[var(--bg_brand)] w-full flex flex-col items-center"
     >
       <div
         className={`flex flex-col xl:flex-row w-full px-2 xl:px-6 pt-28 pb-12 gap-4  cursor-pointer relative overflow-hidden ${
