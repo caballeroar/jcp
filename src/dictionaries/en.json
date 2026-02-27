@@ -417,10 +417,69 @@
       ]
     },
     "contact": {
-      "heading": "Contact Us"
+      "heading": "Contact Us",
+      "description": "Share a bit about your organisation and we'll get in touch with next steps.",
+      "fields": {
+        "name": "Name",
+        "email": "Work email",
+        "organization": "Organisation",
+        "message": "What would you like to discuss?"
+      },
+      "submit": "Send message",
+      "success": "Thanks for reaching out. We'll respond soon."
     },
     "about": {
-      "heading": "About"
+      "heading": "About Us",
+      "heroTitle": "ESG integration requires institutional clarity.",
+      "heroSubtitle": "We support European municipalities and B2B organisations in translating sustainability policy into structured governance, measurable outcomes, and operational implementation.",
+
+      "whoTitle": "Independent ESG advisory for complex public environments.",
+      "whoBody": "We are a small, expert-led consultancy specialising in sustainability strategy, governance alignment, and regulatory implementation across the Netherlands and neighbouring European markets. We work with municipalities and private-sector organisations operating in regulated, multi-stakeholder environments. Our role is to structure ESG ambition into coherent frameworks that withstand public scrutiny, regulatory review, and operational reality. Sustainability in public contexts demands precision. We bring that structure.",
+
+      "contextTitle": "Navigating the European sustainability landscape.",
+      "contextBody": "The European regulatory environment is evolving rapidly — from the European Green Deal to CSRD reporting obligations and taxonomy alignment. Municipalities face increasing expectations around transparency, climate adaptation, procurement sustainability, and measurable impact. We help organisations interpret these requirements pragmatically and embed them into governance, reporting, and operational systems.",
+
+      "approachTitle": "Structured implementation within institutional constraints.",
+      "approachSteps": [
+        {
+          "title": "01 — Regulatory & policy mapping",
+          "body": "We analyse applicable EU and national frameworks, local policy ambitions, and stakeholder expectations."
+        },
+        {
+          "title": "02 — Double materiality & risk assessment",
+          "body": "We identify material ESG factors and translate them into actionable priorities."
+        },
+        {
+          "title": "03 — Governance & operational alignment",
+          "body": "We integrate ESG objectives into procurement processes, internal controls, reporting structures, and cross-departmental workflows."
+        },
+        {
+          "title": "04 — Monitoring & reporting systems",
+          "body": "We establish measurable KPIs and reporting structures aligned with European regulatory standards."
+        }
+      ],
+
+      "focusTitle": "What we focus on",
+      "focusList": [
+        "ESG strategy for municipalities and public-sector organisations",
+        "Double materiality assessments",
+        "CSRD and EU taxonomy readiness",
+        "Sustainable procurement frameworks",
+        "Climate and transition governance",
+        "Cross-functional ESG integration"
+      ],
+
+      "whyTitle": "Why municipalities and B2B organisations work with us",
+      "whyList": [
+        "Deep understanding of EU sustainability regulation",
+        "Experience navigating multi-stakeholder governance structures",
+        "Implementation-focused approach",
+        "Clear documentation and defensible reporting",
+        "Long-term institutional partnership mindset"
+      ],
+
+      "ctaText": "If your organisation is preparing for the next phase of ESG accountability, we help you structure the transition responsibly.",
+      "ctaButton": "Contact us"
     }
   }
 }

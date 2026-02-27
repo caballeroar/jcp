@@ -6,9 +6,7 @@
     "dev": "next dev --webpack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "export": "next build && next export",
-    "deploy": "npm run export"
+    "lint": "eslint"
   },
   "dependencies": {
     "next": "16.0.1",

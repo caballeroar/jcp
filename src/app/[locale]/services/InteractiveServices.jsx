@@ -116,7 +116,7 @@ export default function InteractiveServices({ services = [] }) {
   }
 
   return (
-    <section className="mt-12 w-full space-y-8 rounded-2xl border border-white/20 p-6 text-white">
+    <section className="mt-12 w-5/6 mx-auto space-y-8 rounded-2xl border border-white/20 pt-6 text-white">
       {/* <div className="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-6">
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <div>
@@ -135,7 +135,7 @@ export default function InteractiveServices({ services = [] }) {
         </div>
       </div> */}
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2 px-6">
         {normalized.map((service, index) => {
           const isActive = index === activeServiceIndex;
           return (
@@ -144,7 +144,7 @@ export default function InteractiveServices({ services = [] }) {
               type="button"
               aria-pressed={isActive}
               onClick={() => handleServiceChange(index, service.id)}
-              className={`rounded-2xl border px-12 py-5 text-left transition ${
+              className={`rounded-2xl border px-5 py-5 text-left transition ${
                 isActive
                   ? " border-1 border-white bg-white/10 "
                   : "border-white/50 hover:bg-white/10"
@@ -265,7 +265,7 @@ export default function InteractiveServices({ services = [] }) {
 
               {focusDetails.length ? (
                 <div
-                  className={`mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 ${
+                  className={`mt-12 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 ${
                     forceTwoRows ? "lg:grid-rows-2" : ""
                   }`}
                 >
