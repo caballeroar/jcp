@@ -73,19 +73,23 @@
         "folders": [
           {
             "client": "Communities",
-            "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+            "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative.",
+            "logo": "/assets/logo_icon.svg"
           },
           {
             "client": "Communities",
-            "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+            "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative.",
+            "logo": "/assets/logo_icon.svg"
           },
           {
             "client": "Communities",
-            "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+            "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative.",
+            "logo": "/assets/logo_icon.svg"
           },
           {
             "client": "Communities",
-            "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative."
+            "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative.",
+            "logo": "/assets/logo_icon.svg"
           }
         ]
       },

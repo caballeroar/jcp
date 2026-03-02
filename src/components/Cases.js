@@ -102,6 +102,7 @@ export default function Cases({ href }) {
     slug: entry?.slug || `case-${idx + 1}`,
     client: entry?.client ?? "",
     sentence: entry?.sentence ?? "",
+    logo: entry?.logo ?? null,
     cta: entry?.cta,
     images: getCaseImages(entry?.slug || `case-${idx + 1}`),
   }));
@@ -145,6 +146,7 @@ export default function Cases({ href }) {
               }}
             >
               <FolderIcon
+                logo={caseData.logo}
                 title={caseData.client}
                 description={caseData.sentence}
                 images={caseData.images}

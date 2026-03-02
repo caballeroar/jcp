@@ -8,6 +8,7 @@ export default function Button({
   icon,
   iconPosition = "right",
   theme = "dark",
+  iconOnly = false,
   onClick,
   href,
   prefetch,
@@ -50,6 +51,19 @@ export default function Button({
       ? "group-hover:-translate-x-1"
       : "group-hover:translate-x-1";
 
+  const renderIconSpan = (position = "right") => (
+    <span
+      className={`${baseIcon} ${
+        iconOnly ? "" : position === "left" ? "-mr-[1px]" : "-ml-[1px]"
+      } ${iconOnly ? "" : iconHoverClass}`.trim()}
+      style={themeStyle}
+    >
+      {icon}
+    </span>
+  );
+
+  const iconContent = iconOnly ? renderIconSpan() : null;
+
   if (href) {
     return (
       <Link
@@ -59,24 +73,30 @@ export default function Button({
         {...props}
         style={{ display: "flex", transform: "translateY(1px)" }}
       >
-        {iconPosition === "left" && (
-          <span
-            className={`${baseIcon} ${iconMargin} ${iconHoverClass}`}
-            style={themeStyle}
-          >
-            {icon}
-          </span>
-        )}
-        <span className={` ${baseButton}  `} style={themeStyle}>
-          {children}
-        </span>
-        {iconPosition === "right" && (
-          <span
-            className={`${baseIcon} ${iconMargin} ${iconHoverClass}`}
-            style={themeStyle}
-          >
-            {icon}
-          </span>
+        {iconOnly ? (
+          iconContent
+        ) : (
+          <>
+            {iconPosition === "left" && (
+              <span
+                className={`${baseIcon} ${iconMargin} ${iconHoverClass}`}
+                style={themeStyle}
+              >
+                {icon}
+              </span>
+            )}
+            <span className={` ${baseButton}  `} style={themeStyle}>
+              {children}
+            </span>
+            {iconPosition === "right" && (
+              <span
+                className={`${baseIcon} ${iconMargin} ${iconHoverClass}`}
+                style={themeStyle}
+              >
+                {icon}
+              </span>
+            )}
+          </>
         )}
       </Link>
     );
@@ -89,24 +109,30 @@ export default function Button({
       {...props}
       style={{ display: "flex", transform: "translateY(1px)" }}
     >
-      {iconPosition === "left" && (
-        <span
-          className={`${baseIcon} ${iconMargin} ${iconHoverClass}`}
-          style={themeStyle}
-        >
-          {icon}
-        </span>
-      )}
-      <span className={` ${baseButton}  `} style={themeStyle}>
-        {children}
-      </span>
-      {iconPosition === "right" && (
-        <span
-          className={`${baseIcon} ${iconMargin} ${iconHoverClass} `}
-          style={{ ...themeStyle }}
-        >
-          {icon}
-        </span>
+      {iconOnly ? (
+        iconContent
+      ) : (
+        <>
+          {iconPosition === "left" && (
+            <span
+              className={`${baseIcon} ${iconMargin} ${iconHoverClass}`}
+              style={themeStyle}
+            >
+              {icon}
+            </span>
+          )}
+          <span className={` ${baseButton}  `} style={themeStyle}>
+            {children}
+          </span>
+          {iconPosition === "right" && (
+            <span
+              className={`${baseIcon} ${iconMargin} ${iconHoverClass} `}
+              style={{ ...themeStyle }}
+            >
+              {icon}
+            </span>
+          )}
+        </>
       )}
     </button>
   );

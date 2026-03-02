@@ -15,6 +15,7 @@ export default function FolderIcon({
   buttonLabel = "View",
   cta,
   href,
+  logo,
   onExpand,
 }) {
   const [showOverlay, setShowOverlay] = useState(false);
@@ -94,6 +95,18 @@ export default function FolderIcon({
       </svg>
 
       <div className="relative z-10 w-full px-4 py-4 flex flex-col gap-3">
+        {logo && (
+          <div className="relative h-10 w-[140px] max-w-full self-start">
+            <Image
+              src={logo}
+              alt={title || ""}
+              fill
+              className="object-contain object-left"
+              sizes="140px"
+              unoptimized
+            />
+          </div>
+        )}
         <h3 className="font-semibold text-xl">
           {title || "Title placeholder"}
         </h3>
