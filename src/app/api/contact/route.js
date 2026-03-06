@@ -136,6 +136,7 @@ export async function POST(request) {
     try {
       payload = await request.json();
     } catch (err) {
+      console.error("Contact form error:", error);
       return NextResponse.json(
         { success: false, error: "Invalid request." },
         { status: 400 },
@@ -174,15 +175,15 @@ export async function POST(request) {
 
     await Promise.all([
       client.sendEmail({
-        From: "contact@mydomain.nl",
+        From: "amel@justcommonpeople.com",
         To: sanitized.email,
         Subject: "We received your message",
         HtmlBody: buildConfirmationEmail(sanitized),
         MessageStream: "outbound",
       }),
       client.sendEmail({
-        From: "contact@mydomain.nl",
-        To: "contact@mydomain.nl",
+        From: "amel@justcommonpeople.com",
+        To: "amel@justcommonpeople.com",
         Subject: `New contact request from ${sanitized.name}`,
         HtmlBody: buildInternalEmail(sanitized),
         MessageStream: "outbound",

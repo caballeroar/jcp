@@ -20,13 +20,14 @@ export async function submitContactForm(formData) {
 
     return {
       ok: true,
-      message: "Thank you. We will respond within a few working days.",
+      message:
+        "Yaaaaassss Thank you. We will respond within a few working days.",
     };
   } catch {
     return {
       ok: false,
       message:
-        "We could not submit your request right now. Please try again later.",
+        "Neeeee We could not submit your request right now. Please try again later.",
     };
   }
 }
