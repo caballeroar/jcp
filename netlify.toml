@@ -1,11 +1,12 @@
 [build]
-
   command = "npm run build"
 
 [build.environment]
   NODE_VERSION = "22"
-  # Ensure GA ID is available at build time on Netlify
   NEXT_PUBLIC_GA_MEASUREMENT_ID = "G-E4HPXVNYB0"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
 [[headers]]
   for = "/fonts/*"

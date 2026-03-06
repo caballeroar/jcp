@@ -7,6 +7,8 @@ const MAX_MESSAGE_LENGTH = 5000;
 const MIN_MESSAGE_LENGTH = 10;
 const MIN_NAME_LENGTH = 2;
 
+console.log("POSTMARK_API_KEY exists:", !!process.env.POSTMARK_API_KEY);
+
 const sanitizeInput = (value = "") =>
   value
     .toString()
