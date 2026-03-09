@@ -5,7 +5,7 @@ export async function submitContactForm(formData) {
       email: formData.email?.trim() || "",
       organization: formData.organization?.trim() || "",
       message: formData.message?.trim() || "",
-      companyWebsite: "", // honeypot must stay empty
+      companyWebsite: formData.companyWebsite?.trim() || "",
     };
 
     const response = await fetch("/api/contact", {
@@ -14,20 +14,21 @@ export async function submitContactForm(formData) {
       body: JSON.stringify(payload),
     });
 
-    if (!response.ok) {
-      throw new Error("Request failed");
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok || !data?.success) {
+      throw new Error(data?.error || "Request failed");
     }
 
     return {
       ok: true,
-      message:
-        "Yaaaaassss Thank you. We will respond within a few working days.",
+      message: "Thank you. We will respond within a few working days.",
     };
   } catch {
     return {
       ok: false,
       message:
-        "Neeeee We could not submit your request right now. Please try again later.",
+        "We could not submit your request right now. Please try again later.",
     };
   }
 }

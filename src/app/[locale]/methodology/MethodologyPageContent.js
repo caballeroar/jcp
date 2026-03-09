@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { ArrowRight } from "phosphor-react";
+import { ArrowDown } from "phosphor-react";
 import Button from "../../../components/ui/Button";
 import EllipseSvg from "../../../components/ui/EllipseSvg";
 import Header from "@/components/ui/Header";
@@ -94,28 +94,25 @@ export default function MethodologyPageContent({ copy, locale, ctaLabel }) {
         />
       ))}
 
-      <div className="w-full mx-auto text-center space-y-6 relative z-10 mt-[14%]">
-        <Header title={copy?.heading || "Methodology"} level="h2" />
-        {copy?.sentence1 && (
-          <p className="text-2xl md:text-3xl font-semibold text-[var(--content_dark)]">
-            {copy.sentence1}
-          </p>
-        )}
-        {copy?.sentence2 && (
-          <p className="text-lg md:text-2xl text-[var(--content_dark)]/80">
-            {copy.sentence2}
-          </p>
-        )}
-        {ctaLabel && (
-          <Button
-            theme="dark"
-            icon={<ArrowRight size={20} weight="bold" />}
-            className="mt-10"
-            href={`/${locale}/contact`}
-          >
-            {ctaLabel}
-          </Button>
-        )}
+      <div className="w-full flex flex-col items-center mx-auto text-center space-y-6 relative z-10 mt-[14%]">
+        <Header title={copy?.heading} level="h2" />
+
+        <p className="text-2xl md:text-3xl font-semibold text-[var(--content_dark)]">
+          {copy.sentence1}
+        </p>
+
+        <p className="text-lg md:text-2xl text-[var(--content_dark)]/80">
+          {copy.sentence2}
+        </p>
+
+        <Button
+          theme="dark"
+          icon={<ArrowDown size={20} weight="bold" />}
+          className="mt-10"
+          // href={`/${locale}/contact`}
+        >
+          {ctaLabel}
+        </Button>
       </div>
     </section>
   );

@@ -160,14 +160,14 @@ export default function CasesModal({
             className="relative flex w-full max-w-4xl flex-col items-center gap-4"
             onClick={(e) => e.stopPropagation()}
           >
-            <Button
+            {/* <Button
               iconOnly
               theme="light"
               onClick={closeGallery}
               icon={<X size={18} weight="bold" />}
               aria-label="Close enlarged image"
               className="self-end"
-            />
+            /> */}
 
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl bg-black">
               <Image

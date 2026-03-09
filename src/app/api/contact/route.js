@@ -7,8 +7,6 @@ const MAX_MESSAGE_LENGTH = 5000;
 const MIN_MESSAGE_LENGTH = 10;
 const MIN_NAME_LENGTH = 2;
 
-console.log("POSTMARK_API_KEY exists:", !!process.env.POSTMARK_API_KEY);
-
 const sanitizeInput = (value = "") =>
   value
     .toString()
@@ -138,7 +136,7 @@ export async function POST(request) {
     try {
       payload = await request.json();
     } catch (err) {
-      console.error("Contact form error:", error);
+      console.error("Contact form error: invalid JSON", err);
       return NextResponse.json(
         { success: false, error: "Invalid request." },
         { status: 400 },
@@ -182,6 +180,7 @@ export async function POST(request) {
         Subject: "We received your message",
         HtmlBody: buildConfirmationEmail(sanitized),
         MessageStream: "outbound",
+        ReplyTo: sanitized.email,
       }),
       client.sendEmail({
         From: "amel@justcommonpeople.com",
@@ -189,11 +188,13 @@ export async function POST(request) {
         Subject: `New contact request from ${sanitized.name}`,
         HtmlBody: buildInternalEmail(sanitized),
         MessageStream: "outbound",
+        ReplyTo: sanitized.email,
       }),
     ]);
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
+    console.error("Contact form send error", error);
     return NextResponse.json(
       { success: false, error: "Unable to send message." },
       { status: 500 },

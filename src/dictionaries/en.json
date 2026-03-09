@@ -30,7 +30,8 @@
         "sustainability": "sustainability",
         "middle": " and ",
         "justice": "justice",
-        "after": " challenges deserve human centered insight and action."
+        "after": " challenges deserve human centered insight and action.",
+        "cta": "Create Impact."
       },
       "environment": {
         "words": [
@@ -183,13 +184,9 @@
     },
     "methodology": {
       "heading": "Methodology",
-      "sentence1": "Bij elke uitdaging draait het om mensen.",
-      "sentence2": "Mensgerichte duurzaamheidsoplossingen",
-      "coma": " , ",
-      "and": " en ",
-      "accent1": "begrip",
-      "accent2": "vertrouwen ",
-      "accent3": "samenwerking."
+      "sentence1": "For us, every challenge revolves around people.",
+      "sentence2": "Human-centered sustainability solutions strengthen",
+      "cta": "View Approach"
     },
     "cases": {
       "heading": "Cases",

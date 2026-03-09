@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { submitContactForm } from "@/utils/contact";
 import { Button } from "./ui";
+import { ArrowRight } from "phosphor-react";
 
 export default function ContactForm({
   locale,
@@ -32,7 +33,10 @@ export default function ContactForm({
 
     const result = await submitContactForm(payload);
 
-    setStatus(result.message);
+    setStatus({
+      type: result.ok ? "success" : "error",
+      message: result.message,
+    });
     setLoading(false);
 
     if (result.ok) {
@@ -51,9 +55,10 @@ export default function ContactForm({
       <input
         type="text"
         name="companyWebsite"
-        className="hidden"
+        className="sr-only"
         tabIndex="-1"
         autoComplete="off"
+        aria-hidden="true"
       />
 
       <div className="space-y-6">
@@ -102,13 +107,19 @@ export default function ContactForm({
           type="submit"
           disabled={loading}
           theme="dark"
-          //   className="inline-flex w-full items-center justify-center rounded-full border border-black/10 bg-[var(--surface)] px-8 py-4 text-base font-semibold text-[var(--content_light)] shadow-[0_20px_35px_rgba(0,0,0,0.2)] transition hover:-translate-y-0.5 hover:shadow-[0_25px_45px_rgba(0,0,0,0.25)] disabled:opacity-60"
+          icon={<ArrowRight size={20} weight="bold" />}
         >
           {loading ? "Sending..." : submitLabel}
         </Button>
 
-        <p className="text-sm text-[var(--content_dark)] opacity-75">
-          {status ?? successNote}
+        <p
+          className={`text-sm ${
+            status?.type === "error"
+              ? "text-red-600"
+              : "text-[var(--content_dark)] opacity-75"
+          }`}
+        >
+          {status?.message ?? successNote}
         </p>
       </div>
     </form>
