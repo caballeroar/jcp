@@ -1,8 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
 
-export function useCaseModal(items = []) {
-  const [expandedIndex, setExpandedIndex] = useState(null);
+const normalizeIndex = (index, total) => {
+  if (total <= 0 || index === null || index === undefined) return null;
+  const parsed = Number(index);
+  if (Number.isNaN(parsed)) return null;
+  return ((parsed % total) + total) % total;
+};
+
+export function useCaseModal(items = [], initialIndex = null) {
   const totalCases = items.length;
+  const [expandedIndex, setExpandedIndex] = useState(() =>
+    normalizeIndex(initialIndex, totalCases),
+  );
   const activeCase =
     totalCases > 0 && expandedIndex !== null ? items[expandedIndex] : null;
   const isOpen = Boolean(activeCase);

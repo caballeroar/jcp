@@ -7,17 +7,18 @@ const normalizePath = (path = "/") =>
   path.length > 1 && path.endsWith("/") ? path.slice(0, -1) : path;
 
 export function useMenu() {
-  const [open, setOpen] = useState(false);
+  const [openPath, setOpenPath] = useState(null);
   const router = useRouter();
   const pathname = usePathname();
   const currentPath = normalizePath(pathname);
+  const open = openPath === currentPath;
 
   const toggle = useCallback(() => {
-    setOpen((v) => !v);
-  }, []);
+    setOpenPath((path) => (path === currentPath ? null : currentPath));
+  }, [currentPath]);
 
   const close = useCallback(() => {
-    setOpen(false);
+    setOpenPath(null);
   }, []);
 
   const navigate = useCallback(
@@ -51,10 +52,6 @@ export function useMenu() {
       document.body.style.overflow = previous;
     };
   }, [open]);
-
-  useEffect(() => {
-    close();
-  }, [currentPath, close]);
 
   return {
     open,

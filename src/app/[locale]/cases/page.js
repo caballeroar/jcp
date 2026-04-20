@@ -9,8 +9,13 @@ export async function generateStaticParams() {
   return [{ locale: "en" }, { locale: "nl" }];
 }
 
-export default async function CasesPage({ params }) {
+export default async function CasesPage({ params, searchParams }) {
   const { locale } = await params;
+  const resolvedSearchParams = (await searchParams) ?? {};
+  const initialCaseSlug =
+    typeof resolvedSearchParams.case === "string"
+      ? resolvedSearchParams.case
+      : null;
 
   if (!locales.includes(locale)) {
     notFound();
@@ -28,9 +33,11 @@ export default async function CasesPage({ params }) {
 
   return (
     <CasesClientPage
+      key={initialCaseSlug ?? "no-case"}
       locale={locale}
       heading={casesCopy.heading ?? "Cases"}
       folders={folders}
+      initialCaseSlug={initialCaseSlug}
     />
   );
 }

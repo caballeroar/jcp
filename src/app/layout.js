@@ -12,6 +12,7 @@ import { I18nProvider } from "../lib/I18nContext";
 
 import enDict from "../dictionaries/en.json";
 import nlDict from "../dictionaries/nl.json";
+import { getCaseImages } from "../data/cases";
 
 import { MenuProvider } from "../components/ui/MenuFolder/MenuProvider";
 import { DesktopHeader } from "../components/ui/MenuFolder/DesktopHeader.js";
@@ -60,12 +61,68 @@ export default function RootLayout({ children }) {
   const buildHref = (slug = "") => (slug ? `/${locale}/${slug}` : `/${locale}`);
 
   const navItems = [
-    { label: dict.nav.services, slug: "services" },
-    { label: dict.nav.cases, slug: "cases" },
-    { label: dict.nav.methodology, slug: "methodology" },
-    { label: dict.nav.about, slug: "about" },
-    { label: dict.nav.contact, slug: "contact" },
+    { label: dict?.nav?.services ?? "Services", slug: "services" },
+    { label: dict?.nav?.cases ?? "Cases", slug: "cases" },
+    { label: dict?.nav?.methodology ?? "Methodology", slug: "methodology" },
+    { label: dict?.nav?.about ?? "About", slug: "about" },
+    { label: dict?.nav?.contact ?? "Contact", slug: "contact" },
   ];
+
+  const relatedBySlug = {
+    services: {
+      title: dict?.pages?.services?.heading ?? "Services",
+      items: (dict?.pages?.services?.services ?? [])
+        .slice(0, 4)
+        .map((entry) => ({
+          title: entry?.title ?? "Service",
+          description: entry?.description ?? "",
+        })),
+    },
+    cases: {
+      title: dict?.pages?.cases?.heading ?? "Cases",
+      items: (dict?.pages?.cases?.folders ?? [])
+        .slice(0, 4)
+        .map((entry, idx) => {
+          const slug = entry?.slug || `case-${idx + 1}`;
+          return {
+            slug,
+            title: entry?.client ?? "Case",
+            description: entry?.sentence ?? "",
+            image: getCaseImages(slug)[0] ?? null,
+          };
+        }),
+    },
+    methodology: {
+      title: dict?.pages?.methodology?.heading ?? "Methodology",
+      items: [
+        {
+          title:
+            dict?.pages?.methodology?.sentence1 ?? "Human-centered approach",
+          description: dict?.pages?.methodology?.sentence2 ?? "",
+        },
+      ],
+    },
+    about: {
+      title: dict?.pages?.about?.heading ?? "About",
+      items: [
+        {
+          title: dict?.pages?.about?.whoTitle ?? "Who we are",
+          description: dict?.pages?.about?.whoBody ?? "",
+        },
+      ],
+    },
+    contact: {
+      title: dict?.pages?.contact?.heading ?? "Contact",
+      items: [
+        {
+          title:
+            dict?.pages?.contact?.description ??
+            "Let us know what you are building.",
+          description: "",
+        },
+      ],
+    },
+  };
 
   return (
     <html className={`${fustat.variable} ${robotoMono.variable}`}>
@@ -87,7 +144,11 @@ export default function RootLayout({ children }) {
             <MenuProvider>
               <DesktopHeader buildHref={buildHref} invert={onBrandBackground} />
               <MobileHeader buildHref={buildHref} invert={onBrandBackground} />
-              <MenuDrawer items={navItems} buildHref={buildHref} />
+              <MenuDrawer
+                items={navItems}
+                buildHref={buildHref}
+                relatedBySlug={relatedBySlug}
+              />
             </MenuProvider>
             {gaId && <GoogleAnalytics GA_MEASUREMENT_ID={gaId} />}
             {gaId && (

@@ -21,10 +21,10 @@ export function MobileHeader({ buildHref, invert }) {
 
   return (
     <header
-      className="md:hidden fixed bottom-0 left-0 right-0 z-50 w-full border-t"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-50 w-full"
       style={style}
     >
-      <div className="px-4 py-3 flex items-center justify-between">
+      <div className="px-4 py-3 flex items-center justify-between border-t border-[var(--bg_brand)]">
         <Link href={buildHref()} onClick={(e) => navigate(buildHref(), e)}>
           <Image
             src={LogoIcon}

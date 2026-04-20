@@ -24,8 +24,8 @@ export default function ClientPage() {
         <Environment />
       </div>
       <Methodology2 />
-      <Cases />
       <Testimonials />
+      <Cases />
       <Services copy={servicesCopy} services={servicesItems} />
       <Contact />
     </main>

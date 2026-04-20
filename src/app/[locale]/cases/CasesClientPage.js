@@ -6,7 +6,15 @@ import CasesModal from "../../../components/CasesModal";
 import Image from "next/image";
 import Logo from "../../../../public/assets/logo_icon.svg";
 
-export default function CasesClientPage({ heading, folders = [], locale }) {
+export default function CasesClientPage({
+  heading,
+  folders = [],
+  locale,
+  initialCaseSlug = null,
+}) {
+  const initialCaseIndex = folders.findIndex(
+    (item) => item?.slug === initialCaseSlug,
+  );
   const {
     expandedIndex,
     activeCase,
@@ -15,7 +23,7 @@ export default function CasesClientPage({ heading, folders = [], locale }) {
     openCase,
     closeCase,
     cycleCase,
-  } = useCaseModal(folders);
+  } = useCaseModal(folders, initialCaseIndex >= 0 ? initialCaseIndex : null);
 
   return (
     <section className="relative min-h-screen bg-background text-foreground px-6 py-20">
