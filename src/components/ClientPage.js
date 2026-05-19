@@ -21,6 +21,9 @@ export default function ClientPage() {
         <Environment />
       </div>
       <Hero />
+      <p className="mx-auto mt-20 text-center text-[clamp(28px,2.2vw,40px)] font-semibold text-[var(--content_brand)]">
+        hola
+      </p>
       <Methodology2 />
       <Testimonials />
       <Cases />
