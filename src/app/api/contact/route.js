@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { ServerClient } from "postmark";
+import { Resend } from "resend";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MAX_FIELD_LENGTH = 200;
@@ -125,7 +125,7 @@ const validatePayload = ({ name, email, organization, message }) => {
 
 export async function POST(request) {
   try {
-    if (!process.env.POSTMARK_API_KEY) {
+    if (!process.env.RESEND_API_KEY) {
       return NextResponse.json(
         { success: false, error: "Service unavailable." },
         { status: 500 },
@@ -171,26 +171,28 @@ export async function POST(request) {
       );
     }
 
-    const client = new ServerClient(process.env.POSTMARK_API_KEY);
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
-    await Promise.all([
-      client.sendEmail({
-        From: "amel@justcommonpeople.com",
-        To: sanitized.email,
-        Subject: "We received your message",
-        HtmlBody: buildConfirmationEmail(sanitized),
-        MessageStream: "outbound",
-        ReplyTo: sanitized.email,
+    const [confirmation, internal] = await Promise.all([
+      resend.emails.send({
+        from: "amel@justcommonpeople.com",
+        to: sanitized.email,
+        subject: "We received your message",
+        html: buildConfirmationEmail(sanitized),
+        replyTo: sanitized.email,
       }),
-      client.sendEmail({
-        From: "amel@justcommonpeople.com",
-        To: "amel@justcommonpeople.com",
-        Subject: `New contact request from ${sanitized.name}`,
-        HtmlBody: buildInternalEmail(sanitized),
-        MessageStream: "outbound",
-        ReplyTo: sanitized.email,
+      resend.emails.send({
+        from: "amel@justcommonpeople.com",
+        to: "amel@justcommonpeople.com",
+        subject: `New contact request from ${sanitized.name}`,
+        html: buildInternalEmail(sanitized),
+        replyTo: sanitized.email,
       }),
     ]);
+
+    if (confirmation.error || internal.error) {
+      throw new Error(confirmation.error?.message ?? internal.error?.message);
+    }
 
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {

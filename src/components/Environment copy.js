@@ -266,8 +266,8 @@ export default function Environment({ locale }) {
                     fill="none"
                     stroke="var(--content_brand)"
                     strokeWidth="1"
-                    strokeDasharray="8 4"
-                    strokeOpacity="0.8"
+                    strokeDasharray="4 4"
+                    strokeOpacity="0.4"
                   />
                 </g>
               </g>
@@ -296,8 +296,8 @@ export default function Environment({ locale }) {
                     fill="none"
                     stroke="var(--content_brand)"
                     strokeWidth="1"
-                    strokeDasharray="6 4"
-                    strokeOpacity="0.6"
+                    strokeDasharray="4 4"
+                    strokeOpacity="0.4"
                   />
                 </g>
               </g>

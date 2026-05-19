@@ -61,6 +61,7 @@ export default function RootLayout({ children }) {
   const buildHref = (slug = "") => (slug ? `/${locale}/${slug}` : `/${locale}`);
 
   const navItems = [
+    { label: dict?.nav?.home ?? "Home", slug: "" },
     { label: dict?.nav?.services ?? "Services", slug: "services" },
     { label: dict?.nav?.cases ?? "Cases", slug: "cases" },
     { label: dict?.nav?.methodology ?? "Methodology", slug: "methodology" },

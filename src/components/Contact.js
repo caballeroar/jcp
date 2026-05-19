@@ -3,7 +3,6 @@
 import Button from "./ui/Button";
 import { ArrowRight } from "phosphor-react";
 import { useI18n } from "../lib/I18nContext";
-
 export default function Contact() {
   const { locale, dict } = useI18n();
 

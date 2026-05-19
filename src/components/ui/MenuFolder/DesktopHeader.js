@@ -17,6 +17,7 @@ export function DesktopHeader({ buildHref, invert }) {
         backdropFilter: "blur(4px)",
         WebkitBackdropFilter: "blur(4px)",
       };
+
   const logoClass = invert && !open ? "brightness-0 invert" : "";
 
   return (

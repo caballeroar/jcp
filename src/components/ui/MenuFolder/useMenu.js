@@ -28,10 +28,16 @@ export function useMenu() {
         close();
         return;
       }
+      close();
       router.push(href);
     },
     [router, currentPath, close],
   );
+
+  // Ensure drawer state is reset after route transitions.
+  useEffect(() => {
+    setOpenPath(null);
+  }, [currentPath]);
 
   // Escape key handling
   useEffect(() => {
