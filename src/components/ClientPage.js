@@ -2,13 +2,15 @@
 
 import Hero from "./Hero";
 import Environment from "./Environment";
-import Methodology2 from "./Methodology_2";
+
 import Cases from "./Cases";
 import Testimonials from "./Testimonials";
 import Services from "../components/services/Services";
 import { useI18n } from "../lib/I18nContext";
 import Contact from "./Contact";
 import { SERVICES as mappedServices } from "../data/services";
+import Methodology2 from "./Methodology_2";
+import AboutSection from "./AboutSection";
 
 export default function ClientPage() {
   const { dict } = useI18n();
@@ -21,13 +23,11 @@ export default function ClientPage() {
         <Environment />
       </div>
       <Hero />
-      <p className="mx-auto mt-20 text-center text-[clamp(28px,2.2vw,40px)] font-semibold text-[var(--content_brand)]">
-        hola
-      </p>
       <Methodology2 />
       <Testimonials />
       <Cases />
       <Services copy={servicesCopy} services={mappedServices} />
+      <AboutSection />
       <Contact />
     </main>
   );

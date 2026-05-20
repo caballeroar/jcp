@@ -27,4 +27,32 @@ export const METHODOLOGY = [
     service: "Stakeholder Alignment",
     slug: "listen",
   },
+  {
+    name: "Organise",
+    coreDescription:
+      "Facilitate collaboration and consensus among stakeholders to ensure alignment with strategic goals.",
+    expandedDescription:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    benefits: [
+      "Benefit 1: Foster effective communication and collaboration among stakeholders.",
+      "Benefit 2: Ensure alignment with strategic goals and objectives.",
+      "Benefit 3: Build consensus and support for initiatives.",
+    ],
+    service: "Stakeholder Alignment",
+    slug: "organise",
+  },
+  {
+    name: "Mobilise",
+    coreDescription:
+      "Facilitate collaboration and consensus among stakeholders to ensure alignment with strategic goals.",
+    expandedDescription:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    benefits: [
+      "Benefit 1: Foster effective communication and collaboration among stakeholders.",
+      "Benefit 2: Ensure alignment with strategic goals and objectives.",
+      "Benefit 3: Build consensus and support for initiatives.",
+    ],
+    service: "Stakeholder Alignment",
+    slug: "mobilise",
+  },
 ];

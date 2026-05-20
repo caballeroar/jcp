@@ -175,14 +175,14 @@ export async function POST(request) {
 
     const [confirmation, internal] = await Promise.all([
       resend.emails.send({
-        from: "amel@justcommonpeople.com",
+        from: "no-reply@contact.justcommonpeople.com",
         to: sanitized.email,
         subject: "We received your message",
         html: buildConfirmationEmail(sanitized),
-        replyTo: sanitized.email,
+        replyTo: "amel@justcommonpeople.com",
       }),
       resend.emails.send({
-        from: "amel@justcommonpeople.com",
+        from: "no-reply@contact.justcommonpeople.com",
         to: "amel@justcommonpeople.com",
         subject: `New contact request from ${sanitized.name}`,
         html: buildInternalEmail(sanitized),
