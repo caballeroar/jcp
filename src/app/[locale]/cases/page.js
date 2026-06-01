@@ -23,13 +23,26 @@ export default async function CasesPage({ params, searchParams }) {
 
   const dict = await getDictionary(locale);
   const casesCopy = dict?.pages?.cases ?? {};
-  const folders = (casesCopy.folders ?? []).map((entry, idx) => ({
-    slug: entry?.slug || `case-${idx + 1}`,
-    client: entry?.client,
-    sentence: entry?.sentence,
-    cta: entry?.cta ?? casesCopy.buttonLabel ?? "View case",
-    images: getCaseImages(entry?.slug || `case-${idx + 1}`),
-  }));
+  const folders = (casesCopy.folders ?? []).map((entry, idx) => {
+    const slug = entry?.slug || `case-${idx + 1}`;
+    const title = entry?.title ?? entry?.client ?? "";
+    const sentence =
+      entry?.sentence ?? entry?.description ?? entry?.challenge ?? "";
+
+    return {
+      slug,
+      title,
+      client: entry?.client ?? title,
+      sentence,
+      description: entry?.description ?? sentence,
+      challenge: entry?.challenge ?? "",
+      solution: entry?.solution ?? "",
+      themes: Array.isArray(entry?.themes) ? entry.themes : [],
+      services: Array.isArray(entry?.services) ? entry.services : [],
+      cta: entry?.cta ?? casesCopy.buttonLabel ?? "View case",
+      images: getCaseImages(slug),
+    };
+  });
 
   return (
     <CasesClientPage

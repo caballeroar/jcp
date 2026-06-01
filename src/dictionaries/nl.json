@@ -192,8 +192,24 @@
       "folders": [
         {
           "slug": "case-1",
-          "client": "Klantnaam",
-          "sentence": "We bieden deskundig advies om jouw duurzaamheids- en rechtvaardigheidsdoelen te bereiken."
+          "title": "E6 Repair Coalition",
+          "challenge": "The municipality needed insight into the fragmented electronic repair sector and support in building a coalition around repair, circular economy and local collaboration.",
+          "solution": "JCP conducted a deep sector analysis, mapped repair actors across The Hague, identified strategic coalition partners, and developed an approach for organising and activating the sector. This included stakeholder sessions, mobilisation strategies and coalition building around shared ambitions for repair and circularity.",
+          "description": "As part of a European circular economy trajectory, JCP supported the development of a local repair ecosystem focused on electronic and household device repair. The project combined research, stakeholder engagement and coalition building to strengthen collaboration between repair shops, educational institutions, community initiatives and public actors. By translating a fragmented landscape into a shared network and direction, the project helped lay the foundation for a more visible, accessible and future proof repair sector in The Hague.",
+          "themes": [
+            "circular economy",
+            "coalition building",
+            "Stakeholder engagement",
+            "Ecosystem mapping",
+            "Soft infrastructure"
+          ],
+          "services": [
+            "Coalition building and network facilitation",
+            "Ecosystem mapping and analysis",
+            "Stakeholder engagement and mobilisation",
+            "Strategy development for circular economy activation"
+          ],
+          "cta": "View Case"
         },
         {
           "slug": "case-2",

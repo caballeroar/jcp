@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { ArrowLeft, ArrowRight, X } from "phosphor-react";
 import { Button } from "./ui";
@@ -31,24 +31,38 @@ export default function CasesModal({
 
   const prevCase = prevCaseIndex !== null ? cases[prevCaseIndex] : null;
   const nextCase = nextCaseIndex !== null ? cases[nextCaseIndex] : null;
+  const caseTitle = activeCase?.title || activeCase?.client || "Case details";
+  const caseSummary = activeCase?.description || activeCase?.sentence;
+  const caseThemes = Array.isArray(activeCase?.themes) ? activeCase.themes : [];
+  const caseServices = Array.isArray(activeCase?.services)
+    ? activeCase.services
+    : [];
 
-  const openGalleryAt = (index) => {
-    if (!galleryImages.length) return;
-    setGalleryIndex(index);
-    setIsGalleryOpen(true);
-  };
+  const getCaseLabel = (entry) => entry?.title || entry?.client || "-";
 
-  const closeGallery = () => {
+  const openGalleryAt = useCallback(
+    (index) => {
+      if (!galleryImages.length) return;
+      setGalleryIndex(index);
+      setIsGalleryOpen(true);
+    },
+    [galleryImages.length],
+  );
+
+  const closeGallery = useCallback(() => {
     setIsGalleryOpen(false);
-  };
+  }, []);
 
-  const stepGallery = (direction) => {
-    if (!galleryImages.length) return;
+  const stepGallery = useCallback(
+    (direction) => {
+      if (!galleryImages.length) return;
 
-    setGalleryIndex((prev) => {
-      return (prev + direction + galleryImages.length) % galleryImages.length;
-    });
-  };
+      setGalleryIndex((prev) => {
+        return (prev + direction + galleryImages.length) % galleryImages.length;
+      });
+    },
+    [galleryImages.length],
+  );
 
   useEffect(() => {
     if (!isGalleryOpen) return;
@@ -61,7 +75,7 @@ export default function CasesModal({
 
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [isGalleryOpen, galleryImages.length]);
+  }, [isGalleryOpen, closeGallery, stepGallery]);
 
   // Safe early return AFTER hooks
   if (!isOpen || !activeCase) return null;
@@ -86,35 +100,125 @@ export default function CasesModal({
 
         {/* Content */}
         <div className="flex-1 overflow-hidden">
-          <div className="h-full overflow-y-auto rounded-2xl bg-white p-8">
-            <h1 className="text-2xl font-semibold md:text-3xl">
-              {activeCase.client}
-            </h1>
+          <div className="h-full overflow-y-auto rounded-2xl bg-white p-6 md:p-8">
+            <div className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
+              <div className="space-y-6">
+                <div className="space-y-3">
+                  <p className="text-xs uppercase tracking-[0.22em] text-[var(--content_dark)]/60">
+                    {activeCase.client && activeCase.client !== activeCase.title
+                      ? activeCase.client
+                      : `Case ${expandedIndex + 1}`}
+                  </p>
+                  <h1 className="text-2xl font-semibold md:text-3xl">
+                    {caseTitle}
+                  </h1>
 
-            <div className="mt-4 space-y-4">
-              <p className="text-lg leading-relaxed text-[var(--content_dark)]/80">
-                {activeCase.sentence}
-              </p>
+                  {caseSummary && (
+                    <p className="text-base leading-relaxed text-[var(--content_dark)]/80 md:text-lg">
+                      {caseSummary}
+                    </p>
+                  )}
+                </div>
+
+                {activeCase.challenge && (
+                  <section className="rounded-xl bg-[var(--background)]/55 p-5">
+                    <h2 className="font-roboto-mono text-xs uppercase tracking-[0.22em] text-[var(--content_dark)]/65">
+                      Challenge
+                    </h2>
+                    <p className="mt-3 text-sm leading-relaxed text-[var(--content_dark)]/85 md:text-base">
+                      {activeCase.challenge}
+                    </p>
+                  </section>
+                )}
+
+                {activeCase.solution && (
+                  <section className="rounded-xl bg-[var(--background)]/55 p-5">
+                    <h2 className="font-roboto-mono text-xs uppercase tracking-[0.22em] text-[var(--content_dark)]/65">
+                      Solution
+                    </h2>
+                    <p className="mt-3 text-sm leading-relaxed text-[var(--content_dark)]/85 md:text-base">
+                      {activeCase.solution}
+                    </p>
+                  </section>
+                )}
+
+                {(caseThemes.length > 0 || caseServices.length > 0) && (
+                  <div className="grid gap-5 md:grid-cols-2">
+                    {caseThemes.length > 0 && (
+                      <section className="rounded-xl border border-[var(--surface)]/25 p-5">
+                        <h2 className="font-roboto-mono text-xs uppercase tracking-[0.22em] text-[var(--content_dark)]/65">
+                          Themes
+                        </h2>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          {caseThemes.map((theme, index) => (
+                            <span
+                              key={`${activeCase.slug}-theme-${index}`}
+                              className="rounded-full bg-[var(--content_dark)]/8 px-3 py-1 text-xs font-medium text-[var(--content_dark)]/80"
+                            >
+                              {theme}
+                            </span>
+                          ))}
+                        </div>
+                      </section>
+                    )}
+
+                    {caseServices.length > 0 && (
+                      <section className="rounded-xl border border-[var(--surface)]/25 p-5">
+                        <h2 className="font-roboto-mono text-xs uppercase tracking-[0.22em] text-[var(--content_dark)]/65">
+                          Services
+                        </h2>
+                        <ul className="mt-3 list-disc space-y-2 pl-4 text-sm text-[var(--content_dark)]/85 md:text-base">
+                          {caseServices.map((service, index) => (
+                            <li key={`${activeCase.slug}-service-${index}`}>
+                              {service}
+                            </li>
+                          ))}
+                        </ul>
+                      </section>
+                    )}
+                  </div>
+                )}
+              </div>
 
               {galleryImages.length > 0 && (
-                <div className="flex flex-wrap gap-4">
-                  {galleryImages.map((src, index) => (
-                    <button
-                      key={`${activeCase.slug}-img-${index}`}
-                      type="button"
-                      onClick={() => openGalleryAt(index)}
-                      className="group relative h-48 flex-1 min-w-[220px] overflow-hidden rounded-lg bg-[var(--grey)]/10"
-                      aria-label={`Expand image ${index + 1}`}
-                    >
-                      <Image
-                        src={src}
-                        alt={`${activeCase.client} image ${index + 1}`}
-                        fill
-                        className="object-cover transition duration-300 group-hover:scale-105"
-                      />
-                    </button>
-                  ))}
-                </div>
+                <aside className="space-y-4">
+                  <button
+                    type="button"
+                    onClick={() => openGalleryAt(galleryIndex)}
+                    className="group relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-[var(--grey)]/10"
+                    aria-label="Open image gallery"
+                  >
+                    <Image
+                      src={galleryImages[galleryIndex]}
+                      alt={`${caseTitle} image ${galleryIndex + 1}`}
+                      fill
+                      className="object-cover transition duration-300 group-hover:scale-105"
+                    />
+                  </button>
+
+                  <div className="grid grid-cols-3 gap-3">
+                    {galleryImages.map((src, index) => (
+                      <button
+                        key={`${activeCase.slug}-img-${index}`}
+                        type="button"
+                        onClick={() => setGalleryIndex(index)}
+                        className={`relative aspect-square overflow-hidden rounded-lg border transition ${
+                          galleryIndex === index
+                            ? "border-[var(--content_dark)]/60"
+                            : "border-transparent"
+                        }`}
+                        aria-label={`Show image ${index + 1}`}
+                      >
+                        <Image
+                          src={src}
+                          alt={`${caseTitle} preview ${index + 1}`}
+                          fill
+                          className="object-cover"
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </aside>
               )}
             </div>
           </div>
@@ -124,7 +228,7 @@ export default function CasesModal({
         {hasSiblings && (
           <div className="flex justify-between border-t border-[var(--surface)]/15 pt-4">
             <div className="flex flex-col gap-2">
-              <p className="font-medium">{prevCase?.client || "—"}</p>
+              <p className="font-medium">{getCaseLabel(prevCase)}</p>
               <Button
                 onClick={onPrev}
                 icon={<ArrowLeft size={18} weight="bold" />}
@@ -136,7 +240,7 @@ export default function CasesModal({
             </div>
 
             <div className="flex flex-col items-end gap-2">
-              <p className="font-medium">{nextCase?.client || "—"}</p>
+              <p className="font-medium">{getCaseLabel(nextCase)}</p>
               <Button
                 onClick={onNext}
                 icon={<ArrowRight size={18} weight="bold" />}
@@ -172,7 +276,7 @@ export default function CasesModal({
             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-3xl bg-black">
               <Image
                 src={galleryImages[galleryIndex]}
-                alt={`${activeCase.client} large image`}
+                alt={`${caseTitle} large image`}
                 fill
                 className="object-contain"
                 priority

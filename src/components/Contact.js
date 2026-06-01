@@ -1,13 +1,33 @@
 "use client";
 
-import Button from "./ui/Button";
-import { ArrowRight } from "phosphor-react";
 import { useI18n } from "../lib/I18nContext";
+import ContactForm from "./ContactForm";
+
 export default function Contact() {
   const { locale, dict } = useI18n();
+  const homeContact = dict?.pages?.home?.contact ?? {};
+  const contactCopy = dict?.pages?.contact ?? {};
+  const defaultFields = {
+    name: "Name",
+    email: "Work email",
+    organization: "Organisation",
+    message: "How can we help?",
+  };
+  const fields = { ...defaultFields, ...(contactCopy.fields ?? {}) };
+  const submitLabel = contactCopy.submit ?? "Send message";
+  const successNote =
+    contactCopy.success ??
+    "We aim to reply with next steps within two working days.";
+  const formName = "contact";
+  const formFields = [
+    { key: "name", type: "text", autoComplete: "name" },
+    { key: "email", type: "email", autoComplete: "email" },
+    { key: "organization", type: "text", autoComplete: "organization" },
+    { key: "message", type: "textarea", rows: 6 },
+  ];
 
   return (
-    <section className="relative flex items-center w-full md:w-5/6 h-[600px] md:h-[1200px] py-24 mx-auto sm:py-20 md:my-40 px-6 overflow-hidden">
+    <section className="relative w-full md:w-5/6 py-24 mx-auto sm:py-20 md:my-40 px-6 overflow-hidden">
       {/* Background SVG */}
       <div className="absolute inset-0 -z-10" style={{ pointerEvents: "none" }}>
         <svg
@@ -33,7 +53,7 @@ export default function Contact() {
                 fontSize="14"
                 className="font-roboto-mono rotate-60"
               >
-                {dict?.pages?.home?.contact?.identify}
+                {homeContact.identify}
               </text>
               <animateMotion dur="48s" repeatCount="indefinite" rotate="0">
                 <mpath xlinkHref="#contactPath1" />
@@ -58,7 +78,7 @@ export default function Contact() {
                 fontSize="14"
                 className="font-roboto-mono rotate-[-55deg]"
               >
-                {dict?.pages?.home?.contact?.listen}
+                {homeContact.listen}
               </text>
               <animateMotion dur="42s" repeatCount="indefinite" rotate="0">
                 <mpath xlinkHref="#contactPath2" />
@@ -83,7 +103,7 @@ export default function Contact() {
                 fontSize="14"
                 className="font-roboto-mono rotate-225"
               >
-                {dict?.pages?.home?.contact?.translate}
+                {homeContact.translate}
               </text>
               <animateMotion dur="46s" repeatCount="indefinite" rotate="0">
                 <mpath xlinkHref="#contactPath3" />
@@ -108,7 +128,7 @@ export default function Contact() {
                 fontSize="14"
                 className="font-roboto-mono rotate-124"
               >
-                {dict?.pages?.home?.contact?.experience}
+                {homeContact.experience}
               </text>
               <animateMotion dur="48s" repeatCount="indefinite" rotate="0">
                 <mpath xlinkHref="#contactPath4" />
@@ -119,20 +139,25 @@ export default function Contact() {
       </div>
 
       {/* Overlay content */}
-      <div className="relative max-w-4xl mx-auto text-center">
-        <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-[var(--content_dark)]">
-          {dict?.pages?.home?.contact?.sentence}
-        </h2>
-
-        <div className="mt-8 inline-flex">
-          <Button
-            icon={<ArrowRight size={20} weight="bold" />}
-            theme="dark"
-            href={`/${locale}/contact`}
-          >
-            {dict?.pages?.home?.contact?.cta}
-          </Button>
+      <div className="relative w-full max-w-6xl mx-auto grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)]">
+        <div className="text-center lg:text-left">
+          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-[var(--content_dark)]">
+            {homeContact.sentence}
+          </h2>
+          <p className="mt-5 text-base md:text-lg text-[var(--content_dark)]/80 max-w-2xl mx-auto lg:mx-0">
+            {contactCopy.description ??
+              "Share a few details about your project, team, or policy question so we can prepare the right context before we connect."}
+          </p>
         </div>
+
+        <ContactForm
+          locale={locale}
+          formName={formName}
+          formFields={formFields}
+          fields={fields}
+          submitLabel={submitLabel}
+          successNote={successNote}
+        />
       </div>
     </section>
   );

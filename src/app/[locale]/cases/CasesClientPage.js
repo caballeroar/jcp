@@ -49,6 +49,7 @@ export default function CasesClientPage({
 
       {isOpen && (
         <CasesModal
+          key={activeCase?.slug ?? `case-${expandedIndex}`}
           isOpen={isOpen}
           activeCase={activeCase}
           expandedIndex={expandedIndex}

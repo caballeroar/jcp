@@ -16,6 +16,7 @@ export default function Cases({ href }) {
   const [viewportWidth, setViewportWidth] = useState(0);
 
   const casesCopy = dict?.pages?.home?.cases ?? {};
+  const detailedCasesCopy = dict?.pages?.cases ?? {};
   const {
     heading = "CASES",
     sentence1 = "Explore our cases to discover what ",
@@ -24,8 +25,11 @@ export default function Cases({ href }) {
     folders = [],
     cta: exploreCta = "Explore cases",
   } = casesCopy;
+  const detailedFolders = detailedCasesCopy.folders ?? [];
+  const folderEntries = folders.length > 0 ? folders : detailedFolders;
 
-  const defaultCta = casesCopy.defaultCta ?? "View case";
+  const defaultCta =
+    casesCopy.defaultCta ?? detailedCasesCopy.buttonLabel ?? "View case";
 
   useEffect(() => {
     let raf = null;
@@ -98,14 +102,50 @@ export default function Cases({ href }) {
     return centerLeftPercent + tPos * (desktopTarget - centerLeftPercent);
   };
 
-  const caseEntries = folders.map((entry, idx) => ({
-    slug: entry?.slug || `case-${idx + 1}`,
-    client: entry?.client ?? "",
-    sentence: entry?.sentence ?? "",
-    logo: entry?.logo ?? null,
-    cta: entry?.cta,
-    images: getCaseImages(entry?.slug || `case-${idx + 1}`),
-  }));
+  const caseDetailsBySlug = detailedFolders.reduce((acc, entry, idx) => {
+    const slug = entry?.slug || `case-${idx + 1}`;
+    acc[slug] = entry ?? {};
+    return acc;
+  }, {});
+
+  const caseEntries = folderEntries.map((entry, idx) => {
+    const slug = entry?.slug || `case-${idx + 1}`;
+    const detail = caseDetailsBySlug[slug] ?? {};
+    const title =
+      detail?.title ?? entry?.title ?? detail?.client ?? entry?.client ?? "";
+    const client = detail?.client ?? entry?.client ?? "";
+    const sentence =
+      detail?.sentence ??
+      entry?.sentence ??
+      detail?.description ??
+      entry?.description ??
+      detail?.challenge ??
+      entry?.challenge ??
+      "";
+
+    return {
+      slug,
+      title,
+      client,
+      sentence,
+      description: detail?.description ?? entry?.description ?? sentence,
+      challenge: detail?.challenge ?? entry?.challenge ?? "",
+      solution: detail?.solution ?? entry?.solution ?? "",
+      themes: Array.isArray(detail?.themes)
+        ? detail.themes
+        : Array.isArray(entry?.themes)
+          ? entry.themes
+          : [],
+      services: Array.isArray(detail?.services)
+        ? detail.services
+        : Array.isArray(entry?.services)
+          ? entry.services
+          : [],
+      logo: entry?.logo ?? detail?.logo ?? null,
+      cta: detail?.cta ?? entry?.cta ?? defaultCta,
+      images: getCaseImages(slug),
+    };
+  });
   const {
     expandedIndex,
     activeCase,
@@ -131,9 +171,8 @@ export default function Cases({ href }) {
         </div>
       </div>
       <div className="md:pt-16">
-        {folderParallax.map((multiplier, index) => {
-          const caseData = caseEntries[index];
-          if (!caseData) return null;
+        {caseEntries.map((caseData, index) => {
+          const multiplier = folderParallax[index % folderParallax.length];
           return (
             <div
               key={caseData.slug}
@@ -147,10 +186,14 @@ export default function Cases({ href }) {
             >
               <FolderIcon
                 logo={caseData.logo}
-                title={caseData.client}
-                description={caseData.sentence}
+                title={caseData.title || caseData.client}
+                description={
+                  caseData.sentence ||
+                  caseData.description ||
+                  caseData.challenge
+                }
                 images={caseData.images}
-                cta={caseData.cta ?? defaultCta}
+                cta={caseData.cta}
                 onExpand={() => openCase(index)}
               />
             </div>
@@ -169,6 +212,7 @@ export default function Cases({ href }) {
       </div>
       {isOpen && (
         <CasesModal
+          key={activeCase?.slug ?? `case-${expandedIndex}`}
           isOpen={isOpen}
           activeCase={activeCase}
           expandedIndex={expandedIndex}

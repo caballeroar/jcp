@@ -195,26 +195,63 @@
       "folders": [
         {
           "slug": "case-1",
-          "client": "Communities",
-          "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative.",
+          "title": "E6 Repair Coalition",
+          "challenge": "The municipality needed insight into the fragmented electronic repair sector and support in building a coalition around repair, circular economy and local collaboration.",
+          "solution": "JCP conducted a deep sector analysis, mapped repair actors across The Hague, identified strategic coalition partners, and developed an approach for organising and activating the sector. This included stakeholder sessions, mobilisation strategies and coalition building around shared ambitions for repair and circularity.",
+          "description": "As part of a European circular economy trajectory, JCP supported the development of a local repair ecosystem focused on electronic and household device repair. The project combined research, stakeholder engagement and coalition building to strengthen collaboration between repair shops, educational institutions, community initiatives and public actors. By translating a fragmented landscape into a shared network and direction, the project helped lay the foundation for a more visible, accessible and future proof repair sector in The Hague.",
+          "themes": [
+            "circular economy",
+            "coalition building",
+            "Stakeholder engagement",
+            "Ecosystem mapping",
+            "Soft infrastructure"
+          ],
+          "services": [
+            "Coalition building and network facilitation",
+            "Ecosystem mapping and analysis",
+            "Stakeholder engagement and mobilisation",
+            "Strategy development for circular economy activation"
+          ],
           "cta": "View Case"
         },
         {
           "slug": "case-2",
-          "client": "Communities",
-          "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative.",
+          "title": "ESPON – Urban Circular Collaborative Economy",
+          "challenge": "A European consortium led by the City of The Hague wanted to better understand how urban circular and collaborative economy initiatives operate across Europe, and how cities could learn from emerging sharing economy models.",
+          "solution": "JCP initiated, developed and led the project for the municipality of The Hague, coordinating research, stakeholder collaboration and international exchange within the ESPON programme.",
+          "description": "Within the European ESPON programme, JCP helped establish and lead an international research and collaboration project focused on the urban circular collaborative economy. The project explored how cities across Europe are experimenting with sharing systems, and community based economic models. By connecting policy, research and local practice, the project contributed to new insights into how cities can support more resilient and regenerative urban economies.",
+          "themes": [
+            "circular economy",
+            "European collaboration",
+            "EU benchmarking",
+            "Collaborative economy",
+            "Sharing economy"
+          ],
+          "services": [
+            "Strategy and systems change",
+            "Coalition building and network facilitation",
+            "Circular economy and sustainability activation"
+          ],
           "cta": "View Case"
         },
         {
           "slug": "case-3",
-          "client": "Communities",
-          "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative.",
-          "cta": "View Case"
-        },
-        {
-          "slug": "case-4",
-          "client": "Communities",
-          "sentence": "Description placeholder text that briefly summarizes the case. Keep it concise and informative.",
+          "title": "URBACT – Resourceful Cities",
+          "challenge": "The City of The Hague aimed to strengthen its approach to urban resource management and circularity while learning from other European cities facing similar challenges.",
+          "solution": "JCP helped initiate, shape and lead the URBACT Resourceful Cities trajectory for the municipality, coordinating local stakeholder engagement, international exchange and strategic development around circular urban systems.",
+          "description": "Through the URBACT Resourceful Cities network, JCP supported the City of The Hague in developing new approaches to urban circularity, resource use and local collaboration. The project connected European cities around shared questions related to waste, reuse, local production and community driven sustainability. JCP played a central role in translating international knowledge into local strategies and stakeholder processes that strengthened collaboration between institutions, residents and practitioners.",
+          "themes": [
+            "Circular cities",
+            "European networks",
+            "Urban governance",
+            "Stakeholder engagement",
+            "Knowledge translation"
+          ],
+          "services": [
+            "Strategy and systems change",
+            "Coalition building and network facilitation",
+            "Circular economy and sustainability activation"
+          ],
           "cta": "View Case"
         }
       ]
