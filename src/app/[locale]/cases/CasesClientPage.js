@@ -1,6 +1,6 @@
 "use client";
 
-import FolderIcon from "../../../components/ui/Folder/Folder";
+import FolderIcon from "../../../components/ui/Folder/Folder2";
 import { useCaseModal } from "../../../hooks/useCaseModal";
 import CasesModal from "../../../components/CasesModal";
 import Image from "next/image";

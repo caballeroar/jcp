@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { flushSync } from "react-dom";
+import { useI18n } from "../lib/I18nContext";
 
 const DEFAULT_TESTIMONIALS = [
   {
@@ -40,13 +41,16 @@ const DEFAULT_TESTIMONIALS = [
 ];
 
 export default function Testimonials({ items }) {
+  const { dict } = useI18n();
+  const testimonialsDict = dict?.pages?.home?.testimonials || {};
+  const { sentence } = testimonialsDict;
   const testimonials = items && items.length ? items : DEFAULT_TESTIMONIALS;
   const containerRef = useRef(null);
   const trackRef = useRef(null);
   const sectionRef = useRef(null);
   const initialOrder = useMemo(
     () => Array.from({ length: testimonials.length }, (_, i) => i),
-    [testimonials.length]
+    [testimonials.length],
   );
   const [order, setOrder] = useState(initialOrder);
   const [inView, setInView] = useState(false);
@@ -60,7 +64,7 @@ export default function Testimonials({ items }) {
   const repeatLogos = (times = 3) =>
     Array.from(
       { length: ASSET_LOGOS.length * times },
-      (_, i) => ASSET_LOGOS[i % ASSET_LOGOS.length]
+      (_, i) => ASSET_LOGOS[i % ASSET_LOGOS.length],
     );
 
   // Reset order when testimonials length changes
@@ -79,7 +83,7 @@ export default function Testimonials({ items }) {
           setInView(true);
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.2 },
     );
 
     observer.observe(section);
@@ -94,7 +98,7 @@ export default function Testimonials({ items }) {
 
     const getGap = () =>
       parseFloat(
-        getComputedStyle(track).gap || getComputedStyle(track).columnGap || "0"
+        getComputedStyle(track).gap || getComputedStyle(track).columnGap || "0",
       );
 
     let isRotating = false;
@@ -166,7 +170,7 @@ export default function Testimonials({ items }) {
   return (
     <section
       ref={sectionRef}
-      className=" w-5/6 md:w-4/6 max-w-4xl mx-auto mb-80 flex items-center justify-center bg-[var(--bg_box_neutral)]/60 text-[var(--content_dark)]"
+      className=" w-5/6 md:w-4/6 max-w-4xl mx-auto my-[20%] flex items-center justify-center bg-[var(--bg_box_neutral)]/60 text-[var(--content_dark)]"
       style={{
         transform: inView ? "scale(1)" : "scale(0.9)",
         opacity: inView ? 1 : 0,
@@ -184,8 +188,7 @@ export default function Testimonials({ items }) {
           }}
         >
           <h3 className="text-xl md:text-2xl lg:text-3xl tracking-tight mb-8">
-            We have helped organisations and business decipher difficult
-            questions.
+            {sentence}
           </h3>
         </div>
         <div

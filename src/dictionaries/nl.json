@@ -27,11 +27,8 @@
   "pages": {
     "home": {
       "hero": {
-        "before": "Jouw ",
-        "sustainability": "duurzaamheids-",
-        "middle": " en ",
-        "justice": "rechtvaardigheids",
-        "after": "uitdagingen verdienen mensgerichte inzichten en actie.",
+        "text": "Every challenge revolves around ",
+        "accent": "people",
         "cta": "Maak Impact."
       },
       "environment": {
@@ -60,19 +57,17 @@
         ]
       },
       "methodology": {
-        "cta": "Methodologie",
-        "sentence1": "Bij elke uitdaging draait het om mensen.",
-        "sentence2": "Mensgerichte duurzaamheidsoplossingen",
-        "coma": " , ",
-        "and": " en ",
-        "accent1": "begrip",
-        "accent2": "vertrouwen ",
-        "accent3": "samenwerking."
+        "sentence1": "We ontwikkel ",
+        "accent": "human-centered ",
+        "sentence2": "approach to strategy, participation and collaboration",
+        "sentence3": "Soft Infrastructure Studio",
+        "cta": "Methodology"
       },
       "cases": {
-        "sentence1": "Explore our cases to discover what ",
-        "sentence2": "impact looks like in practice.",
-        "accent": "human centered",
+        "title": "Ons Werk",
+        "sentence1": "Bekijk onze cases om te ontdekken wat ",
+        "sentence2": "impact in de praktijk betekent.",
+        "accent": "mensgericht",
         "folders": [
           {
             "client": "Communities",

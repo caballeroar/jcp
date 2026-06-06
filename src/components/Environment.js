@@ -2,209 +2,223 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useI18n } from "../lib/I18nContext";
+import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
+import { useViewportWidth } from "../hooks/useViewportWidth";
+
+const INTRO_DURATION_MS = 1400;
+const MAX_SCALE = 1.75;
+const DELAYS = [0.0, 0.12, 0.24, 0.36];
+const END_PROGRESS = 0.85;
+const FADE_WINDOW = 0.12;
+const PARALLAX_PX = 120;
+const BASE_Y = -120;
+const DEPTHS = [0.15, 0.25, 0.35, 0.45];
+const AUTO_AMP = 40;
+const AUTO_FREQ = 0.1;
+const FADE_START_RATIO = 0.55;
+const FADE_DURATION_RATIO = 0.35;
+
+const BASE_RADII = [120, 240, 400, 600];
+const RING_ASSIGNMENTS = [
+  ...Array(7).fill(1),
+  ...Array(7).fill(2),
+  ...Array(6).fill(3),
+];
+
+const clamp01 = (v) => Math.max(0, Math.min(1, v));
+const round3 = (n) => Math.round(n * 1000) / 1000;
+const easeOutCubic = (t) => 1 - Math.pow(1 - clamp01(t), 3);
+
+const easeInOutCubic = (t) => {
+  const x = clamp01(t);
+  return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+};
+
+const toRingScale = (progress, delay) => {
+  const rpRaw = (progress - delay) / Math.max(0.0001, END_PROGRESS - delay);
+  const rp = easeOutCubic(clamp01(rpRaw));
+  return 1 + rp * (MAX_SCALE - 1);
+};
+
+const buildWordLayout = (words) => {
+  return words.map((word, i) => {
+    const ringIndex = RING_ASSIGNMENTS[i % RING_ASSIGNMENTS.length];
+    const baseR = BASE_RADII[ringIndex];
+    const angle = ((i * 137.5) % 360) * (Math.PI / 180);
+    const phase = (i * 47.3) % (2 * Math.PI);
+    const amp = 14 + (i % 4);
+    const speed = i % 5 === 0 ? 1.25 : 1.0;
+    const autoPhase = (i * 13.37) % (2 * Math.PI);
+    const autoSpeed = 0.8 + (i % 4) * 0.15;
+
+    return {
+      word,
+      ringIndex,
+      baseR,
+      angle,
+      phase,
+      amp,
+      speed,
+      autoPhase,
+      autoSpeed,
+    };
+  });
+};
 
 export default function Environment({ locale }) {
   const i18n = useI18n();
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const viewportWidth = useViewportWidth();
 
-  const [scrollProgress, setScrollProgress] = useState(1);
-  const [introProgress, setIntroProgress] = useState(0);
-  const [introComplete, setIntroComplete] = useState(false);
   const [scrollRatio, setScrollRatio] = useState(0);
+  const [introProgressRaw, setIntroProgressRaw] = useState(0);
   const [autoTime, setAutoTime] = useState(0);
   const [mounted, setMounted] = useState(false);
-  // Hero behavior:
-  // - On load, play an intro expansion automatically.
-  // - After intro, use scroll to collapse through the first viewport.
+  const [isCoarsePointer, setIsCoarsePointer] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const media = window.matchMedia("(hover: none) and (pointer: coarse)");
+    const onChange = () => setIsCoarsePointer(media.matches);
+
+    onChange();
+    media.addEventListener("change", onChange);
+    return () => media.removeEventListener("change", onChange);
+  }, []);
 
   useEffect(() => {
     let rafId = null;
 
     const onScroll = () => {
       if (rafId) return;
+
       rafId = requestAnimationFrame(() => {
         const doc = document.documentElement;
         const scrollTop = window.pageYOffset || doc.scrollTop || 0;
-        // Drive collapse over the first viewport height.
         const viewport = window.innerHeight || 1;
-        const ratio = Math.max(0, Math.min(1, scrollTop / viewport));
-        const p = 1 - ratio;
-        setScrollProgress(p);
-        setScrollRatio(ratio);
+        const ratio = clamp01(scrollTop / viewport);
+
+        setScrollRatio((prev) =>
+          Math.abs(prev - ratio) < 0.001 ? prev : ratio,
+        );
+
         rafId = null;
       });
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
+
     return () => {
       window.removeEventListener("scroll", onScroll);
       if (rafId) cancelAnimationFrame(rafId);
     };
   }, []);
 
-  // Autoplay intro timeline on first paint.
   useEffect(() => {
+    if (prefersReducedMotion) return;
+
     let rafId = null;
-    const INTRO_DURATION_MS = 1400;
-    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
     const start =
       typeof performance !== "undefined" ? performance.now() : Date.now();
 
     const step = (now) => {
       const current = typeof performance !== "undefined" ? now : Date.now();
       const elapsed = current - start;
-      const t = Math.max(0, Math.min(1, elapsed / INTRO_DURATION_MS));
-      setIntroProgress(easeOutCubic(t));
+      const t = clamp01(elapsed / INTRO_DURATION_MS);
+      setIntroProgressRaw(easeOutCubic(t));
 
       if (t < 1) {
         rafId = requestAnimationFrame(step);
-      } else {
-        setIntroComplete(true);
       }
     };
 
     rafId = requestAnimationFrame(step);
+
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
     };
-  }, []);
+  }, [prefersReducedMotion]);
 
-  // Mark as mounted to avoid SSR/CSR hydration style mismatches
   useEffect(() => {
     const id = requestAnimationFrame(() => setMounted(true));
     return () => cancelAnimationFrame(id);
   }, []);
 
-  // Autonomous motion loop — drives subtle in/out movement even without scroll
+  const autoUpdateIntervalMs = useMemo(() => {
+    if (prefersReducedMotion) return 0;
+    if (viewportWidth > 1200 && !isCoarsePointer) return 33;
+    if (viewportWidth > 768) return 50;
+    return 66;
+  }, [prefersReducedMotion, viewportWidth, isCoarsePointer]);
+
   useEffect(() => {
+    if (!autoUpdateIntervalMs) return;
+
     let rafId = null;
     let last =
       typeof performance !== "undefined" ? performance.now() : Date.now();
+
     const step = (now) => {
-      // Update ~30fps to keep re-renders efficient
       const current = typeof performance !== "undefined" ? now : Date.now();
-      if (current - last >= 33) {
+      if (current - last >= autoUpdateIntervalMs) {
         setAutoTime(current);
         last = current;
       }
       rafId = requestAnimationFrame(step);
     };
+
     rafId = requestAnimationFrame(step);
+
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
     };
-  }, []);
+  }, [autoUpdateIntervalMs]);
 
-  // Scaling config
-  // - MAX_SCALE: final ring scale (~5% overflow at completion)
-  // - delays: stagger order (inner → outer)
-  // - END: rings reach full size by 85% of first viewport scroll
-  // - easeOut: acceleration curve for faster early growth
-  const MAX_SCALE = 1.75; // ensures outer ring ~105vmin diameter (~5% overflow)
-  const delays = [0.0, 0.12, 0.24, 0.36]; // inner -> outer
-  const END = 0.85; // complete scaling earlier to reduce required scroll
-  const easeOut = (t) => 1 - Math.pow(1 - Math.max(0, Math.min(1, t)), 3);
-  const progress = introComplete
-    ? scrollProgress
-    : Math.min(introProgress, scrollProgress);
-  const scales = delays.map((d) => {
-    const rpRaw = (progress - d) / Math.max(0.0001, END - d);
-    const rp = easeOut(Math.max(0, Math.min(1, rpRaw)));
-    return 1 + rp * (MAX_SCALE - 1);
-  });
-
-  // Words setup
-  // - innerLabel: localized "people"
-  // - WORDS: sustainability-related keywords, localized via dictionaries
   const effectiveLocale = i18n?.locale || locale || "en";
   const innerLabel =
     i18n?.dict?.environment?.innerLabel ??
     (effectiveLocale === "nl" ? "mensen" : "people");
 
-  const dictWords = i18n?.dict?.pages?.home?.environment?.words;
-
-  const WORDS = useMemo(() => {
+  const allWords = useMemo(() => {
+    const dictWords = i18n?.dict?.pages?.home?.environment?.words;
     return Array.isArray(dictWords) ? dictWords : [];
-  }, [dictWords]);
+  }, [i18n?.dict?.pages?.home?.environment?.words]);
 
-  // Assign words across OUTER rings with deterministic angles/phases
-  // - ringAssignments: spread words across r=240, 320, 400
-  // - angle/phase: fixed layout with subtle variation
-  // - speed: 20% of words move slightly faster on scroll
-  const wordLayout = useMemo(() => {
-    const baseRadii = [120, 240, 400, 600];
-    // 20 words across outer rings: 7 (r=240), 7 (r=320), 6 (r=700)
-    const ringAssignments = [
-      ...Array(7).fill(1),
-      ...Array(7).fill(2),
-      ...Array(6).fill(3),
-    ];
-    return WORDS.map((w, i) => {
-      const ringIndex = ringAssignments[i % ringAssignments.length];
-      const baseR = baseRadii[ringIndex];
-      // Deterministic angle using a simple hash
-      const angle = ((i * 137.5) % 360) * (Math.PI / 180);
-      const phase = (i * 47.3) % (2 * Math.PI);
-      const amp = 14 + (i % 4);
-      // 20% of words (i % 5 === 0) move slightly faster with scroll
-      const speed = i % 5 === 0 ? 1.25 : 1.0;
-      // autonomous per-word variation factors (constant per word)
-      const autoPhase = (i * 13.37) % (2 * Math.PI);
-      const autoSpeed = 0.8 + (i % 4) * 0.15;
-      return {
-        w,
-        ringIndex,
-        baseR,
-        angle,
-        phase,
-        amp,
-        speed,
-        autoPhase,
-        autoSpeed,
-      };
-    });
-  }, [WORDS]);
+  const wordLayout = useMemo(() => buildWordLayout(allWords), [allWords]);
 
-  // Helpers
-  // - clamp01: clamp to [0,1]
-  // - ease: easeInOutCubic used for opacity/parallax sequencing
-  const clamp01 = (v) => Math.max(0, Math.min(1, v));
-  const ease = (t) => {
-    // easeInOutCubic
-    t = clamp01(t);
-    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-  };
+  const scrollProgress = 1 - scrollRatio;
+  const introProgress = prefersReducedMotion ? 1 : introProgressRaw;
+  const progress = Math.min(introProgress, scrollProgress);
 
-  // Stabilize SSR/CSR numeric precision to avoid hydration diffs
-  const round3 = (n) => Math.round(n * 1000) / 1000;
-
-  // Parallax + fade sequencing (inner → outer)
-  // - depths: increasing vertical parallax per ring
-  // - opacities: staggered fade-in per ring using delays
-  // - offsetsY: BASE_Y position + parallax based on scroll
-  const FADE_WINDOW = 0.12;
-  const PARALLAX_PX = 120;
-  const BASE_Y = -120; // nudge entire animation slightly upward toward screen center
-  const depths = [0.15, 0.25, 0.35, 0.45];
-  const opacities = delays.map((d) => clamp01((progress - d) / FADE_WINDOW));
-  const offsetsY = delays.map(
-    (_, i) => BASE_Y + depths[i] * PARALLAX_PX * progress,
+  const scalesRounded = useMemo(
+    () => DELAYS.map((d) => round3(toRingScale(progress, d))),
+    [progress],
   );
-  // Rounded versions to stabilize SSR/CSR transform attributes
-  const offsetsYRounded = offsetsY.map(round3);
-  const scalesRounded = scales.map(round3);
 
-  // Autonomous motion config — subtle continuous in/out movement
-  const AUTO_AMP = 40; // small amplitude so scroll remains dominant
-  const AUTO_FREQ = 0.1; // Hz multiplier for gentle pacing
+  const opacities = useMemo(
+    () => DELAYS.map((d) => clamp01((progress - d) / FADE_WINDOW)),
+    [progress],
+  );
 
-  // Overlay fade timing for hero usage:
-  // start fading after a short scroll and finish near the end of the first viewport.
-  const FADE_START_RATIO = 0.55;
-  const FADE_DURATION_RATIO = 0.35;
+  const offsetsY = useMemo(
+    () => DELAYS.map((_, i) => BASE_Y + DEPTHS[i] * PARALLAX_PX * progress),
+    [progress],
+  );
+
+  const offsetsYRounded = useMemo(
+    () => offsetsY.map((v) => round3(v)),
+    [offsetsY],
+  );
+
+  const tSec = autoTime / 1000;
+  const autoAmp = viewportWidth > 1200 && !isCoarsePointer ? AUTO_AMP : 26;
+
   const globalOpacity = mounted
     ? 1 - clamp01((scrollRatio - FADE_START_RATIO) / FADE_DURATION_RATIO)
     : 1;
+
   return (
     <div
       className="pointer-events-none fixed inset-0 flex flex-col items-center justify-center sm:top-[10%]"
@@ -222,10 +236,9 @@ export default function Environment({ locale }) {
             viewBox="-200 -200 1400 1400"
             style={{ overflow: "visible" }}
           >
-            {/* Solid center ring (smallest) — scales first, no rotation */}
             <g
               transform={`translate(0 ${offsetsYRounded[0]})`}
-              opacity={ease(opacities[0])}
+              opacity={easeInOutCubic(opacities[0])}
             >
               <g
                 transform={`translate(500 500) scale(${scalesRounded[0]}) translate(-500 -500)`}
@@ -236,17 +249,15 @@ export default function Environment({ locale }) {
                   r="120"
                   fill="none"
                   stroke="var(--content_brand)"
-                  strokeWidth="1"
+                  strokeWidth="1.6"
                 />
               </g>
             </g>
 
-            {/* Dashed rings — staggered scaling + independent rotation speeds */}
             <g
               transform={`translate(0 ${offsetsYRounded[1]})`}
-              opacity={ease(opacities[1])}
+              opacity={easeInOutCubic(opacities[1])}
             >
-              {/* Inner dashed ring rotation (faster) */}
               <g
                 className="animate-spin-slow"
                 style={{
@@ -265,18 +276,18 @@ export default function Environment({ locale }) {
                     r="240"
                     fill="none"
                     stroke="var(--content_brand)"
-                    strokeWidth="1"
+                    strokeWidth="1.6"
                     strokeDasharray="8 4"
                     strokeOpacity="0.8"
                   />
                 </g>
               </g>
             </g>
+
             <g
               transform={`translate(0 ${offsetsYRounded[2]})`}
-              opacity={ease(opacities[2])}
+              opacity={easeInOutCubic(opacities[2])}
             >
-              {/* Middle dashed ring rotation (medium) */}
               <g
                 className="animate-spin-slow"
                 style={{
@@ -295,18 +306,18 @@ export default function Environment({ locale }) {
                     r="320"
                     fill="none"
                     stroke="var(--content_brand)"
-                    strokeWidth="1"
+                    strokeWidth="1.3"
                     strokeDasharray="6 4"
                     strokeOpacity="0.6"
                   />
                 </g>
               </g>
             </g>
+
             <g
               transform={`translate(0 ${offsetsYRounded[3]})`}
-              opacity={ease(opacities[3])}
+              opacity={easeInOutCubic(opacities[3])}
             >
-              {/* Outer dashed ring rotation (slowest) */}
               <g
                 className="animate-spin-slow"
                 style={{
@@ -333,10 +344,9 @@ export default function Environment({ locale }) {
               </g>
             </g>
 
-            {/* Inner label — centered "people/mensen" (Roboto Mono) */}
             <g
               transform={`translate(0 ${offsetsYRounded[0]})`}
-              opacity={ease(opacities[0])}
+              opacity={easeInOutCubic(opacities[0])}
             >
               <text
                 x={500}
@@ -357,11 +367,10 @@ export default function Environment({ locale }) {
               </text>
             </g>
 
-            {/* Words — radial in/out motion bound to scroll, staggered fade-in */}
             {wordLayout.map(
               (
                 {
-                  w,
+                  word,
                   ringIndex,
                   baseR,
                   angle,
@@ -375,40 +384,38 @@ export default function Environment({ locale }) {
               ) => {
                 const delta =
                   amp * Math.sin(progress * Math.PI * speed + phase);
-                // time-based autonomous offset so words move even without scroll
-                const tSec = autoTime / 1000;
                 const autoDelta =
-                  AUTO_AMP *
+                  autoAmp *
                   Math.sin(
                     tSec * 2 * Math.PI * AUTO_FREQ * autoSpeed + autoPhase,
                   );
-                // Keep words from coming too close to inner ring
+
                 const minR =
                   ringIndex === 1 ? 200 : ringIndex === 2 ? 380 : 460;
                 const r = Math.max(baseR + delta + autoDelta, minR);
                 const x = 500 + r * Math.cos(angle);
                 const y = 500 + r * Math.sin(angle) + offsetsY[ringIndex];
-                const appear = ease(
-                  clamp01((progress - delays[ringIndex]) / (FADE_WINDOW * 0.9)),
+                const appear = easeInOutCubic(
+                  clamp01((progress - DELAYS[ringIndex]) / (FADE_WINDOW * 0.9)),
                 );
+
                 return (
                   <text
-                    key={i}
+                    key={`${word}-${i}`}
                     x={round3(x)}
                     y={round3(y)}
                     textAnchor="middle"
-                    className="font-roboto-mono"
+                    className="font-roboto-mono font-medium"
                     style={{
                       fill: "var(--content_dark)",
                       letterSpacing: "normal",
-                      fontSize: 20,
                       opacity: appear,
-                      fontFamily: "var(--font-roboto-mono)", // fixed closing parenthesis
+                      fontFamily: "var(--font-roboto-mono)",
                       textTransform: "capitalize",
                     }}
-                    fontSize={14}
+                    fontSize={20}
                   >
-                    {w}
+                    {word}
                   </text>
                 );
               },

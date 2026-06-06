@@ -26,11 +26,8 @@
   "pages": {
     "home": {
       "hero": {
-        "before": "Your ",
-        "sustainability": "sustainability",
-        "middle": " and ",
-        "justice": "justice",
-        "after": " challenges deserve human centered insight and action.",
+        "text": "Every challenge revolves around ",
+        "accent": "people",
         "cta": "Create Impact."
       },
       "environment": {
@@ -59,19 +56,17 @@
         ]
       },
       "methodology": {
-        "cta": "Methodology",
-        "sentence1": " Every challenge revolves around people.",
-        "sentence2": " We help you strengthen",
-        "coma": " , ",
-        "and": " and ",
-        "accent1": "understanding",
-        "accent2": "trust ",
-        "accent3": "collaboration."
+        "sentence1": "We design ",
+        "accent": "human centered ",
+        "sentence2": "approach to strategy, participation and collaboration",
+        "sentence3": "Soft Infrastructure Studio",
+        "cta": "Methodology"
       },
       "cases": {
-        "sentence1": "Explore our cases to discover what ",
-        "sentence2": "impact looks like in practice.",
-        "accent": "human centered",
+        "title": "Our Work",
+        "sentence1": "impact in practice",
+        "accent": "Human centered",
+        "cta": "Explore Projects",
         "folders": [
           {
             "client": "Communities",
@@ -96,7 +91,7 @@
         ]
       },
       "testimonials": {
-        "sentence": "We have helped organisations and business decipher difficult questions.",
+        "sentence": "Supporting positive impact across different sectors and industries",
         "quotes": [
           {
             "name": "Communities",

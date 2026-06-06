@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Button from "./ui/Button";
-import FolderIcon from "./ui/Folder/Folder";
+import FolderIcon from "./ui/Folder/Folder2";
 import { ArrowRight } from "phosphor-react";
 import { useI18n } from "../lib/I18nContext";
 import { getCaseImages } from "../data/cases";
@@ -18,7 +18,7 @@ export default function Cases({ href }) {
   const casesCopy = dict?.pages?.home?.cases ?? {};
   const detailedCasesCopy = dict?.pages?.cases ?? {};
   const {
-    heading = "CASES",
+    heading = "OUR WORK",
     sentence1 = "Explore our cases to discover what ",
     sentence2 = "impact looks like in practice.",
     accent: accentText = "human centered",
@@ -157,18 +157,15 @@ export default function Cases({ href }) {
   } = useCaseModal(caseEntries);
 
   const folderParallax = [0.1, 0.3, 0.4, 0.25];
-  const accent =
-    "text-xl md:text-3xl font-bold mb-2 text-[var(--content_brand)]";
+  const accent = "font-bold mb-2 text-[var(--content_brand)]";
 
   return (
-    <section ref={sectionRef} className="relative w-full pt-80 mb-[-28%]">
+    <section ref={sectionRef} className="relative w-full mb-[-28%]">
       <div className="relative z-20 mx-auto max-w-5xl overflow-hidden px-6 py-16 flex flex-col items-center gap-6">
         <Header title={heading} level="h2" />
-        <div className="flex justify-start w-full">
-          <p className="text-xl md:text-3xl text-left text-[var(--content_dark)] max-w-md mt-20 md:mt-40">
-            {sentence1} <span className={accent}>{accentText}</span> {sentence2}
-          </p>
-        </div>
+        <p className="mt-8 text-xl md:text-6xl font-bold tracking-tighter leading-tight">
+          <span className={accent}>{accentText}</span> {sentence1}
+        </p>
       </div>
       <div className="md:pt-16">
         {caseEntries.map((caseData, index) => {

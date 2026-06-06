@@ -3,7 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import FolderIcon from "./ui/Folder/Folder";
+import FolderIcon from "./ui/Folder/Folder2";
 import { Button } from "./ui";
 import { ArrowRight } from "phosphor-react";
 
@@ -50,7 +50,7 @@ export default function FolderStackSection({
         // Clamp current scroll offset within that range
         const current = Math.min(
           Math.max(window.scrollY - sectionTopAbs, 0),
-          stickyRun
+          stickyRun,
         );
         // Normalize to 0..1
         const p = current / stickyRun;
@@ -177,7 +177,7 @@ export default function FolderStackSection({
                 // Local progress (0..1) for this folder's segment
                 const local = Math.max(
                   Math.min((progress - start) / segLen, 1),
-                  0
+                  0,
                 );
                 // Exit distance in px so item fully leaves the 72vh frame
                 const exitPx = Math.max(frameHeight * 0.9, 0);

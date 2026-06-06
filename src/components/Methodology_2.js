@@ -101,6 +101,8 @@ function OrbitGlyph({ id, orbit, label }) {
 
 export default function Methodology2() {
   const { dict } = useI18n();
+  const methodology = dict?.pages?.home?.methodology || {};
+  const { sentence1, accent, sentence2, sentence3, cta } = methodology;
   const sectionRef = useRef(null);
   const transitionTimeoutRef = useRef(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -113,7 +115,7 @@ export default function Methodology2() {
 
   useScrollProgress(sectionRef, { start: 0.12, end: 0.42 });
 
-  const accent = "font-bold mb-2 text-[var(--content_brand)]";
+  const accentStyle = "font-bold mb-2 text-[var(--content_brand)]";
 
   const goToIndex = useCallback(
     (index, directionHint = 1) => {
@@ -213,24 +215,16 @@ export default function Methodology2() {
         );
       })}
 
-      <div className="w-4/6  flex flex-col items-center text-center relative z-10">
-        <p className="text-xl md:text-5xl font-bold tracking-tighter">
-          {dict?.pages?.home?.methodology?.sentence1}
-        </p>
-
-        <p className="mt-8 text-xl md:text-5xl font-bold tracking-tighter">
-          {dict?.pages?.home?.methodology?.sentence2}{" "}
-          <span className={accent}>
-            {dict?.pages?.home?.methodology?.accent1}
-          </span>
-          ,{" "}
-          <span className={accent}>
-            {dict?.pages?.home?.methodology?.accent2}
-          </span>{" "}
-          and{" "}
-          <span className={accent}>
-            {dict?.pages?.home?.methodology?.accent3}
-          </span>
+      <div className="w-4/6  flex flex-col items-center text-center relative z-10 gap-8">
+        <div className="bg-white/80 rounded-full px-6 py-2">
+          <p className="text-xl md:text-2xl font-normal tracking-tight">
+            {sentence3}
+          </p>
+        </div>
+        <p className="mt-8 text-xl md:text-6xl font-bold tracking-tighter leading-tight ">
+          {sentence1}
+          <span className={accentStyle}>{accent}</span>
+          {sentence2}
         </p>
 
         <Button
@@ -239,7 +233,7 @@ export default function Methodology2() {
           className="mt-12"
           onClick={() => setIsModalOpen(true)}
         >
-          {dict?.pages?.home?.methodology?.cta}
+          {cta}
         </Button>
       </div>
 

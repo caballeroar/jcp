@@ -2,22 +2,17 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useMenuContext } from "./MenuProvider";
 import LogoIcon from "../../../../public/assets/logo_icon.svg";
 import LanguageSwitcher from "../Switcher/LanguageSwitcher";
 
 export function MobileHeader({ buildHref, invert }) {
-  const { open, toggle, navigate } = useMenuContext();
-
-  const style = open
-    ? { borderColor: "var(--bg_brand)", background: "var(--bg_box_neutral)" }
-    : {
-        borderColor: "color-mix(in srgb, var(--surface) 25%, transparent)",
-        background: "color-mix(in srgb, var(--background) 5%, transparent)",
-        backdropFilter: "blur(4px)",
-        WebkitBackdropFilter: "blur(4px)",
-      };
-  const logoClass = invert && !open ? "brightness-0 invert" : "";
+  const style = {
+    borderColor: "color-mix(in srgb, var(--surface) 25%, transparent)",
+    background: "color-mix(in srgb, var(--background) 5%, transparent)",
+    backdropFilter: "blur(4px)",
+    WebkitBackdropFilter: "blur(4px)",
+  };
+  const logoClass = invert ? "brightness-0 invert" : "";
 
   return (
     <header
@@ -25,7 +20,7 @@ export function MobileHeader({ buildHref, invert }) {
       style={style}
     >
       <div className="px-4 py-3 flex items-center justify-between">
-        <Link href={buildHref()} onClick={(e) => navigate(buildHref(), e)}>
+        <Link href={buildHref()}>
           <Image
             src={LogoIcon}
             alt="Just Common People"
@@ -34,10 +29,6 @@ export function MobileHeader({ buildHref, invert }) {
             priority
           />
         </Link>
-
-        <button onClick={toggle} className="text-sm font-bold">
-          {open ? "CLOSE" : "MENU"}
-        </button>
 
         <LanguageSwitcher />
       </div>
