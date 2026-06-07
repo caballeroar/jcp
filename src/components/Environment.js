@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useI18n } from "../lib/I18nContext";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { useViewportWidth } from "../hooks/useViewportWidth";
@@ -29,6 +29,22 @@ const MOBILE_SVG_SIZE_VMIN = 190;
 const MOBILE_SVG_OFFSET_Y_PX = -28;
 const DESKTOP_SVG_SIZE_VMIN = 120;
 const TABLET_MAX_WIDTH_PX = 1024;
+
+// Scroll performance tuning constants (single source of truth):
+// - Threshold: minimum ratio delta required before redraw.
+// - Quantization: snapping step for scroll ratio to smooth kinetic scrolling.
+// - Min frame ms: upper bound on redraw frequency during scroll.
+const SCROLL_THRESHOLD_DESKTOP = 0.001;
+const SCROLL_THRESHOLD_TOUCH = 0.003;
+const SCROLL_THRESHOLD_SAFARI_TOUCH = 0.0045;
+
+const SCROLL_QUANTIZATION_DESKTOP = 0;
+const SCROLL_QUANTIZATION_TOUCH = 0.0015;
+const SCROLL_QUANTIZATION_SAFARI_TOUCH = 0.0025;
+
+const SCROLL_MIN_FRAME_MS_DESKTOP = 0;
+const SCROLL_MIN_FRAME_MS_TOUCH = 16;
+const SCROLL_MIN_FRAME_MS_SAFARI_TOUCH = 20;
 
 const BASE_RADII = [120, 240, 400, 600];
 const RING_ASSIGNMENTS = [
@@ -73,6 +89,24 @@ const toRingScale = (progress, delay) => {
   return 1 + rp * (MAX_SCALE - 1);
 };
 
+const getFrameValues = (progress) => {
+  const scales = DELAYS.map((d) => round3(toRingScale(progress, d)));
+  const opacities = DELAYS.map((d) =>
+    easeInOutCubic(clamp01((progress - d) / FADE_WINDOW)),
+  );
+  const offsetsY = DELAYS.map(
+    (_, i) => BASE_Y + DEPTHS[i] * PARALLAX_PX * progress,
+  );
+  const offsetsYRounded = offsetsY.map(round3);
+
+  return {
+    scales,
+    opacities,
+    offsetsY,
+    offsetsYRounded,
+  };
+};
+
 const buildWordLayout = (words) => {
   return words.map((word, i) => {
     const ringIndex = RING_ASSIGNMENTS[i % RING_ASSIGNMENTS.length];
@@ -106,10 +140,31 @@ export default function Environment({ locale }) {
   const prefersReducedMotion = usePrefersReducedMotion();
   const viewportWidth = useViewportWidth();
 
-  const [scrollRatio, setScrollRatio] = useState(0);
-  const [introProgressRaw, setIntroProgressRaw] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [isCoarsePointer, setIsCoarsePointer] = useState(false);
+
+  const rootRef = useRef(null);
+  const ringTranslateRefs = useRef([]);
+  const ringScaleRefs = useRef([]);
+  const labelGroupRef = useRef(null);
+  const wordRefs = useRef([]);
+
+  const scrollRatioRef = useRef(0);
+  const introProgressRef = useRef(0);
+  const drawRafRef = useRef(null);
+  const scrollRafRef = useRef(null);
+  const introRafRef = useRef(null);
+  const lastScrollDrawTsRef = useRef(0);
+
+  const prevFrameRef = useRef({
+    opacity: null,
+    ringOffsets: [null, null, null, null],
+    ringScales: [null, null, null, null],
+    ringOpacities: [null, null, null, null],
+    words: [],
+  });
+
+  const requestDrawRef = useRef(() => {});
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -129,69 +184,46 @@ export default function Environment({ locale }) {
     return () => media.removeListener(onChange);
   }, []);
 
+  const isSafariTouch = useMemo(() => {
+    if (typeof window === "undefined") return false;
+
+    // iPadOS can report desktop-like UA; include MacIntel + touchpoints.
+    const ua = window.navigator.userAgent;
+    const isAppleTouchDevice =
+      /iPhone|iPad|iPod/i.test(ua) ||
+      (window.navigator.platform === "MacIntel" &&
+        window.navigator.maxTouchPoints > 1);
+    const isWebKit = /AppleWebKit/i.test(ua);
+    const isAltIOSBrowser = /CriOS|FxiOS|EdgiOS|OPiOS/i.test(ua);
+
+    return isAppleTouchDevice && isWebKit && !isAltIOSBrowser;
+  }, []);
+
   const isMobileDevice =
     viewportWidth > 0 && viewportWidth < MOBILE_MAX_WIDTH_PX;
   const isTabletDevice =
     viewportWidth >= MOBILE_MAX_WIDTH_PX &&
     viewportWidth <= TABLET_MAX_WIDTH_PX;
 
-  // PERF: touch devices get a slightly larger state-change threshold to reduce
-  // scroll-driven rerenders while preserving the same visual progression.
-  const scrollUpdateThreshold = isCoarsePointer ? 0.003 : 0.001;
-
-  useEffect(() => {
-    let rafId = null;
-
-    const onScroll = () => {
-      if (rafId) return;
-
-      rafId = requestAnimationFrame(() => {
-        const doc = document.documentElement;
-        const scrollTop = window.pageYOffset || doc.scrollTop || 0;
-        const viewport = window.innerHeight || 1;
-        const ratio = clamp01(scrollTop / viewport);
-
-        setScrollRatio((prev) =>
-          Math.abs(prev - ratio) < scrollUpdateThreshold ? prev : ratio,
-        );
-
-        rafId = null;
-      });
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (rafId) cancelAnimationFrame(rafId);
-    };
-  }, [scrollUpdateThreshold]);
-
-  useEffect(() => {
-    if (prefersReducedMotion) return;
-
-    let rafId = null;
-    const start =
-      typeof performance !== "undefined" ? performance.now() : Date.now();
-
-    const step = (now) => {
-      const current = typeof performance !== "undefined" ? now : Date.now();
-      const elapsed = current - start;
-      const t = clamp01(elapsed / INTRO_DURATION_MS);
-      setIntroProgressRaw(easeOutCubic(t));
-
-      if (t < 1) {
-        rafId = requestAnimationFrame(step);
-      }
-    };
-
-    rafId = requestAnimationFrame(step);
-
-    return () => {
-      if (rafId) cancelAnimationFrame(rafId);
-    };
-  }, [prefersReducedMotion]);
+  // Scroll-tuning knobs:
+  // - threshold: minimum ratio delta needed before we redraw.
+  // - quantization: snap ratio to tiny steps to smooth Safari kinetic scrolling.
+  // - min frame ms: caps draw frequency only on touch-heavy paths.
+  const scrollUpdateThreshold = isSafariTouch
+    ? SCROLL_THRESHOLD_SAFARI_TOUCH
+    : isCoarsePointer
+      ? SCROLL_THRESHOLD_TOUCH
+      : SCROLL_THRESHOLD_DESKTOP;
+  const scrollQuantizationStep = isSafariTouch
+    ? SCROLL_QUANTIZATION_SAFARI_TOUCH
+    : isCoarsePointer
+      ? SCROLL_QUANTIZATION_TOUCH
+      : SCROLL_QUANTIZATION_DESKTOP;
+  const minScrollFrameMs = isSafariTouch
+    ? SCROLL_MIN_FRAME_MS_SAFARI_TOUCH
+    : isCoarsePointer
+      ? SCROLL_MIN_FRAME_MS_TOUCH
+      : SCROLL_MIN_FRAME_MS_DESKTOP;
 
   useEffect(() => {
     const id = requestAnimationFrame(() => setMounted(true));
@@ -209,30 +241,6 @@ export default function Environment({ locale }) {
   }, [i18n?.dict?.pages?.home?.environment?.words]);
 
   const wordLayout = useMemo(() => buildWordLayout(allWords), [allWords]);
-
-  const scrollProgress = 1 - scrollRatio;
-  const introProgress = prefersReducedMotion ? 1 : introProgressRaw;
-  const progress = Math.min(introProgress, scrollProgress);
-
-  const scalesRounded = useMemo(
-    () => DELAYS.map((d) => round3(toRingScale(progress, d))),
-    [progress],
-  );
-
-  const opacities = useMemo(
-    () => DELAYS.map((d) => clamp01((progress - d) / FADE_WINDOW)),
-    [progress],
-  );
-
-  const offsetsY = useMemo(
-    () => DELAYS.map((_, i) => BASE_Y + DEPTHS[i] * PARALLAX_PX * progress),
-    [progress],
-  );
-
-  const offsetsYRounded = useMemo(
-    () => offsetsY.map((v) => round3(v)),
-    [offsetsY],
-  );
 
   const autoAmp = viewportWidth > 1200 && !isCoarsePointer ? AUTO_AMP : 26;
   const isMobileFrame = isMobileDevice;
@@ -258,12 +266,8 @@ export default function Environment({ locale }) {
     isCoarsePointer,
   ]);
 
-  const globalOpacity = mounted
-    ? 1 - clamp01((scrollRatio - FADE_START_RATIO) / FADE_DURATION_RATIO)
-    : 1;
-
-  // PERF: Precompute render-ready word data so render stays mostly a cheap map.
-  const positionedWords = useMemo(() => {
+  // PERF: Word constants are precomputed once and reused by the scroll RAF.
+  const wordRuntime = useMemo(() => {
     return wordLayout.map(
       (
         {
@@ -280,14 +284,7 @@ export default function Environment({ locale }) {
         },
         i,
       ) => {
-        const delta = amp * Math.sin(progress * Math.PI * speed + phase);
         const minR = ringIndex === 1 ? 200 : ringIndex === 2 ? 380 : 460;
-        const r = Math.max(baseR + delta, minR);
-        const x = 500 + r * cos;
-        const y = 500 + r * sin + offsetsY[ringIndex];
-        const appear = easeInOutCubic(
-          clamp01((progress - DELAYS[ringIndex]) / (FADE_WINDOW * 0.9)),
-        );
 
         // PERF: autonomous motion is handed to SVG animateTransform (no React timer rerenders).
         const tierAmp = ambientTier === "full" ? autoAmp : autoAmp * 0.55;
@@ -309,28 +306,56 @@ export default function Environment({ locale }) {
               : false;
 
         return {
-          key: `${word}-${i}`,
           word,
-          x: round3(x),
-          y: round3(y),
-          appear,
+          ringIndex,
+          baseR,
+          cos,
+          sin,
+          phase,
+          amp,
+          speed,
+          minR,
           autoDx,
           autoDy,
           autoPeriodSec,
           autoBeginSec,
           shouldAnimateAmbient,
+          key: `${word}-${i}`,
         };
       },
     );
-  }, [wordLayout, progress, offsetsY, autoAmp, ambientTier]);
+  }, [wordLayout, autoAmp, ambientTier]);
+
+  useEffect(() => {
+    // Keep refs arrays aligned with rendered word nodes.
+    wordRefs.current = wordRefs.current.slice(0, wordRuntime.length);
+    prevFrameRef.current.words = prevFrameRef.current.words.slice(
+      0,
+      wordRuntime.length,
+    );
+  }, [wordRuntime.length]);
+
+  const initialFrame = useMemo(() => getFrameValues(0), []);
+
+  const initialWords = useMemo(() => {
+    return wordRuntime.map((item) => {
+      const delta = item.amp * Math.sin(item.phase);
+      const r = Math.max(item.baseR + delta, item.minR);
+      return {
+        x: round3(500 + r * item.cos),
+        y: round3(500 + r * item.sin + BASE_Y),
+        opacity: 0,
+      };
+    });
+  }, [wordRuntime]);
 
   const containerStyle = useMemo(
     () => ({
-      opacity: globalOpacity,
+      opacity: 1,
       background: "var(--background)",
       zIndex: 5,
     }),
-    [globalOpacity],
+    [],
   );
 
   const svgStyle = useMemo(
@@ -341,8 +366,209 @@ export default function Environment({ locale }) {
     [svgOffsetYPx],
   );
 
+  useEffect(() => {
+    const applyFrame = () => {
+      const introProgress = prefersReducedMotion ? 1 : introProgressRef.current;
+      const scrollProgress = 1 - scrollRatioRef.current;
+      const progress = Math.min(introProgress, scrollProgress);
+
+      const { scales, opacities, offsetsY, offsetsYRounded } =
+        getFrameValues(progress);
+
+      for (let i = 0; i < 4; i += 1) {
+        const groupNode = ringTranslateRefs.current[i];
+        const scaleNode = ringScaleRefs.current[i];
+
+        const offset = offsetsYRounded[i];
+        if (groupNode && prevFrameRef.current.ringOffsets[i] !== offset) {
+          groupNode.setAttribute("transform", `translate(0 ${offset})`);
+          prevFrameRef.current.ringOffsets[i] = offset;
+        }
+
+        const opacity = round3(opacities[i]);
+        if (groupNode && prevFrameRef.current.ringOpacities[i] !== opacity) {
+          groupNode.setAttribute("opacity", `${opacity}`);
+          prevFrameRef.current.ringOpacities[i] = opacity;
+        }
+
+        const scale = scales[i];
+        if (scaleNode && prevFrameRef.current.ringScales[i] !== scale) {
+          scaleNode.setAttribute(
+            "transform",
+            `translate(500 500) scale(${scale}) translate(-500 -500)`,
+          );
+          prevFrameRef.current.ringScales[i] = scale;
+        }
+      }
+
+      if (labelGroupRef.current) {
+        labelGroupRef.current.setAttribute(
+          "transform",
+          `translate(0 ${offsetsYRounded[0]})`,
+        );
+        labelGroupRef.current.setAttribute(
+          "opacity",
+          `${round3(opacities[0])}`,
+        );
+      }
+
+      const overlayOpacity = mounted
+        ? 1 -
+          clamp01(
+            (scrollRatioRef.current - FADE_START_RATIO) / FADE_DURATION_RATIO,
+          )
+        : 1;
+
+      if (
+        rootRef.current &&
+        prevFrameRef.current.opacity !== round3(overlayOpacity)
+      ) {
+        rootRef.current.style.opacity = `${round3(overlayOpacity)}`;
+        prevFrameRef.current.opacity = round3(overlayOpacity);
+      }
+
+      for (let i = 0; i < wordRuntime.length; i += 1) {
+        const item = wordRuntime[i];
+        const textNode = wordRefs.current[i];
+        if (!textNode) continue;
+
+        const delta =
+          item.amp * Math.sin(progress * Math.PI * item.speed + item.phase);
+        const r = Math.max(item.baseR + delta, item.minR);
+        const x = round3(500 + r * item.cos);
+        const y = round3(500 + r * item.sin + offsetsY[item.ringIndex]);
+        const appear = round3(
+          easeInOutCubic(
+            clamp01((progress - DELAYS[item.ringIndex]) / (FADE_WINDOW * 0.9)),
+          ),
+        );
+
+        const prevWord = prevFrameRef.current.words[i] || {};
+
+        if (prevWord.x !== x) {
+          textNode.setAttribute("x", `${x}`);
+        }
+        if (prevWord.y !== y) {
+          textNode.setAttribute("y", `${y}`);
+        }
+        if (prevWord.opacity !== appear) {
+          textNode.setAttribute("opacity", `${appear}`);
+        }
+
+        prevFrameRef.current.words[i] = {
+          x,
+          y,
+          opacity: appear,
+        };
+      }
+    };
+
+    const requestDraw = () => {
+      if (drawRafRef.current) return;
+      drawRafRef.current = requestAnimationFrame(() => {
+        drawRafRef.current = null;
+        applyFrame();
+      });
+    };
+
+    requestDrawRef.current = requestDraw;
+    requestDraw();
+
+    return () => {
+      if (drawRafRef.current) {
+        cancelAnimationFrame(drawRafRef.current);
+        drawRafRef.current = null;
+      }
+    };
+  }, [wordRuntime, prefersReducedMotion, mounted]);
+
+  useEffect(() => {
+    const onScroll = () => {
+      if (scrollRafRef.current) return;
+
+      scrollRafRef.current = requestAnimationFrame(() => {
+        scrollRafRef.current = null;
+
+        const now =
+          typeof performance !== "undefined" ? performance.now() : Date.now();
+        if (
+          minScrollFrameMs > 0 &&
+          now - lastScrollDrawTsRef.current < minScrollFrameMs
+        ) {
+          return;
+        }
+
+        const doc = document.documentElement;
+        const scrollTop = window.pageYOffset || doc.scrollTop || 0;
+        const viewport = window.innerHeight || 1;
+        const rawRatio = clamp01(scrollTop / viewport);
+        const ratio =
+          scrollQuantizationStep > 0
+            ? clamp01(
+                Math.round(rawRatio / scrollQuantizationStep) *
+                  scrollQuantizationStep,
+              )
+            : rawRatio;
+
+        if (Math.abs(scrollRatioRef.current - ratio) < scrollUpdateThreshold) {
+          return;
+        }
+
+        scrollRatioRef.current = ratio;
+        lastScrollDrawTsRef.current = now;
+        requestDrawRef.current();
+      });
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (scrollRafRef.current) {
+        cancelAnimationFrame(scrollRafRef.current);
+        scrollRafRef.current = null;
+      }
+    };
+  }, [scrollUpdateThreshold, scrollQuantizationStep, minScrollFrameMs]);
+
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      introProgressRef.current = 1;
+      requestDrawRef.current();
+      return;
+    }
+
+    introProgressRef.current = 0;
+    const start =
+      typeof performance !== "undefined" ? performance.now() : Date.now();
+
+    const step = (now) => {
+      const current = typeof performance !== "undefined" ? now : Date.now();
+      const elapsed = current - start;
+      const t = clamp01(elapsed / INTRO_DURATION_MS);
+
+      introProgressRef.current = easeOutCubic(t);
+      requestDrawRef.current();
+
+      if (t < 1) {
+        introRafRef.current = requestAnimationFrame(step);
+      }
+    };
+
+    introRafRef.current = requestAnimationFrame(step);
+
+    return () => {
+      if (introRafRef.current) {
+        cancelAnimationFrame(introRafRef.current);
+        introRafRef.current = null;
+      }
+    };
+  }, [prefersReducedMotion]);
+
   return (
     <div
+      ref={rootRef}
       className="pointer-events-none fixed inset-0 flex flex-col items-center justify-center sm:top-[10%]"
       style={containerStyle}
     >
@@ -355,11 +581,17 @@ export default function Environment({ locale }) {
             style={svgStyle}
           >
             <g
-              transform={`translate(0 ${offsetsYRounded[0]})`}
-              opacity={easeInOutCubic(opacities[0])}
+              ref={(node) => {
+                ringTranslateRefs.current[0] = node;
+              }}
+              transform={`translate(0 ${initialFrame.offsetsYRounded[0]})`}
+              opacity={initialFrame.opacities[0]}
             >
               <g
-                transform={`translate(500 500) scale(${scalesRounded[0]}) translate(-500 -500)`}
+                ref={(node) => {
+                  ringScaleRefs.current[0] = node;
+                }}
+                transform={`translate(500 500) scale(${initialFrame.scales[0]}) translate(-500 -500)`}
               >
                 <circle
                   cx="500"
@@ -373,12 +605,18 @@ export default function Environment({ locale }) {
             </g>
 
             <g
-              transform={`translate(0 ${offsetsYRounded[1]})`}
-              opacity={easeInOutCubic(opacities[1])}
+              ref={(node) => {
+                ringTranslateRefs.current[1] = node;
+              }}
+              transform={`translate(0 ${initialFrame.offsetsYRounded[1]})`}
+              opacity={initialFrame.opacities[1]}
             >
               <g className="animate-spin-slow" style={SPIN_STYLE_60}>
                 <g
-                  transform={`translate(500 500) scale(${scalesRounded[1]}) translate(-500 -500)`}
+                  ref={(node) => {
+                    ringScaleRefs.current[1] = node;
+                  }}
+                  transform={`translate(500 500) scale(${initialFrame.scales[1]}) translate(-500 -500)`}
                 >
                   <circle
                     cx="500"
@@ -395,12 +633,18 @@ export default function Environment({ locale }) {
             </g>
 
             <g
-              transform={`translate(0 ${offsetsYRounded[2]})`}
-              opacity={easeInOutCubic(opacities[2])}
+              ref={(node) => {
+                ringTranslateRefs.current[2] = node;
+              }}
+              transform={`translate(0 ${initialFrame.offsetsYRounded[2]})`}
+              opacity={initialFrame.opacities[2]}
             >
               <g className="animate-spin-slow" style={SPIN_STYLE_120}>
                 <g
-                  transform={`translate(500 500) scale(${scalesRounded[2]}) translate(-500 -500)`}
+                  ref={(node) => {
+                    ringScaleRefs.current[2] = node;
+                  }}
+                  transform={`translate(500 500) scale(${initialFrame.scales[2]}) translate(-500 -500)`}
                 >
                   <circle
                     cx="500"
@@ -417,12 +661,18 @@ export default function Environment({ locale }) {
             </g>
 
             <g
-              transform={`translate(0 ${offsetsYRounded[3]})`}
-              opacity={easeInOutCubic(opacities[3])}
+              ref={(node) => {
+                ringTranslateRefs.current[3] = node;
+              }}
+              transform={`translate(0 ${initialFrame.offsetsYRounded[3]})`}
+              opacity={initialFrame.opacities[3]}
             >
               <g className="animate-spin-slow" style={SPIN_STYLE_240}>
                 <g
-                  transform={`translate(500 500) scale(${scalesRounded[3]}) translate(-500 -500)`}
+                  ref={(node) => {
+                    ringScaleRefs.current[3] = node;
+                  }}
+                  transform={`translate(500 500) scale(${initialFrame.scales[3]}) translate(-500 -500)`}
                 >
                   <circle
                     cx="500"
@@ -439,8 +689,9 @@ export default function Environment({ locale }) {
             </g>
 
             <g
-              transform={`translate(0 ${offsetsYRounded[0]})`}
-              opacity={easeInOutCubic(opacities[0])}
+              ref={labelGroupRef}
+              transform={`translate(0 ${initialFrame.offsetsYRounded[0]})`}
+              opacity={initialFrame.opacities[0]}
             >
               <text
                 x={500}
@@ -461,17 +712,20 @@ export default function Environment({ locale }) {
               </text>
             </g>
 
-            {positionedWords.map((item) => (
+            {wordRuntime.map((item, index) => (
               <text
                 key={item.key}
-                x={item.x}
-                y={item.y}
+                ref={(node) => {
+                  wordRefs.current[index] = node;
+                }}
+                x={initialWords[index]?.x ?? 500}
+                y={initialWords[index]?.y ?? 500}
+                opacity={initialWords[index]?.opacity ?? 0}
                 textAnchor="middle"
                 className="font-roboto-mono font-medium"
                 style={{
                   fill: "var(--content_dark)",
                   letterSpacing: "normal",
-                  opacity: item.appear,
                   fontFamily: "var(--font-roboto-mono)",
                   textTransform: "capitalize",
                 }}
