@@ -249,22 +249,13 @@ export default function Environment({ locale }) {
     : DESKTOP_SVG_SIZE_VMIN;
   const svgOffsetYPx = isMobileFrame ? MOBILE_SVG_OFFSET_Y_PX : 0;
 
-  // Progressive enhancement strategy:
-  // - Desktop: full ambient floating
-  // - Tablet: medium ambient floating (fewer/slower moving words)
-  // - Mobile/touch small screens: ambient floating off (keep intro + scroll)
+  // Motion strategy:
+  // - Reduced motion or pre-mount: ambient motion off
+  // - Otherwise: full ambient motion across all device sizes
   const ambientTier = useMemo(() => {
     if (!mounted || prefersReducedMotion) return "off";
-    if (isMobileDevice) return "off";
-    if (isTabletDevice || isCoarsePointer) return "medium";
     return "full";
-  }, [
-    mounted,
-    prefersReducedMotion,
-    isMobileDevice,
-    isTabletDevice,
-    isCoarsePointer,
-  ]);
+  }, [mounted, prefersReducedMotion]);
 
   // PERF: Word constants are precomputed once and reused by the scroll RAF.
   const wordRuntime = useMemo(() => {
@@ -302,7 +293,7 @@ export default function Environment({ locale }) {
           ambientTier === "full"
             ? true
             : ambientTier === "medium"
-              ? i % 2 === 0
+              ? true
               : false;
 
         return {

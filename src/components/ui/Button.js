@@ -15,6 +15,8 @@ export default function Button({
   className,
   ...props
 }) {
+  const hasIcon = Boolean(icon);
+
   const baseButton =
     "inline-flex items-center justify-center rounded-full h-[46px] px-8 font-semibold leading-none transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50";
 
@@ -62,7 +64,7 @@ export default function Button({
     </span>
   );
 
-  const iconContent = iconOnly ? renderIconSpan() : null;
+  const iconContent = iconOnly && hasIcon ? renderIconSpan() : null;
 
   if (href) {
     return (
@@ -73,9 +75,9 @@ export default function Button({
         {...props}
         style={{ display: "flex", transform: "translateY(1px)" }}
       >
-        {iconOnly ? (
+        {iconOnly && hasIcon ? (
           iconContent
-        ) : (
+        ) : hasIcon ? (
           <>
             {iconPosition === "left" && (
               <span
@@ -97,6 +99,10 @@ export default function Button({
               </span>
             )}
           </>
+        ) : (
+          <span className={` ${baseButton}  `} style={themeStyle}>
+            {children}
+          </span>
         )}
       </Link>
     );
@@ -109,9 +115,9 @@ export default function Button({
       {...props}
       style={{ display: "flex", transform: "translateY(1px)" }}
     >
-      {iconOnly ? (
+      {iconOnly && hasIcon ? (
         iconContent
-      ) : (
+      ) : hasIcon ? (
         <>
           {iconPosition === "left" && (
             <span
@@ -133,6 +139,10 @@ export default function Button({
             </span>
           )}
         </>
+      ) : (
+        <span className={` ${baseButton}  `} style={themeStyle}>
+          {children}
+        </span>
       )}
     </button>
   );

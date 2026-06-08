@@ -5,6 +5,7 @@ import { ArrowRight, CaretLeft, CaretRight, X } from "phosphor-react";
 import { useI18n } from "../lib/I18nContext";
 import { Button } from "./ui";
 import { useScrollProgress } from "../hooks/useScrollProgress";
+import { useViewportWidth } from "../hooks/useViewportWidth";
 import { METHODOLOGY } from "../data/methodology";
 // import "../app/globals.css";
 
@@ -47,11 +48,25 @@ const CONTACT_ORBITS = [
   },
 ];
 
-const CONTACT_ELLIPSE_MAP = [
+const CONTACT_ELLIPSE_MAP_DESKTOP = [
   { xStart: -600, yStart: -400, xEnd: -260, yEnd: -220 },
   { xStart: 600, yStart: -400, xEnd: 260, yEnd: -220 },
   { xStart: -600, yStart: 400, xEnd: -260, yEnd: 260 },
   { xStart: 600, yStart: 400, xEnd: 260, yEnd: 260 },
+];
+
+const CONTACT_ELLIPSE_MAP_TABLET = [
+  { xStart: -500, yStart: -320, xEnd: -215, yEnd: -180 },
+  { xStart: 500, yStart: -320, xEnd: 215, yEnd: -180 },
+  { xStart: -500, yStart: 320, xEnd: -215, yEnd: 220 },
+  { xStart: 500, yStart: 320, xEnd: 215, yEnd: 220 },
+];
+
+const CONTACT_ELLIPSE_MAP_MOBILE = [
+  { xStart: -360, yStart: -240, xEnd: -120, yEnd: -135 },
+  { xStart: 360, yStart: -240, xEnd: 120, yEnd: -135 },
+  { xStart: -360, yStart: 220, xEnd: -120, yEnd: 90 },
+  { xStart: 360, yStart: 220, xEnd: 120, yEnd: 90 },
 ];
 
 const ORBIT_SCALE = 1.55;
@@ -101,6 +116,7 @@ function OrbitGlyph({ id, orbit, label }) {
 
 export default function Methodology2() {
   const { dict } = useI18n();
+  const viewportWidth = useViewportWidth();
   const methodology = dict?.pages?.home?.methodology || {};
   const { sentence1, accent, sentence2, sentence3, cta } = methodology;
   const sectionRef = useRef(null);
@@ -113,9 +129,21 @@ export default function Methodology2() {
   const methodologyItems = useMemo(() => METHODOLOGY, []);
   const activeItem = methodologyItems[activeIndex] ?? methodologyItems[0];
 
+  const contactEllipseMap = useMemo(() => {
+    if (viewportWidth > 0 && viewportWidth < 640) {
+      return CONTACT_ELLIPSE_MAP_MOBILE;
+    }
+
+    if (viewportWidth > 0 && viewportWidth < 1024) {
+      return CONTACT_ELLIPSE_MAP_TABLET;
+    }
+
+    return CONTACT_ELLIPSE_MAP_DESKTOP;
+  }, [viewportWidth]);
+
   useScrollProgress(sectionRef, { start: 0.12, end: 0.42 });
 
-  const accentStyle = "font-bold mb-2 text-[var(--content_brand)]";
+  const accentStyle = "font-bold text-[var(--content_brand)]";
 
   const goToIndex = useCallback(
     (index, directionHint = 1) => {
@@ -190,16 +218,17 @@ export default function Methodology2() {
   return (
     <section
       ref={sectionRef}
-      className="methodology relative w-full min-h-screen flex items-center justify-center overflow-visible"
+      className="methodology relative w-full min-h-[80svh] xl:min-h-screen flex items-center justify-center overflow-visible"
     >
       {CONTACT_ORBITS.map((orbit, index) => {
-        const coords = CONTACT_ELLIPSE_MAP[index];
+        const coords =
+          contactEllipseMap[index] ?? CONTACT_ELLIPSE_MAP_DESKTOP[index];
         const id = `methodologyContactPath${index + 1}`;
         const label = dict?.pages?.home?.contact?.[orbit.labelKey] ?? "";
         return (
           <svg
             key={id}
-            className="ellipse opacity-70 w-[520px] md:w-[680px] lg:w-[780px] overflow-visible"
+            className="ellipse opacity-70 w-[360px] sm:w-[520px] md:w-[680px] lg:w-[780px] overflow-visible"
             data-index={index}
             viewBox="0 0 1148 1093"
             aria-hidden
@@ -215,13 +244,13 @@ export default function Methodology2() {
         );
       })}
 
-      <div className="w-4/6  flex flex-col items-center text-center relative z-10 gap-8">
-        <div className="bg-white/80 rounded-full px-6 py-2">
-          <p className="text-xl md:text-2xl font-normal tracking-tight">
+      <div className="relative z-10 flex w-full max-w-5xl flex-col items-center gap-6 px-4 text-center sm:gap-8 sm:px-6 md:px-10">
+        <div className="rounded-full bg-white/80 px-4 py-2 sm:px-6">
+          <p className="text-[clamp(0.9rem,3.8vw,1.5rem)] font-normal tracking-tight leading-tight">
             {sentence3}
           </p>
         </div>
-        <p className="mt-8 text-xl md:text-6xl font-bold tracking-tighter leading-tight ">
+        <p className="mt-2 max-w-[24ch] text-[clamp(1.35rem,7vw,3.6rem)] font-bold leading-[1.02] tracking-[-0.02em]">
           {sentence1}
           <span className={accentStyle}>{accent}</span>
           {sentence2}
@@ -230,7 +259,7 @@ export default function Methodology2() {
         <Button
           theme="dark"
           icon={<ArrowRight size={20} weight="bold" />}
-          className="mt-12"
+          className="mt-6 w-full justify-center sm:mt-10 sm:w-auto"
           onClick={() => setIsModalOpen(true)}
         >
           {cta}
@@ -260,7 +289,7 @@ export default function Methodology2() {
                   <p className="font-roboto-mono text-xs uppercase tracking-[0.2em] text-[var(--content_brand)]">
                     Methodology
                   </p>
-                  <h2 className="mt-1 text-2xl font-bold tracking-tight md:text-4xl">
+                  <h2 className="mt-1 text-[clamp(1.35rem,4.6vw,2.25rem)] font-bold tracking-tight">
                     {activeItem?.name}
                   </h2>
                 </div>
@@ -339,11 +368,11 @@ export default function Methodology2() {
                         {activeItem?.service}
                       </p>
 
-                      <p className="mt-4 text-lg leading-relaxed md:mt-5 md:text-xl">
+                      <p className="mt-4 text-[clamp(1rem,2.8vw,1.25rem)] leading-relaxed md:mt-5">
                         {activeItem?.coreDescription}
                       </p>
 
-                      <p className="mt-4 text-sm leading-relaxed opacity-85 md:mt-5 md:text-lg">
+                      <p className="mt-4 text-[clamp(0.9rem,2.2vw,1.05rem)] leading-relaxed opacity-85 md:mt-5">
                         {activeItem?.expandedDescription}
                       </p>
 
@@ -358,7 +387,7 @@ export default function Methodology2() {
                             }`}
                             style={{ transitionDelay: `${120 + index * 75}ms` }}
                           >
-                            <p className="text-sm leading-relaxed md:text-base">
+                            <p className="text-[clamp(0.85rem,2vw,1rem)] leading-relaxed">
                               {benefit}
                             </p>
                           </article>

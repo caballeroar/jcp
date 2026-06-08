@@ -5,6 +5,7 @@ import Image from "next/image";
 import Button from "../Button";
 import { ArrowUpRight } from "phosphor-react";
 import { useCarouselSwap } from "./useCarouselSwap";
+import { useViewportWidth } from "../../../hooks/useViewportWidth";
 
 export default function Folder2({
   title,
@@ -18,6 +19,8 @@ export default function Folder2({
   onExpand,
 }) {
   const [isPaused, setIsPaused] = useState(false);
+  const viewportWidth = useViewportWidth();
+  const smScreen = viewportWidth >= 640;
 
   const effectiveImages =
     images.length > 0 ? images : imageSrc ? [imageSrc] : [];
@@ -73,28 +76,28 @@ export default function Folder2({
         />
       </svg>
 
-      <div className="relative z-10 flex h-[85%] w-full px-4 mb-6">
-        <div className="grid h-full w-full grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="flex min-w-0 flex-col justify-end pl-2 pb-2">
+      <div className="relative z-10 flex h-full w-full px-3 pb-4 pt-3 sm:px-4 sm:h-[91%] md:px-4 sm:mb-[1%]">
+        <div className="grid h-full w-full grid-cols-1 gap-3 sm:grid-cols-2 md:gap-4">
+          <div className="order-1 flex min-w-0 flex-col justify-end pb-1 md:pl-2 md:pb-2">
             <div className="flex flex-col gap-3">
-              {logo && (
-                <div className="relative h-10 w-[140px] max-w-full self-start">
+              {smScreen && logo && (
+                <div className="relative h-8 w-[120px] max-w-full self-start md:h-10 md:w-[140px]">
                   <Image
                     src={logo}
                     alt={title || ""}
                     fill
                     className="object-contain object-left"
-                    sizes="140px"
+                    sizes="(max-width: 768px) 120px, 140px"
                     unoptimized
                   />
                 </div>
               )}
 
-              <h4 className="text-3xl font-semibold tracking-tight">
+              <h4 className="text-[clamp(1.3rem,5vw,1.9rem)] md:text-3xl font-semibold tracking-tight leading-tight">
                 {title || "Title placeholder"}
               </h4>
 
-              <p className="line-clamp-2 text-lg">
+              <p className="line-clamp-2 text-sm sm:text-base md:text-lg">
                 {description ||
                   "Description placeholder text that briefly summarizes the case."}
               </p>
@@ -104,7 +107,12 @@ export default function Folder2({
               <Button
                 href={href}
                 theme="light"
-                icon={<ArrowUpRight size={20} weight="bold" />}
+                className="w-full justify-start sm:w-auto"
+                icon={
+                  smScreen ? (
+                    <ArrowUpRight size={20} weight="bold" />
+                  ) : undefined
+                }
                 onClick={(event) => {
                   event.stopPropagation();
                   handleActivate();
@@ -114,50 +122,51 @@ export default function Folder2({
               </Button>
             </div>
           </div>
-
-          <div className="relative h-[180px] w-full overflow-hidden rounded-lg md:h-full md:min-h-0">
-            {effectiveImages.length > 0 ? (
-              <>
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    transform: currentTransform,
-                    transition: currentTransition,
-                  }}
-                >
-                  <Image
-                    src={effectiveImages[currentIndex]}
-                    alt={title || ""}
-                    fill
-                    className="object-cover"
-                    unoptimized
-                  />
-                </div>
-
-                {effectiveImages.length > 1 && (
+          {smScreen && (
+            <div className="order-1 relative h-full w-full overflow-hidden rounded-lg  md:order-2  md:min-h-0">
+              {effectiveImages.length > 0 ? (
+                <>
                   <div
                     className="absolute inset-0"
                     style={{
-                      transform: nextTransform,
-                      transition: nextTransition,
+                      transform: currentTransform,
+                      transition: currentTransition,
                     }}
                   >
                     <Image
-                      src={effectiveImages[nextIndex]}
-                      alt=""
+                      src={effectiveImages[currentIndex]}
+                      alt={title || ""}
                       fill
                       className="object-cover"
                       unoptimized
                     />
                   </div>
-                )}
-              </>
-            ) : (
-              <div className="flex h-full w-full items-center justify-center bg-black/5 text-sm opacity-70">
-                No image
-              </div>
-            )}
-          </div>
+
+                  {effectiveImages.length > 1 && (
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        transform: nextTransform,
+                        transition: nextTransition,
+                      }}
+                    >
+                      <Image
+                        src={effectiveImages[nextIndex]}
+                        alt=""
+                        fill
+                        className="object-cover"
+                        unoptimized
+                      />
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="flex h-full w-full items-center justify-center bg-black/5 text-sm opacity-70">
+                  No image
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

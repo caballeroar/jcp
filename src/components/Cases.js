@@ -78,7 +78,7 @@ export default function Cases({ href }) {
   const folderWidth = `${widthFraction * 100}%`;
 
   // Desktop horizontal positions for each folder
-  const desktopLeftPositions = [10, 45, 15, 35];
+  const desktopLeftPositions = [10, 40, 15, 35];
 
   // Responsive horizontal positioning
   const centerLeftPercent = (1 - widthFraction) * 50; // centers the folder
@@ -156,18 +156,23 @@ export default function Cases({ href }) {
     cycleCase,
   } = useCaseModal(caseEntries);
 
-  const folderParallax = [0.1, 0.3, 0.4, 0.25];
+  const mobileFolderParallax = [0.06, 0, -0.01, -0.02];
+  const desktopFolderParallax = [0.1, 0.3, 0.4, 0.25];
+  const folderParallax =
+    (viewportWidth || minViewport) <= 1024
+      ? mobileFolderParallax
+      : desktopFolderParallax;
   const accent = "font-bold mb-2 text-[var(--content_brand)]";
 
   return (
     <section ref={sectionRef} className="relative w-full mb-[-28%]">
       <div className="relative z-20 mx-auto max-w-5xl overflow-hidden px-6 py-16 flex flex-col items-center gap-6">
         <Header title={heading} level="h2" />
-        <p className="mt-8 text-xl md:text-6xl font-bold tracking-tighter leading-tight">
+        <p className="text-[clamp(1.35rem,7vw,3.6rem)]  text-center font-bold leading-[1.02] tracking-[-0.02em]">
           <span className={accent}>{accentText}</span> {sentence1}
         </p>
       </div>
-      <div className="md:pt-16">
+      <div className="px-2 md:pt-16">
         {caseEntries.map((caseData, index) => {
           const multiplier = folderParallax[index % folderParallax.length];
           return (

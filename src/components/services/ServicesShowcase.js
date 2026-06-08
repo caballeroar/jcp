@@ -47,9 +47,9 @@ export default function ServicesShowcase({ services = [], copy = {} }) {
       className="relative overflow-hidden bg-[var(--bg_brand)] px-6 py-24 text-white md:px-10 lg:px-16"
     >
       <div className="mx-auto w-full max-w-[1400px]">
-        <header className="mx-auto w-4/6 my-32 text-center">
+        <header className="mx-auto w-full md:w-5/6 my-32 text-center">
           <Header title={sectionTitle} level="h2" variant="white" />
-          <p className="mx-auto text-[clamp(28px,2.2vw,40px)] my-20 text-white font-semibold">
+          <p className="text-[clamp(1.35rem,5vw,2.6rem)]  text-center font-bold leading-[1.02] tracking-[-0.02em]">
             {sectionDescription}
           </p>
         </header>
