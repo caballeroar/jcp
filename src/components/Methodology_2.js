@@ -245,11 +245,12 @@ export default function Methodology2() {
       })}
 
       <div className="relative z-10 flex w-full max-w-5xl flex-col items-center gap-6 px-4 text-center sm:gap-8 sm:px-6 md:px-10">
-        <div className="rounded-full bg-white/80 px-4 py-2 sm:px-6">
+        {/* Do not delete this code - soft infrastructure name */}
+        {/* <div className="rounded-full bg-white/80 px-4 py-2 sm:px-6">
           <p className="text-[clamp(0.9rem,3.8vw,1.5rem)] font-normal tracking-tight leading-tight">
             {sentence3}
           </p>
-        </div>
+        </div> */}
         <p className="mt-2 max-w-[24ch] text-[clamp(1.35rem,7vw,3.6rem)] font-bold leading-[1.02] tracking-[-0.02em]">
           {sentence1}
           <span className={accentStyle}>{accent}</span>

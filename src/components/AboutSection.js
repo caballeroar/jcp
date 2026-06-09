@@ -2,23 +2,9 @@
 
 import { useMemo, useState } from "react";
 import { useI18n } from "../lib/I18nContext";
-
-const FALLBACK_COPY = {
-  en: {
-    eyebrow: "About Us",
-    title: "A small team focused on human-centered transition work.",
-    body: "We partner with public institutions, communities, and organizations to translate sustainability ambitions into practical steps people can trust.",
-    values: ["Systems thinking", "Co-creation", "Evidence-driven action"],
-    teamTitle: "Team",
-  },
-  nl: {
-    eyebrow: "Over Ons",
-    title: "Een klein team met focus op mensgerichte transities.",
-    body: "We werken samen met publieke instellingen, gemeenschappen en organisaties om duurzaamheidsambities te vertalen naar praktische stappen die mensen vertrouwen.",
-    values: ["Systeemdenken", "Co-creatie", "Actie op basis van bewijs"],
-    teamTitle: "Team",
-  },
-};
+import Team from "../../public/assets/team.jpg";
+import Header from "./ui/Header";
+import Image from "next/image";
 
 const FALLBACK_TEAM = {
   en: [
@@ -26,39 +12,29 @@ const FALLBACK_TEAM = {
       id: "amel",
       name: "Amel Ramirez",
       role: "Founder & Strategy Lead",
-      bio: "Bridges policy, participation, and delivery to make complex sustainability transitions understandable and actionable.",
+      bio: "Bridges policy, participation and delivery to make complex sustainability transitions understandable and actionable.",
+      image: "/assets/jay.jpeg",
     },
     {
       id: "kai",
       name: "Kai de Vries",
       role: "Research & Insights",
-      bio: "Designs inclusive research processes and translates stakeholder insight into sharp strategic direction.",
+      bio: "Designs inclusive research processes and translates stakeholder insight into strategic direction.",
+      image: "/assets/amel.png",
     },
     {
       id: "nora",
       name: "Nora Janssen",
       role: "Partnerships & Programs",
       bio: "Builds trusted collaborations across institutions and communities to move initiatives from plan to practice.",
-    },
-  ],
-  nl: [
-    {
-      id: "amel",
-      name: "Amel Ramirez",
-      role: "Oprichter & Strategielead",
-      bio: "Verbindt beleid, participatie en uitvoering om complexe duurzaamheidsvraagstukken begrijpelijk en uitvoerbaar te maken.",
+      image: "/assets/andrew.jpg",
     },
     {
-      id: "kai",
-      name: "Kai de Vries",
-      role: "Onderzoek & Inzichten",
-      bio: "Ontwerpt inclusieve onderzoeksprocessen en vertaalt stakeholderinzichten naar scherpe strategische keuzes.",
-    },
-    {
-      id: "nora",
-      name: "Nora Janssen",
-      role: "Partnerschappen & Programma's",
-      bio: "Bouwt betrouwbare samenwerkingen tussen instellingen en gemeenschappen om plannen om te zetten in praktijk.",
+      id: "sara",
+      name: "Sara Verbeek",
+      role: "Design Lead",
+      bio: "Creates human-centred service experiences that connect strategy and implementation.",
+      image: "/assets/marlies.jpeg",
     },
   ],
 };
@@ -72,117 +48,147 @@ function initialsFromName(name = "") {
     .join("");
 }
 
+function normalizeImageSrc(src) {
+  if (typeof src !== "string") return null;
+  const trimmedSrc = src.trim();
+  return trimmedSrc.length > 0 ? trimmedSrc : null;
+}
+
 export default function AboutSection() {
   const { locale, dict } = useI18n();
-  const [activeCard, setActiveCard] = useState(null);
 
   const lang = locale === "nl" ? "nl" : "en";
-  const dictAbout = dict?.pages?.home?.about ?? {};
-
-  const copy = {
-    ...FALLBACK_COPY[lang],
-    ...dictAbout,
-    values: dictAbout.values ?? FALLBACK_COPY[lang].values,
-  };
 
   const team = useMemo(() => {
-    if (Array.isArray(dictAbout.team) && dictAbout.team.length > 0) {
-      return dictAbout.team;
+    const translatedTeam = dict?.pages?.home?.about?.team;
+
+    if (Array.isArray(translatedTeam) && translatedTeam.length > 0) {
+      return translatedTeam;
     }
+
     return FALLBACK_TEAM[lang];
-  }, [dictAbout.team, lang]);
+  }, [dict, lang]);
+
+  const [activeMember, setActiveMember] = useState(team[0]);
 
   return (
-    <section className="relative px-6 py-20 md:py-28 bg-[var(--background)] text-[var(--content_dark)] overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 opacity-70">
-        <div className="absolute top-8 right-0 h-64 w-64 rounded-full bg-[var(--content_brand)]/12 blur-3xl" />
-        <div className="absolute bottom-0 left-0 h-56 w-56 rounded-full bg-[var(--content_brand)]/10 blur-3xl" />
+    <section className="mx-auto max-w-7xl px-6 my-[20%]">
+      <Header title="About Us" level="h4" variant="accent" />
+
+      <div className="mx-auto max-w-3xl py-6 text-center">
+        <p className="text-[clamp(1.35rem,5vw,2.4rem)] text-center font-bold leading-[1.02] tracking-[-0.02em]">
+          Shaping systems that create lasting impact.
+        </p>
+
+        <p className="text-[clamp(0.5rem,5vw,1.3rem)] py-6 text-center font-normal leading-relaxed tracking-normal">
+          We work with governments, organisations and communities to transform
+          ambitious goals into practical solutions. By combining strategy,
+          design and implementation, we help create change that is measurable,
+          sustainable and centred around people.
+        </p>
       </div>
 
-      <div className="relative mx-auto max-w-6xl space-y-12 md:space-y-16">
-        <div className="grid gap-8 items-start">
-          <div>
-            <p className="font-roboto-mono text-xs uppercase tracking-[0.24em] text-[var(--content_brand)]">
-              {copy.eyebrow}
-            </p>
-            <h2 className="mt-4 text-3xl md:text-5xl font-bold tracking-tight leading-tight">
-              {copy.title}
-            </h2>
-          </div>
-
-          <div className="space-y-6">
-            <p className="text-base md:text-lg leading-relaxed text-[var(--content_dark)]/85">
-              {copy.body}
-            </p>
-            <ul className="flex flex-wrap gap-3">
-              {copy.values.map((value) => (
-                <li
-                  key={value}
-                  className="rounded-full border border-black/10 bg-white/70 px-4 py-2 text-sm font-semibold"
-                >
-                  {value}
-                </li>
-              ))}
-            </ul>
-          </div>
+      <div className="mt-12 grid gap-4 lg:grid-cols-[1.7fr_1fr] max-w-4xl mx-auto">
+        <div className="relative min-h-[520px] overflow-hidden rounded-[32px]">
+          <Image
+            src={Team}
+            alt="Workshop"
+            fill
+            sizes="(min-width: 1024px) 66vw, 100vw"
+            className="object-cover"
+          />
         </div>
 
-        <div>
-          <h3 className="text-2xl md:text-3xl font-bold tracking-tight">
-            {copy.teamTitle}
-          </h3>
+        <div className="grid gap-4">
+          <div className="relative h-[252px] overflow-hidden rounded-[32px]">
+            <Image
+              src={Team}
+              alt="Collaboration"
+              fill
+              sizes="(min-width: 1024px) 34vw, 100vw"
+              className="object-cover"
+            />
+          </div>
 
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
+          <div className="relative h-[252px] overflow-hidden rounded-[32px]">
+            <Image
+              src={Team}
+              fill
+              alt="Team session"
+              sizes="(min-width: 1024px) 34vw, 100vw"
+              className="object-cover"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="pt-40 max-w-4xl mx-auto">
+        <div className="max-w-3xl">
+          <h2 className="text-4xl font-bold tracking-tight text-[var(--accent)]">
+            Team Members
+          </h2>
+
+          <p className="mt-6 text-[clamp(0.8rem,2.5vw,1.2rem)] tracking-relaxed leading-relaxed text-[var(--content_dark)]/80">
+            We are a multidisciplinary team with a shared passion for solving
+            complex societal challenges. Through research, strategy, design and
+            facilitation, we help organisations move from ambition to
+            implementation.
+          </p>
+        </div>
+
+        <div className="mt-20 grid gap-20 lg:grid-cols-[1.1fr_0.9fr]">
+          {/* LEFT SIDE */}
+
+          <div className="flex flex-wrap gap-6 max-w-[560px]">
             {team.map((member) => {
-              const isActive = activeCard === member.id;
-              const memberInitials = initialsFromName(member.name);
+              const isActive = activeMember?.id === member.id;
+              const memberImageSrc = normalizeImageSrc(member?.image);
 
               return (
-                <article
+                <button
                   key={member.id}
-                  className="group relative rounded-3xl border border-black/10 bg-white/65 p-4 shadow-[0_14px_30px_rgba(0,0,0,0.08)]"
-                  onMouseEnter={() => setActiveCard(member.id)}
-                  onMouseLeave={() => setActiveCard(null)}
-                >
-                  <button
-                    type="button"
-                    className="w-full text-left"
-                    onClick={() => setActiveCard(isActive ? null : member.id)}
-                  >
-                    <div className="relative h-60 overflow-hidden rounded-2xl bg-[linear-gradient(145deg,#0c2a2f_0%,#3f7f7a_65%,#8ec7be_100%)]">
-                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_14%,rgba(255,255,255,0.18),transparent_42%)]" />
-                      <div className="absolute inset-0 flex items-end p-4">
-                        <p className="font-monument-extended text-4xl uppercase text-white/95">
-                          {memberInitials}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="mt-4">
-                      <p className="text-xl font-semibold leading-tight">
-                        {member.name}
-                      </p>
-                      <p className="mt-1 text-sm text-[var(--content_dark)]/70">
-                        {member.role}
-                      </p>
-                    </div>
-                  </button>
-
-                  <div
-                    className={`pointer-events-none absolute inset-4 rounded-2xl bg-black/70 p-5 text-white transition-all duration-300 ${
+                  type="button"
+                  onClick={() => setActiveMember(member)}
+                  className={`
+                    relative h-32 w-32 overflow-hidden rounded-full
+                    transition-all duration-300
+                    ${
                       isActive
-                        ? "opacity-100 translate-y-0"
-                        : "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0"
-                    }`}
-                  >
-                    <p className="font-roboto-mono text-[11px] uppercase tracking-[0.18em] text-white/70">
-                      About
-                    </p>
-                    <p className="mt-3 text-sm leading-relaxed">{member.bio}</p>
-                  </div>
-                </article>
+                        ? "scale-105 ring-2 ring-[var(--content_brand)]"
+                        : "opacity-100 hover:scale-105"
+                    }
+                  `}
+                >
+                  {memberImageSrc ? (
+                    <Image
+                      fill
+                      src={memberImageSrc}
+                      alt={member.name}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-neutral-200 text-xl font-semibold">
+                      {initialsFromName(member.name)}
+                    </div>
+                  )}
+                </button>
               );
             })}
+          </div>
+
+          {/* RIGHT SIDE */}
+
+          <div className="max-w-md">
+            <h4 className="text-[clamp(1.5rem,4vw,2rem)] font-normal tracking-tight">
+              {activeMember?.name}
+            </h4>
+            <p className="mt-3 text-lg font-medium text-[var(--accent)]">
+              {activeMember?.role}
+            </p>
+            <div className="mt-4 h-px w-40 bg-[var(--content_brand)]" />
+            <p className="mt-6 text-[clamp(0.8rem,2.5vw,1.2rem)] leading-relaxed text-[var(--content_dark)]/80">
+              {activeMember?.bio}
+            </p>
           </div>
         </div>
       </div>

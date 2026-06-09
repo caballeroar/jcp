@@ -33,7 +33,6 @@ export default function ServicesShowcase({ services = [], copy = {} }) {
     return normalizeServices(source).slice(0, 4);
   }, [services]);
 
-  const [hoveredIndex, setHoveredIndex] = useState(null);
   const [activeIndex, setActiveIndex] = useState(null);
 
   const sectionTitle = String(copy?.heading ?? "SERVICES").toUpperCase();
@@ -54,21 +53,17 @@ export default function ServicesShowcase({ services = [], copy = {} }) {
           </p>
         </header>
 
-        <div className="relative mt-14">
+        <div className="relative mt-14 lg:max-w-[1100px] mx-auto">
           <div className="absolute inset-0 h-full w-full shrink-0 rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,#ffffff80_0%,#ffffff40_100%)] blur-[260px]" />
           <div className="absolute left-1/2 top-1/2 h-[500px] w-[500px] shrink-0 rounded-full  bg-[radial-gradient(circle,rgba(255,255,255,0.26)_0%,rgba(255,255,255,0.12)_35%,transparent_72%)] blur-[30px]" />
           <div className="absolute left-1/2 top-1/2 h-[150px] w-[150px] aspect-square shrink-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(62.49%_62.49%_at_50%_50%,#fff_33.17%,#fff0_100%)] blur-[20px]" />
-
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {normalizedServices.map((service, index) => {
               return (
                 <NewServiceCard
                   key={service.id}
                   service={service}
-                  isHovered={hoveredIndex === index && activeIndex === null}
                   isActive={activeIndex === index}
-                  onHoverStart={() => setHoveredIndex(index)}
-                  onHoverEnd={() => setHoveredIndex(null)}
                   onOpen={() => setActiveIndex(index)}
                   onClose={() => setActiveIndex(null)}
                 />
