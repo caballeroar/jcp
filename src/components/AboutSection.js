@@ -66,10 +66,15 @@ export default function AboutSection() {
       return translatedTeam;
     }
 
-    return FALLBACK_TEAM[lang];
+    return FALLBACK_TEAM[lang] ?? FALLBACK_TEAM.en ?? [];
   }, [dict, lang]);
 
-  const [activeMember, setActiveMember] = useState(team[0]);
+  const [activeMemberId, setActiveMemberId] = useState(null);
+
+  const activeMember = useMemo(() => {
+    if (!Array.isArray(team) || team.length === 0) return null;
+    return team.find((member) => member.id === activeMemberId) ?? team[0];
+  }, [team, activeMemberId]);
 
   return (
     <section className="mx-auto max-w-7xl px-6 my-[20%]">
@@ -148,7 +153,7 @@ export default function AboutSection() {
                 <button
                   key={member.id}
                   type="button"
-                  onClick={() => setActiveMember(member)}
+                  onClick={() => setActiveMemberId(member.id)}
                   className={`
                     relative h-32 w-32 overflow-hidden rounded-full
                     transition-all duration-300

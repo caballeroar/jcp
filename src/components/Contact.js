@@ -2,6 +2,7 @@
 
 import { useI18n } from "../lib/I18nContext";
 import ContactForm from "./ContactForm";
+import Header from "./ui/Header";
 
 export default function Contact() {
   const { locale, dict } = useI18n();
@@ -27,15 +28,16 @@ export default function Contact() {
   ];
 
   return (
-    <section className="relative w-full md:w-5/6 py-24 mx-auto sm:py-20 md:my-40 px-6 overflow-hidden">
+    <section className="w-full md:w-5/6 py-24 mx-auto sm:py-20 md:my-40 px-6 overflow-hidden">
       {/* Background SVG */}
+      <Header title={"Contact us"} />
 
       {/* Overlay content */}
-      <div className="relative w-full max-w-6xl mx-auto grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)]">
+      <div className="relative w-full max-w-6xl mx-auto py-20 grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)]">
         <div className="text-center lg:text-left">
-          <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-[var(--content_dark)]">
+          <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-[var(--content_dark)]">
             {homeContact.sentence}
-          </h2>
+          </h3>
           <p className="mt-5 text-base md:text-lg text-[var(--content_dark)]/80 max-w-2xl mx-auto lg:mx-0">
             {contactCopy.description ??
               "Share a few details about your project, team, or policy question so we can prepare the right context before we connect."}
